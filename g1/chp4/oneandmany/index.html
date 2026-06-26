@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chapter 4: One and Many (-s and -es)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght=500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #FF9F1C; /* Juicy Orange */
@@ -532,17 +532,17 @@
                 document.getElementById('next-action-btn').style.display = 'block';
             } else {
                 // Missed hit
-                try { soundWrong.play(); } catch(e){}
+                try { soundNo.play(); } catch(e){}
                 contextAttempts++;
                 
                 if(contextAttempts === 1) {
                     // One Retry Rule
                     element.classList.add('wrong');
-                    element.disabled = true; // prevent re-clicking this incorrect option
+                    element.disabled = true; // disable only this clicked option
                     panel.className = "feedback-box retry visible";
                     panel.innerHTML = "<strong>Don't worry! Try one more time!</strong> Look closely at the word ending or meaning.";
                 } else {
-                    // Lock out completely
+                    // Lock out completely after second wrong answer
                     clearInterval(engineTimer);
                     element.classList.add('wrong');
                     freezeTiles();

@@ -1,220 +1,744 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Gender Nouns CBQ Game</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Masculine and Feminine Gender Nouns</title>
+    <style>
+        :root {
+            --primary: #4a3bc8;
+            --primary-light: #6c5ce7;
+            --secondary: #ff7675;
+            --success: #2ecc71;
+            --background: #f0f3fa;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --text-light: #636e72;
+        }
 
-<style>
-body{
-    margin:0;
-    font-family: Arial;
-    background: linear-gradient(to bottom, #f0f8ff, #ffffff);
-    text-align:center;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-/* INTRO */
-#intro{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:white;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    z-index:10;
-}
+        body {
+            background-color: var(--background);
+            background: linear-gradient(135deg, #e0e6ed 0%, #f0f3fa 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-/* GAME */
-#game{
-    display:none;
-    padding:20px;
-}
+        /* --- Ambient Background Animations --- */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-.card{
-    max-width:650px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
+        .streamer {
+            position: absolute;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 50%;
+            animation: float Up 12s infinite linear;
+        }
 
-.option{
-    display:block;
-    margin:10px;
-    padding:12px;
-    border:2px solid #2196f3;
-    border-radius:10px;
-    cursor:pointer;
-    transition:0.3s;
-}
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
 
-.option:hover{
-    background:#e3f2fd;
-}
+        /* --- Branding Overlay --- */
+        #brand-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, pointer-events 0.5s;
+        }
 
-#score,#timer{
-    font-weight:bold;
-    margin:10px;
-}
+        #brand-overlay img {
+            max-width: 220px;
+            height: auto;
+            margin-bottom: 20px;
+        }
 
-#timer{color:red;}
+        .loader-bar {
+            width: 150px;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
 
-#nextBtn{
-    display:none;
-    padding:10px 20px;
-    background:green;
-    color:white;
-    border:none;
-    border-radius:8px;
-}
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary);
+            animation: load 5s linear forwards;
+        }
 
-/* END */
-#end{
-    display:none;
-    padding:30px;
-}
+        @keyframes load {
+            to { width: 100%; }
+        }
 
-.correct{background:#c8e6c9 !important;}
-.wrong{background:#ffcdd2 !important;}
+        /* --- Main Container Layout --- */
+        .container {
+            width: 100%;
+            max-width: 650px;
+            padding: 20px;
+            z-index: 10;
+        }
 
-</style>
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Typography & Buttons --- */
+        h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 10px; text-align: center; }
+        h2 { font-size: 1.4rem; margin-bottom: 20px; color: var(--text); line-height: 1.4; }
+        p { color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
+        
+        .meta-info {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-light);
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn:hover { background-color: var(--primary-light); }
+        .btn:active { transform: scale(0.98); }
+
+        /* --- Header Trackers --- */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .tracker-item {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tracker-item span {
+            color: var(--primary);
+        }
+
+        .timer-box {
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .timer-box.urgent {
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); background-color: #ffeaa7; }
+            to { transform: scale(1.05); background-color: #ff7675; color: white; }
+        }
+
+        /* --- Options Grid --- */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-light);
+            background-color: #f1f0ff;
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda !important;
+            border-color: var(--success) !important;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background-color: #f8d7da !important;
+            border-color: var(--secondary) !important;
+            color: #721c24;
+        }
+
+        /* Cross Indicator Layer */
+        .option-btn.wrong::after {
+            content: '✕';
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .option-btn.correct::after {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* --- System Feedback & Explanations --- */
+        .feedback-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-box.visible { display: block; }
+        .feedback-box.retry { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .feedback-box.final-reveal { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+
+        /* --- Canvas Effects --- */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* --- Results Panel --- */
+        .result-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .badge {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #fdcb6e;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- INTRO -->
-<div id="intro">
-    <img src="assets/logo.png" width="180">
-    <h2>CBQ Adventure</h2>
-    <p>Masculine & Feminine Gender Nouns</p>
-</div>
+    <div class="ambient-bg" id="ambient-layer"></div>
 
-<!-- GAME -->
-<div id="game">
+    <canvas id="confetti-canvas"></canvas>
 
-    <div id="score">Score: 0</div>
-    <div id="timer">Time: 60</div>
-
-    <div class="card">
-        <h3 id="question"></h3>
-        <div id="options"></div>
-        <button id="nextBtn" onclick="nextQ()">Next</button>
+    <div id="brand-overlay">
+        <img src="assets/logo.png" alt="Innovine Logo" onerror="this.style.display='none';">
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
     </div>
 
-</div>
+    <div class="container">
+        <div class="card">
+            
+            <div id="intro-screen" class="screen active">
+                <div class="meta-info">Grade 1 • English Language Arts</div>
+                <h1>Chapter 3: Masculine & Feminine Gender Nouns</h1>
+                <p style="text-align: center; margin-top: 15px;">Welcome! Explore and learn how we name male and female people or animals through this fun, competency-based challenge. Read each context carefully!</p>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 0.9rem;">
+                    <strong>✨ Challenge Rules:</strong>
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>60 seconds per question.</li>
+                        <li>You get 1 Retry if you answer incorrectly the first time!</li>
+                        <li>Difficulty climbs gradually as you proceed.</li>
+                    </ul>
+                </div>
+                <button class="btn" onclick="startQuiz()">Start Challenge</button>
+            </div>
 
-<!-- END -->
-<div id="end">
-    <h1>🎉 Well Done!</h1>
-    <h2 id="finalScore"></h2>
-</div>
+            <div id="quiz-screen" class="screen">
+                <div class="quiz-header">
+                    <div class="tracker-item">Question: <span id="q-current">1</span>/<span id="q-total">15</span></div>
+                    <div id="timer" class="timer-box">60s</div>
+                    <div class="tracker-item">Score: <span id="live-score">0</span></div>
+                </div>
 
-<!-- AUDIO -->
-<audio id="correctSound" src="assets/correct.mp3"></audio>
-<audio id="wrongSound" src="assets/wrong.mp3"></audio>
-<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+                <h2 id="question-text">Loading question text...</h2>
+                
+                <div class="options-list" id="options-container">
+                    </div>
 
-<script>
+                <div id="feedback" class="feedback-box"></div>
+                
+                <button class="btn" id="next-btn" style="display: none; margin-top: 15px;" onclick="nextQuestion()">Continue</button>
+            </div>
 
-const questions = [
-{q:"The class welcomes a female principal. What is correct?",o:["He is principal","She is principal","Him is principal","They is principal"],a:1,ex:"She is used for female."},
-{q:"Your aunt visits home.",o:["He is aunt","She is aunt","Him is aunt","They is aunt"],a:1,ex:"Aunt is female."},
-{q:"Peahen is:",o:["Male peacock","Female peacock","Baby","Not bird"],a:1,ex:"Peahen is female peacock."},
-{q:"Incorrect sentence:",o:["Uncle talks","Mother cooks","Sister helps","Grandmother his story"],a:3,ex:"Should be her story."},
-{q:"Female doctor:",o:["He checked","She checked","Him checked","They checked"],a:1,ex:"She is correct."},
-{q:"Why 'he' is wrong for female?",o:["For males","For animals","For things","For places"],a:0,ex:"He = male."},
-{q:"Female deer:",o:["Doe","Buck","Deerer","Deeress"],a:0,ex:"Doe is female deer."},
-{q:"Woman marrying:",o:["Bride","Groom","Uncle","Brother"],a:0,ex:"Bride is correct."},
-{q:"King-Queen is:",o:["Gender pair","Place","Animal","Thing"],a:0,ex:"Correct gender pair."},
-{q:"Waitress correction:",o:["to waiter","to waitress","to is","to are"],a:1,ex:"Female = waitress."},
-{q:"Father sister:",o:["Aunt","Uncle","Brother","Son"],a:0,ex:"Aunt is correct."},
-{q:"Female lion:",o:["Lioness","Lioner","King lion","Boy lion"],a:0,ex:"Lioness is female."},
-{q:"Feminine group:",o:["Queen mother aunt","King boy father","Tiger lion dog","Chair table book"],a:0,ex:"All feminine."},
-{q:"Female teacher:",o:["He teaches","She teaches","Him teaches","They teaches"],a:1,ex:"She is correct."},
-{q:"Why learn gender nouns?",o:["Identify male/female","Measure","Time","Color"],a:0,ex:"To identify gender."}
-];
+            <div id="result-screen" class="screen">
+                <div class="meta-info">Challenge Completed!</div>
+                <h1>Your Results</h1>
+                <div class="result-score"><span id="final-score">0</span> / <span id="final-max">15</span></div>
+                <div id="performance-badge" class="badge">Super Job!</div>
+                <p id="result-text" style="text-align: center; margin-bottom: 25px;"></p>
+                <button class="btn" onclick="restartQuiz()">Try Again</button>
+            </div>
 
-let i=0;
-let score=0;
-let time=60;
-let attempts=0;
-let timer;
+        </div>
+    </div>
 
-setTimeout(()=>{
-    document.getElementById("intro").style.display="none";
-    document.getElementById("game").style.display="block";
-    loadQ();
-    startTimer();
-},3000);
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-applause" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
-function startTimer(){
-    timer=setInterval(()=>{
-        time--;
-        document.getElementById("timer").innerText="Time: "+time;
-        if(time<=0){
-            nextQ();
+    <script>
+        // 15 Competency-Based ordered sequentially from easier concepts to final master checks
+        const questions = [
+            {
+                text: "The class welcomes a new female principal. Which sentence should a student say?",
+                options: ["He is our new principal.", "She is our new principal.", "Him is our new principal.", "They is our new principal."],
+                correct: 1,
+                explanation: "We use 'she' when talking about a female person."
+            },
+            {
+                text: "Your aunt has come to visit your home. Which sentence is correct?",
+                options: ["He is my aunt.", "She is my aunt.", "Him is my aunt.", "They is my aunt."],
+                correct: 1,
+                explanation: "An aunt is a female family member, so we use 'she'."
+            },
+            {
+                text: "A female doctor checks your health. Which sentence would you use?",
+                options: ["He checked my health.", "She checked my health.", "Him checked my health.", "They checked my health."],
+                correct: 1,
+                explanation: "We use 'she' for a female doctor."
+            },
+            {
+                text: "A child is talking about a female teacher. Which sentence is correct?",
+                options: ["He teaches us English.", "She teaches us English.", "Him teaches us English.", "They teaches us English."],
+                correct: 1,
+                explanation: "We use 'she' for a female teacher."
+            },
+            {
+                text: "A child points to a woman bus driver and says, 'He is driving the bus.' Why is this incorrect?",
+                options: ["He is used for males.", "He is used for animals.", "He is used for places.", "He is used for things."],
+                correct: 0,
+                explanation: "We use 'she' for females. 'He' belongs only to males."
+            },
+            {
+                text: "Your father's sister visits your home. What is she called?",
+                options: ["Aunt", "Uncle", "Brother", "Son"],
+                correct: 0,
+                explanation: "Your father's sister is called your aunt."
+            },
+            {
+                text: "A child sees a woman getting married. What is she called?",
+                options: ["Bride", "Groom", "Uncle", "Brother"],
+                correct: 0,
+                explanation: "A woman getting married is called a bride."
+            },
+            {
+                text: "A child sees a peahen in a park. Which statement is correct?",
+                options: ["A peahen is a female peacock.", "A peahen is a male peacock.", "A peahen is a baby peacock.", "A peahen is not a bird."],
+                correct: 0,
+                explanation: "Peahen is the female form of a peacock."
+            },
+            {
+                text: "A forest guide talks about a female deer. Which word should be used?",
+                options: ["Doe", "Deerer", "Buck", "Deeress"],
+                correct: 0,
+                explanation: "A female deer is called a doe."
+            },
+            {
+                text: "A story is about a female lion. Which word should be used?",
+                options: ["Lioness", "Lioner", "Lion boy", "Lion king"],
+                correct: 0,
+                explanation: "Lioness is the specific feminine form of lion."
+            },
+            {
+                text: "Which pair shows a masculine noun and its exact matching feminine form?",
+                options: ["King – Queen", "Boy – School", "Tiger – Forest", "Chair – Table"],
+                correct: 0,
+                explanation: "King (male) and Queen (female) are matching masculine and feminine forms."
+            },
+            {
+                text: "Which group contains only feminine gender nouns?",
+                options: ["Queen, mother, aunt", "King, queen, aunt", "Brother, uncle, father", "Boy, mother, lion"],
+                correct: 0,
+                explanation: "All words in this group (Queen, mother, aunt) represent females."
+            },
+            {
+                text: "Which sentence is incorrect?",
+                options: ["The uncle is talking to us.", "The sister is helping her brother.", "The grandmother is telling his story.", "The mother is cooking food."],
+                correct: 2,
+                explanation: "We should say 'her story' instead of 'his story' when talking about a grandmother."
+            },
+            {
+                text: "A student says, 'The waitress is a polite waiter.' What should be corrected to make structural sense?",
+                options: ["waitress → waiter", "waiter → waitress", "polite → politely", "is → are"],
+                correct: 1,
+                explanation: "A female server is a waitress, so comparing her to a waiter requires setting the core term correct."
+            },
+            {
+                text: "Why do we learn masculine and feminine nouns?",
+                options: ["To identify whether a person or animal is male or female", "To measure things", "To tell time", "To describe colours"],
+                correct: 0,
+                explanation: "Masculine and feminine nouns help us accurately identify and group male and female forms."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerCount = 60;
+        let timerInterval = null;
+        let attemptCount = 0; // Tracks structural 1-retry logic per question
+
+        // Audio Triggers
+        const soundCorrect = document.getElementById('audio-correct');
+        const soundWrong = document.getElementById('audio-wrong');
+        const soundApplause = document.getElementById('audio-applause');
+
+        // Boot system decoration and timed layout
+        window.addEventListener('DOMContentLoaded', () => {
+            createAmbientLayers();
+            setTimeout(() => {
+                const overlay = document.getElementById('brand-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 500);
+            }, 5000);
+            
+            document.getElementById('q-total').innerText = questions.length;
+        });
+
+        function createAmbientLayers() {
+            const container = document.getElementById('ambient-layer');
+            const layerCount = 15;
+            for(let i = 0; i < layerCount; i++) {
+                const streamer = document.createElement('div');
+                streamer.classList.add('streamer');
+                const size = Math.random() * 30 + 10;
+                streamer.style.width = `${size}px`;
+                streamer.style.height = `${size}px`;
+                streamer.style.left = `${Math.random() * 100}vw`;
+                streamer.style.animationDelay = `${Math.random() * 10}s`;
+                streamer.style.animationDuration = `${Math.random() * 8 + 8}s`;
+                container.appendChild(streamer);
+            }
         }
-    },1000);
-}
 
-function loadQ(){
-    attempts=0;
-    time=60;
-
-    let q=questions[i];
-    document.getElementById("question").innerText=q.q;
-
-    let html="";
-    q.o.forEach((opt,idx)=>{
-        html+=`<div class='option' onclick='check(${idx})'>${opt}</div>`;
-    });
-
-    document.getElementById("options").innerHTML=html;
-    document.getElementById("nextBtn").style.display="none";
-}
-
-function check(x){
-    let q=questions[i];
-
-    if(x===q.a){
-        document.querySelectorAll(".option")[x].classList.add("correct");
-        document.getElementById("correctSound").play();
-        score++;
-        document.getElementById("score").innerText="Score: "+score;
-        document.getElementById("nextBtn").style.display="block";
-    }else{
-        attempts++;
-        document.querySelectorAll(".option")[x].classList.add("wrong");
-        document.getElementById("wrongSound").play();
-
-        if(attempts>=2){
-            alert("Correct Answer: "+q.o[q.a]+"\n\n"+q.ex);
-            document.getElementById("nextBtn").style.display="block";
+        // Quiz State Engines
+        function startQuiz() {
+            document.getElementById('intro-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('live-score').innerText = score;
+            loadQuestion();
         }
-    }
-}
 
-function nextQ(){
-    i++;
-    if(i>=questions.length){
-        endGame();
-        return;
-    }
-    loadQ();
-}
+        function loadQuestion() {
+            attemptCount = 0;
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Set basic structure indicators
+            document.getElementById('q-current').innerText = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerText = currentQuestion.text;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback-box';
+            feedback.innerText = '';
+            
+            document.getElementById('next-btn').style.display = 'none';
 
-function endGame(){
-    clearInterval(timer);
-    document.getElementById("game").style.display="none";
-    document.getElementById("end").style.display="block";
-    document.getElementById("finalScore").innerText=score+" / "+questions.length;
-    document.getElementById("clapSound").play();
-}
+            // Generate answer selectors
+            currentQuestion.options.forEach((option, idx) => {
+                const button = document.createElement('button');
+                button.classList.add('option-btn');
+                button.innerText = option;
+                button.onclick = () => handleAnswerSelection(idx, button);
+                optionsContainer.appendChild(button);
+            });
 
-</script>
+            startTimer();
+        }
 
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerCount = 60; // Grade 1 parameter rules
+            const timerBox = document.getElementById('timer');
+            timerBox.classList.remove('urgent');
+            timerBox.innerText = timerCount + 's';
+
+            timerInterval = setInterval(() => {
+                timerCount--;
+                timerBox.innerText = timerCount + 's';
+                
+                if(timerCount <= 10) {
+                    timerBox.classList.add('urgent');
+                }
+                
+                if(timerCount <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function handleAnswerSelection(selectedIndex, clickedButton) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.option-btn');
+
+            if (selectedIndex === currentQuestion.correct) {
+                // Correct Pathway
+                clearInterval(timerInterval);
+                clickedButton.classList.add('correct');
+                disableAllOptions();
+                try { soundCorrect.play(); } catch(e){}
+                triggerConfetti();
+                
+                // Final Challenge variations update immediate track score
+                if(attemptCount === 0) {
+                    score++;
+                    document.getElementById('live-score').innerText = score;
+                }
+                
+                feedback.className = "feedback-box final-reveal visible";
+                feedback.innerHTML = `<strong>✨ Correct!</strong> ${currentQuestion.explanation}`;
+                document.getElementById('next-btn').style.display = 'block';
+            } else {
+                // Incorrect Pathway
+                try { soundWrong.play(); } catch(e){}
+                attemptCount++;
+                
+                if (attemptCount === 1) {
+                    // One retry allowed rule
+                    clickedButton.classList.add('wrong');
+                    clickedButton.disabled = true; // prevent re-clicking this incorrect option
+                    feedback.className = "feedback-box retry visible";
+                    feedback.innerHTML = `<strong>Try Again!</strong> That's not quite right. Think about if the person or animal is male or female. You have 1 attempt remaining.`;
+                } else {
+                    // Second failed attempt option locks and shows brief explanation
+                    clearInterval(timerInterval);
+                    clickedButton.classList.add('wrong');
+                    disableAllOptions();
+                    
+                    // Emphasize actual solution
+                    buttons[currentQuestion.correct].classList.add('correct');
+                    
+                    feedback.className = "feedback-box final-reveal visible";
+                    feedback.innerHTML = `<strong>Nice effort!</strong> ${currentQuestion.explanation}`;
+                    document.getElementById('next-btn').style.display = 'block';
+                }
+            }
+        }
+
+        function handleTimeOut() {
+            disableAllOptions();
+            const currentQuestion = questions[currentQuestionIndex];
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons[currentQuestion.correct].classList.add('correct');
+            feedback.className = "feedback-box final-reveal visible";
+            feedback.innerHTML = `<strong>Time's Up!</strong> ${currentQuestion.explanation}`;
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function disableAllOptions() {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if(currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+            
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-max').innerText = questions.length;
+            
+            const badge = document.getElementById('performance-badge');
+            const text = document.getElementById('result-text');
+            
+            const ratio = score / questions.length;
+            if(ratio >= 0.8) {
+                badge.innerText = "🏆 Superstar!";
+                text.innerText = "Spectacular work! You have perfectly mastered masculine and feminine nouns. Keep shining!";
+                try { soundApplause.play(); } catch(e){}
+            } else if(ratio >= 0.5) {
+                badge.innerText = "🌟 Great Effort!";
+                text.innerText = "You did a wonderful job identifying male and female nouns! Try again to get a perfect score.";
+            } else {
+                badge.innerText = "📚 Keep Practicing!";
+                text.innerText = "Reviewing family members and animal pairs will help you score higher next time! Give it another go.";
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('result-screen').classList.remove('active');
+            startQuiz();
+        }
+
+        // --- Performance Safe Canvas Particle Effects ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function triggerConfetti() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            
+            // Create 45 star/streamer elements safely
+            for(let i=0; i<45; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    sx: (Math.random() - 0.5) * 10,
+                    sy: (Math.random() - 0.5) * 10 - 4,
+                    size: Math.random() * 6 + 4,
+                    color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+                    life: 100
+                });
+            }
+            if(particles.length > 0) {
+                requestAnimationFrame(drawConfetti);
+            }
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let alive = false;
+
+            particles.forEach(p => {
+                if(p.life > 0) {
+                    alive = true;
+                    ctx.fillStyle = p.color;
+                    
+                    // Draw custom 5-pointed star shapes
+                    ctx.beginPath();
+                    for(let i=0; i<5; i++) {
+                        ctx.lineTo(p.x + Math.cos((18 + i*72)*Math.PI/180)*p.size, p.y + Math.sin((18 + i*72)*Math.PI/180)*p.size);
+                        ctx.lineTo(p.x + Math.cos((54 + i*72)*Math.PI/180)*(p.size/2), p.y + Math.sin((54 + i*72)*Math.PI/180)*(p.size/2));
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+
+                    p.x += p.sx;
+                    p.y += p.sy;
+                    p.sy += 0.2; // simulated gravity track
+                    p.life--;
+                }
+            });
+
+            if(alive) {
+                requestAnimationFrame(drawConfetti);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+    </script>
 </body>
 </html>

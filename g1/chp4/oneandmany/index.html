@@ -8,15 +8,14 @@
     <style>
         :root {
             /* MAGIC FOREST & SUNSET PALETTE */
-            --forest-deep: #1E4620; /* Deep Jungle Moss */
-            --mint-light: #E8F5E9; /* Soft Pastel Grass */
-            --sunset-orange: #FB8500; /* Warm Sunset */
-            --sunset-gold: #FFB703; /* Bright Sun */
-            --success-green: #2D6A4F; /* Emerald Leaf */
-            --wrong-watermelon: #D90429; /* Red Berry */
-            --card-base: #F4F9F4; /* Creamy Mint Milk */
+            --forest-deep: #1E4620; 
+            --mint-light: #E8F5E9; 
+            --sunset-orange: #FB8500; 
+            --sunset-gold: #FFB703; 
+            --success-green: #2D6A4F; 
+            --wrong-watermelon: #D90429; 
+            --card-base: #F4F9F4; 
             --text-dark: #132A13;
-            --text-muted: #52796F;
             --font-head: 'Fredoka One', cursive;
             --font-body: 'Quicksand', sans-serif;
         }
@@ -30,96 +29,43 @@
         body {
             font-family: var(--font-body);
             background: linear-gradient(135deg, #D8F3DC 0%, #A3E4D7 100%);
-            overflow: hidden;
-            position: relative;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px;
         }
-
-        /* --- AMBIENT FLOATING LEAF/CLOVER ANIMATION --- */
-        .ambient-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .leaf-shape {
-            position: absolute;
-            background-color: rgba(45, 106, 79, 0.12);
-            border-radius: 80% 0 80% 0;
-            transform-origin: center;
-            animation: leafTumble 14s infinite ease-in-out;
-        }
-        @keyframes leafTumble {
-            0% { transform: translateY(105vh) translateX(0px) rotate(0deg) scale(0.8); }
-            50% { transform: translateY(50vh) translateX(50px) rotate(180deg) scale(1.1); }
-            100% { transform: translateY(-15vh) translateX(-30px) rotate(360deg) scale(0.8); }
-        }
-
-        /* --- BRANDING OVERLAY (5 Seconds Rule) --- */
-        #brand-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #FFFFFF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease-out;
-        }
-        #brand-overlay img {
-            max-width: 240px;
-            height: auto;
-            margin-bottom: 25px;
-        }
-        .load-container {
-            width: 180px; height: 8px; background: #E0E0E0; border-radius: 4px; overflow: hidden;
-        }
-        .load-progress {
-            width: 0%; height: 100%; background: var(--sunset-orange);
-            animation: progress 5s linear forwards;
-        }
-        @keyframes progress { to { width: 100%; } }
 
         /* --- CARD CONTAINER --- */
         .game-container {
-            width: 95%;
-            max-width: 740px;
-            z-index: 10;
+            width: 100%;
+            max-width: 650px;
         }
+        
         .card {
             background-color: var(--card-base);
-            border-radius: 35px;
-            padding: 40px;
-            box-shadow: 0 22px 0px var(--forest-deep), 0 30px 50px rgba(0,0,0,0.15);
-            border: 6px solid #FFFFFF;
-            position: relative;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 16px 0px var(--forest-deep), 0 25px 40px rgba(0,0,0,0.15);
+            border: 5px solid #FFFFFF;
+            max-height: 92vh;
+            overflow-y: auto; /* Adds inner scroll if elements get too tall */
         }
 
         .screen { display: none; }
-        .screen.active {
-            display: block;
-            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes popUp {
-            from { opacity: 0; transform: scale(0.85) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .screen.active { display: block; }
 
         /* --- TYPOGRAPHY --- */
         h1 {
             font-family: var(--font-head);
-            font-size: 2.4rem;
+            font-size: 2rem;
             color: var(--forest-deep);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
             text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
         }
-        .intro-p { font-size: 1.3rem; color: var(--text-dark); text-align: center; line-height: 1.6; margin-bottom: 35px; }
-        .meta-text { font-size: 0.95rem; color: var(--sunset-orange); text-align: center; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
+        .intro-p { font-size: 1.1rem; color: var(--text-dark); text-align: center; line-height: 1.5; margin-bottom: 25px; }
+        .meta-text { font-size: 0.85rem; color: var(--sunset-orange); text-align: center; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
 
         /* SUNSET ACTION BUTTONS */
         .btn {
@@ -128,97 +74,74 @@
             background: linear-gradient(135deg, var(--sunset-orange) 0%, #FFB703 100%);
             color: white;
             border: none;
-            padding: 18px 30px;
-            border-radius: 24px;
+            padding: 15px 25px;
+            border-radius: 20px;
             font-family: var(--font-head);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.1s ease;
             text-align: center;
-            box-shadow: 0 8px 0px #C76200;
+            box-shadow: 0 6px 0px #C76200;
+            margin-top: 15px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 0px #C76200; }
-        .btn:active { transform: translateY(6px); box-shadow: 0 2px 0px #C76200; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0px #C76200; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #C76200; }
 
         /* --- TRACKERS --- */
         .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 5px dashed #CEDFCE;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 4px dashed #CEDFCE;
         }
         .tracker-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
             font-weight: 700;
             color: var(--forest-deep);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
         }
         .q-count { color: var(--sunset-orange); font-family: var(--font-head); }
         .s-count { color: var(--success-green); font-family: var(--font-head); }
-        
-        .timer-box {
-            background-color: #FFF2CC;
-            color: #7F6000;
-            border: 2px dashed #FFD166;
-            font-weight: 700;
-            padding: 8px 20px;
-            border-radius: 20px;
-            min-width: 95px; text-align: center;
-        }
-        .timer-box.urgent {
-            animation: emergencyPulse 0.6s infinite alternate;
-        }
-        @keyframes emergencyPulse {
-            from { background-color: #FFF2CC; color: #7F6000; }
-            to { background-color: var(--wrong-watermelon); color: white; transform: scale(1.08); }
-        }
 
         /* --- QUESTION TEXT --- */
         h2.question-title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: var(--text-dark);
-            margin-bottom: 25px;
-            line-height: 1.5;
+            margin-bottom: 15px;
+            line-height: 1.4;
             font-weight: 700;
             background: #EAF4EA;
-            padding: 20px;
-            border-radius: 20px;
+            padding: 15px;
+            border-radius: 15px;
             border-left: 6px solid var(--success-green);
         }
 
         /* --- BOUNCY JUNGLE BUBBLE TILES --- */
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         .option-tile {
             background-color: #FFFFFF;
-            border: 5px solid #E2EFE0;
-            padding: 20px;
-            border-radius: 25px;
+            border: 4px solid #E2EFE0;
+            padding: 14px;
+            border-radius: 18px;
             text-align: left;
             font-family: var(--font-body);
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
             color: var(--text-dark);
             box-shadow: 0 4px 0px #D0E3CD;
+            width: 100%;
         }
         .option-tile:hover:not(:disabled) {
-            transform: scale(1.04) translateY(-2px);
             border-color: var(--sunset-gold);
-            box-shadow: 0 6px 15px rgba(251,133,0,0.15);
             background-color: #FFFDF7;
         }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
         .option-tile.correct {
             background-color: #E8F5E9 !important;
@@ -232,27 +155,18 @@
             border-color: var(--wrong-watermelon) !important;
             box-shadow: 0 4px 0px #800016 !important;
         }
-        .option-tile.correct::after { content: '🌿'; position: absolute; top: 15px; right: 20px; font-size: 1.2rem; }
-        .option-tile.wrong::after { content: '🍂'; position: absolute; top: 15px; right: 20px; font-size: 1.2rem; }
 
         /* --- FEEDBACK BOXES --- */
         .feedback-box {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 22px;
-            font-size: 1.1rem;
-            line-height: 1.6;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 1rem;
+            line-height: 1.5;
             display: none;
-            animation: elementReveal 0.3s ease-out;
-        }
-        .feedback-box.visible { display: block; }
-        @keyframes elementReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .feedback-box.retry {
-            background-color: #FFF9E6; color: #664D03; border: 3px solid var(--sunset-gold);
-        }
-        .feedback-box.reveal {
-            background-color: #E2ECE9; color: var(--forest-deep); border: 3px solid var(--success-green);
+            background-color: #E2ECE9; 
+            color: var(--forest-deep); 
+            border: 3px solid var(--success-green);
         }
 
         /* --- SUMMARY MEDAL --- */
@@ -260,29 +174,20 @@
             background: radial-gradient(circle, var(--sunset-gold) 0%, var(--sunset-orange) 100%);
             color: white;
             font-family: var(--font-head);
-            font-size: 4rem;
-            width: 150px; height: 150px;
+            font-size: 3.5rem;
+            width: 120px; height: 120px;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            margin: 25px auto;
-            box-shadow: 0 10px 25px rgba(251,133,0,0.3);
-            border: 6px solid #FFFFFF;
+            margin: 20px auto;
+            box-shadow: 0 8px 20px rgba(251,133,0,0.3);
+            border: 5px solid #FFFFFF;
         }
         .badge {
-            font-family: var(--font-head); font-size: 1.8rem; color: var(--forest-deep); text-align: center; margin-bottom: 25px;
+            font-family: var(--font-head); font-size: 1.5rem; color: var(--forest-deep); text-align: center; margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-
-    <div class="ambient-layer" id="leaf-box"></div>
-
-    <div id="brand-overlay">
-        <img src="assets/logo.png" alt="Innovine" onerror="this.style.display='none';">
-        <div class="load-container">
-            <div class="load-progress"></div>
-        </div>
-    </div>
 
     <div class="game-container">
         <div class="card">
@@ -296,8 +201,7 @@
 
             <div id="scr-quiz" class="screen">
                 <div class="game-header">
-                    <div class="tracker-item">🌳 Q: <span class="q-count" id="curr-idx">1</span>/<span id="max-idx">16</span></div>
-                    <div class="timer-box" id="timer-label">⏰ 60s</div>
+                    <div class="tracker-item">🌳 Q: <span class="q-count" id="curr-idx">1</span> / 16</div>
                     <div class="tracker-item">🍊 Score: <span class="s-count" id="score-label">0</span></div>
                 </div>
 
@@ -307,7 +211,7 @@
 
                 <div id="feedback-panel" class="feedback-box"></div>
                 
-                <button class="btn" id="next-action-btn" style="display: none; margin-top: 20px;" onclick="advanceQueue()">Next Challenge 🚀</button>
+                <button class="btn" id="next-action-btn" style="display: none;" onclick="advanceQueue()">Next Challenge 🚀</button>
             </div>
 
             <div id="scr-over" class="screen">
@@ -315,16 +219,12 @@
                 <h1>Amazing Discoveries!</h1>
                 <div class="score-medal" id="medal-score">0</div>
                 <div class="badge" id="evaluation-badge">Forest Ranger!</div>
-                <p id="evaluation-msg" style="text-align: center; color: var(--text-dark); margin-bottom: 30px; line-height: 1.5; padding: 0 10px;"></p>
-                <button class="btn" onclick="retryGame()">Play Again 🔄</button>
+                <p id="evaluation-msg" style="text-align: center; color: var(--text-dark); margin-bottom: 20px; line-height: 1.4;"></p>
+                <button class="btn" onclick="location.reload()">Play Again 🔄</button>
             </div>
 
         </div>
     </div>
-
-    <audio id="snd-yes" src="assets/correct.mp3" preload="auto"></audio>
-    <audio id="snd-no" src="assets/wrong.mp3" preload="auto"></audio>
-    <audio id="snd-cheer" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
     <script>
         const coreQuiz = [
@@ -426,140 +326,60 @@
             }
         ];
 
-        let playHead = 0; let points = 0; let clockCount = 60;
-        let engineTimer = null; let contextAttempts = 0;
-
-        const soundYes = document.getElementById('snd-yes');
-        const soundNo = document.getElementById('snd-no');
-        const soundCheer = document.getElementById('snd-cheer');
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initLeafBackground();
-            document.getElementById('max-idx').innerText = coreQuiz.length;
-            setTimeout(() => {
-                const overlay = document.getElementById('brand-overlay');
-                if(overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 600);
-                }
-            }, 5000);
-        });
-
-        function initLeafBackground() {
-            try {
-                const container = document.getElementById('leaf-box');
-                for(let i=0; i<14; i++) {
-                    const l = document.createElement('div');
-                    l.classList.add('leaf-shape');
-                    const w = Math.random() * 25 + 15;
-                    l.style.width = w + 'px'; l.style.height = (w * 1.4) + 'px';
-                    l.style.left = Math.random() * 100 + 'vw';
-                    l.style.animationDuration = (Math.random() * 6 + 10) + 's';
-                    l.style.animationDelay = (Math.random() * 5) + 's';
-                    container.appendChild(l);
-                }
-            } catch(e) {}
-        }
+        let playHead = 0; 
+        let points = 0;
 
         function initGame() {
             document.getElementById('scr-intro').classList.remove('active');
             document.getElementById('scr-quiz').classList.add('active');
-            playHead = 0; points = 0;
+            playHead = 0; 
+            points = 0;
             document.getElementById('score-label').innerText = points;
             buildQuestionLayout();
         }
 
         function buildQuestionLayout() {
-            contextAttempts = 0;
             const data = coreQuiz[playHead];
             document.getElementById('curr-idx').innerText = playHead + 1;
             document.getElementById('question-text').innerHTML = data.q.replace(/\n/g, '<br>');
             
             const holder = document.getElementById('options-holder');
             holder.innerHTML = '';
-            document.getElementById('feedback-panel').className = 'feedback-box';
+            
+            document.getElementById('feedback-panel').style.display = 'none';
             document.getElementById('next-action-btn').style.display = 'none';
 
             data.o.forEach((opt, idx) => {
                 const b = document.createElement('button');
                 b.classList.add('option-tile');
                 b.innerText = opt;
-                b.onclick = () => monitorInput(idx, b);
+                b.onclick = () => verifySelection(idx, b);
                 holder.appendChild(b);
             });
-            triggerClock();
         }
 
-        function triggerClock() {
-            clearInterval(engineTimer); clockCount = 60;
-            const lbl = document.getElementById('timer-label');
-            lbl.innerText = "⏰ " + clockCount + "s";
-            lbl.classList.remove('urgent');
-
-            engineTimer = setInterval(() => {
-                clockCount--;
-                lbl.innerText = "⏰ " + clockCount + "s";
-                if(clockCount <= 10) lbl.classList.add('urgent');
-                if(clockCount <= 0) { clearInterval(engineTimer); clockExpiry(); }
-            }, 1000);
-        }
-
-        function monitorInput(selected, element) {
+        function verifySelection(selected, element) {
             const data = coreQuiz[playHead];
             const panel = document.getElementById('feedback-panel');
-            const collection = document.querySelectorAll('.option-tile');
+            const tiles = document.querySelectorAll('.option-tile');
+
+            // Freeze all choices immediately
+            tiles.forEach(t => t.disabled = true);
 
             if(selected === data.c) {
-                clearInterval(engineTimer);
                 element.classList.add('correct');
-                freezeTiles();
-                
-                if(contextAttempts === 0) {
-                    points++;
-                    document.getElementById('score-label').innerText = points;
-                }
-                
-                panel.className = "feedback-box reveal visible";
+                points++;
+                document.getElementById('score-label').innerText = points;
                 panel.innerHTML = `<strong>Splendid! You got it!</strong> ${data.x}`;
-                document.getElementById('next-action-btn').style.display = 'block';
-
-                try { soundYes.play(); } catch(e){}
             } else {
-                contextAttempts++;
-                try { soundNo.play(); } catch(e){}
-                
-                if(contextAttempts === 1) {
-                    element.classList.add('wrong');
-                    element.disabled = true; 
-                    panel.className = "feedback-box retry visible";
-                    panel.innerHTML = "<strong>Don't worry! Try one more time!</strong> Look closely at the word ending or meaning.";
-                } else {
-                    clearInterval(engineTimer);
-                    element.classList.add('wrong');
-                    freezeTiles();
-                    if(collection[data.c]) collection[data.c].classList.add('correct');
-                    
-                    panel.className = "feedback-box reveal visible";
-                    panel.innerHTML = `<strong>Let's learn!</strong> ${data.x}`;
-                    document.getElementById('next-action-btn').style.display = 'block';
-                }
+                element.classList.add('wrong');
+                if(tiles[data.c]) tiles[data.c].classList.add('correct');
+                panel.innerHTML = `<strong>Let's learn!</strong> ${data.x}`;
             }
-        }
 
-        function clockExpiry() {
-            freezeTiles();
-            const data = coreQuiz[playHead];
-            const panel = document.getElementById('feedback-panel');
-            const collection = document.querySelectorAll('.option-tile');
-            if(collection[data.c]) collection[data.c].classList.add('correct');
-            
-            panel.className = "feedback-box reveal visible";
-            panel.innerHTML = `<strong>Time flew away!</strong> ${data.x}`;
+            // Always display feedback panel and next action button instantly
+            panel.style.display = 'block';
             document.getElementById('next-action-btn').style.display = 'block';
-        }
-
-        function freezeTiles() {
-            document.querySelectorAll('.option-tile').forEach(b => b.disabled = true);
         }
 
         function advanceQueue() {
@@ -572,7 +392,6 @@
         }
 
         function displaySummary() {
-            clearInterval(engineTimer);
             document.getElementById('scr-quiz').classList.remove('active');
             document.getElementById('scr-over').classList.add('active');
             document.getElementById('medal-score').innerText = points;
@@ -584,19 +403,13 @@
             if(rate >= 0.85) {
                 badge.innerText = "🏆 Forest Ranger!";
                 msg.innerText = "Exceptional work! You know exactly when to use -s and -es to show many things!";
-                try { soundCheer.play(); } catch(e){}
             } else if(rate >= 0.5) {
                 badge.innerText = "🌟 Great Effort!";
-                msg.innerText = "Wonderful job! You match singular and plural words nicely. Give it another play to unlock a perfect score!";
+                msg.innerText = "Wonderful job! Give it another play to unlock a perfect score!";
             } else {
                 badge.innerText = "📚 Explorer Kid!";
-                msg.innerText = "Good try! Reading more words that end with s, x, ch, or sh will make this super easy next time. Let's try again!";
+                msg.innerText = "Good try! Reading more words that end with s, x, ch, or sh will make this super easy next time.";
             }
-        }
-
-        function retryGame() {
-            document.getElementById('scr-over').classList.remove('active');
-            initGame();
         }
     </script>
 </body>

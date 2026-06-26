@@ -1,1 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 1 Grammar Quest: Sweet Pronouns! 🍭</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-candy: #FFE5EC;
+            --bubblegum-pink: #FF85A2;
+            --lollipop-purple: #9B5DE5;
+            --mint-green: #00F5D4;
+            --cotton-candy-blue: #79CCFC;
+            --marshmallow-white: #FFF0F5;
+            --text-dark: #4A2840;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--bg-candy) 0%, #FFF0F3 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Performance-Safe Background Streamers */
+        .streamer {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatAmbient 12s infinite linear;
+        }
+        @keyframes floatAmbient {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Mandatory Branding Screen (First 5 Seconds Overlay) */
+        #brand-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .brand-logo {
+            max-width: 220px;
+            max-height: 120px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .brand-loading-bar {
+            width: 150px;
+            height: 6px;
+            background: #EEE;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .brand-loading-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--lollipop-purple);
+            animation: loadSplash 5s linear forwards;
+        }
+
+        @keyframes loadSplash {
+            to { width: 100%; }
+        }
+
+        /* Intro Screen State Layout */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            margin: auto;
+            max-width: 500px;
+            z-index: 10;
+        }
+
+        .intro-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 36px;
+            color: var(--lollipop-purple);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        .intro-card {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 12px 24px rgba(74, 40, 64, 0.06);
+            border: 4px solid white;
+            width: 100%;
+        }
+
+        .start-btn {
+            background: var(--bubblegum-pink);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #D15674;
+            transition: all 0.1s ease;
+            margin-top: 20px;
+        }
+
+        .start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #D15674;
+        }
+
+        /* Interactive Main Game Container Layout */
+        #game-container {
+            display: none;
+            width: 90%;
+            max-width: 650px;
+            margin: auto;
+            padding: 20px 0;
+            z-index: 10;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stats-pill {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 15px;
+            border: 3px solid var(--cotton-candy-blue);
+            box-shadow: 0 4px 0 var(--cotton-candy-blue);
+        }
+
+        /* Visual Timer Track Circle/Bar */
+        .timer-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid white;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--mint-green);
+            transition: width 1s linear, background-color 0.3s ease;
+        }
+
+        /* Dynamic Main Question Quiz Card Layout */
+        .quiz-card {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 12px 0px rgba(255, 133, 162, 0.15), 0 16px 24px rgba(74, 40, 64, 0.06);
+            border: 4px solid white;
+            position: relative;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: var(--marshmallow-white);
+            color: var(--lollipop-purple);
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 2px dashed var(--lollipop-purple);
+        }
+
+        .question-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .blank {
+            display: inline-block;
+            border-bottom: 3px dashed var(--bubblegum-pink);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .option-btn {
+            background: var(--marshmallow-white);
+            border: 3px solid #FFE0E9;
+            border-radius: 16px;
+            padding: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 #FFE0E9;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #FFE0E9;
+            border-color: var(--bubblegum-pink);
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #FFE0E9;
+        }
+
+        .option-badge {
+            background: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            color: var(--bubblegum-pink);
+            border: 2px solid #FFE0E9;
+            flex-shrink: 0;
+        }
+
+        /* Option Validation Visual Modifiers */
+        .option-btn.correct {
+            background: #E8FFF9 !important;
+            border-color: var(--mint-green) !important;
+            box-shadow: 0 4px 0 var(--mint-green) !important;
+        }
+        .option-btn.correct .option-badge {
+            background: var(--mint-green);
+            color: white;
+            border-color: var(--mint-green);
+        }
+
+        .option-btn.wrong-once {
+            background: #FFF0F3 !important;
+            border-color: #FFA4BA !important;
+            box-shadow: 0 4px 0 #FFA4BA !important;
+            opacity: 0.8;
+        }
+
+        .option-btn.wrong-final {
+            background: #FFEBEF !important;
+            border-color: var(--bubblegum-pink) !important;
+            box-shadow: 0 4px 0 var(--bubblegum-pink) !important;
+        }
+        .option-btn.wrong-final .option-badge {
+            background: var(--bubblegum-pink);
+            color: white;
+            border-color: var(--bubblegum-pink);
+        }
+
+        .option-btn.disabled {
+            pointer-events: none;
+        }
+
+        /* Gentle Feedback Elements overlay */
+        .attempt-indicator {
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #C32F51;
+            display: none;
+            text-align: center;
+        }
+
+        .explanation-box {
+            margin-top: 15px;
+            background: #FFFDF7;
+            border-left: 5px solid var(--lollipop-purple);
+            border-radius: 8px;
+            padding: 12px;
+            display: none;
+        }
+
+        .explanation-box p {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .action-btn {
+            margin-top: 15px;
+            width: 100%;
+            background: var(--lollipop-purple);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 16px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #7A39C4;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #7A39C4;
+        }
+
+        /* Results Summary Screen Display */
+        #results-screen {
+            display: none;
+            text-align: center;
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            z-index: 10;
+        }
+
+        .score-hero {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--bubblegum-pink);
+            margin: 15px 0;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        /* Full Canvas Renderers Layer */
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fx-canvas"></canvas>
+
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-cheer" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+    <div id="brand-splash">
+        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo" id="brand-img">
+        <div class="brand-loading-bar">
+            <div class="brand-loading-fill"></div>
+        </div>
+    </div>
+
+    <div id="intro-screen">
+        <h1 class="intro-title">Sweet Pronouns! 🍭</h1>
+        <div class="intro-card">
+            <p style="font-weight:700; font-size:16px; margin-bottom:15px;">Welcome to your Grammar Challenge! Can you score a perfect 15/15 on today's pronoun quests?</p>
+            <p style="font-size:13px; color:#777; margin-bottom:20px;">⚡ Rules: 60 seconds per question. You get 1 retry if you make a mistake!</p>
+            <button class="start-btn" onclick="startQuizEngine()">Start Quest ✨</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <header>
+            <div class="stats-pill">🍬 Q: <span id="ui-current-q">1</span>/15</div>
+            <div class="stats-pill" style="border-color:var(--bubblegum-pink); box-shadow:0 4px 0 var(--bubblegum-pink);">⭐ Score: <span id="ui-score">0</span></div>
+        </header>
+
+        <div class="timer-container">
+            <div id="timer-bar" class="timer-bar"></div>
+        </div>
+
+        <div class="quiz-card">
+            <div id="q-tag" class="tag-pill">Scenario-Based</div>
+            <div id="q-text" class="question-text">Loading question details...</div>
+            
+            <div id="options-grid" class="options-grid"></div>
+
+            <div id="retry-hint" class="attempt-indicator">❌ Oops! Let's try that one more time. You can do it!</div>
+
+            <div id="explanation-box" class="explanation-box">
+                <p><strong>💡 Explanation:</strong> <span id="explanation-text"></span></p>
+            </div>
+
+            <button id="action-button" class="action-btn" onclick="handleActionClick()">Next Question 🌟</button>
+        </div>
+    </div>
+
+    <div id="results-screen">
+        <h1 class="intro-title" id="results-title">Fantastic Job!</h1>
+        <div class="intro-card">
+            <div style="font-size:50px;">🏆</div>
+            <div class="score-hero"><span id="final-score">0</span> / 15</div>
+            <p id="results-msg" style="font-weight:700; margin-bottom:25px;"></p>
+            <button class="start-btn" style="background:var(--mint-green); box-shadow:0 6px 0 #00BFA5; color:#004D40;" onclick="resetQuizEngine()">Play Again 🍩</button>
+        </div>
+    </div>
+
+    <script>
+        // Production Competency Quiz Dataset Architecture
+        const database = [
+            { tag: "Scenario-Based – Replacing a Name", question: 'A child says, "Anaya is drawing a picture. Anaya is using crayons." Which word can replace the second "Anaya"?', options: ["He", "She", "They", "It"], answer: "She", explanation: "We use she for one girl." },
+            { tag: "Application-Based – Talking About Friends", question: 'Two friends are playing football together. Which word can replace "the two friends"?', options: ["He", "She", "They", "It"], answer: "They", explanation: "We use they for more than one person." },
+            { tag: "Scenario-Based – Family Context", question: 'A child points to his father and says, "<span class="blank"></span> is reading a newspaper."', options: ["He", "She", "They", "It"], answer: "He", explanation: "We use he for one male person." },
+            { tag: "Decision-Based – Choosing the Best Pronoun", question: 'A teacher says, "Do not repeat names again and again while speaking." What can children use instead?', options: ["Pronouns", "Colours", "Numbers", "Shapes"], answer: "Pronouns", explanation: "Pronouns help replace naming words." },
+            { tag: "Application-Based – Animal Context", question: 'A puppy is sleeping in a basket. Which word can replace "the puppy"?', options: ["They", "It", "We", "She"], answer: "It", explanation: "We often use it for animals when gender is not known." },
+            { tag: "Classification with Reasoning", question: 'Which group contains only pronouns?', options: ["he, she, they", "boy, girl, dog", "run, jump, play", "school, park, home"], answer: "he, she, they", explanation: "He, she and they are pronouns." },
+            { tag: "Scenario-Based – Classroom Context", question: 'A teacher and a student are carrying books together. Which word can replace "the teacher and the student"?', options: ["He", "She", "It", "They"], answer: "They", explanation: "We use they for more than one person." },
+            { tag: "Application-Based – Talking About Yourself", question: 'A child says, "<span class="blank"></span> am going to school."', options: ["I", "He", "They", "It"], answer: "I", explanation: "We use I when talking about ourselves." },
+            { tag: "Error Detection – Choosing the Correct Pronoun", question: 'A child points to her grandmother and says, "He is telling me a story." Which word should be used instead?', options: ["She", "They", "It", "We"], answer: "She", explanation: "We use she for one female person." },
+            { tag: "Scenario-Based – Working Together", question: 'You and your friend are making a chart together. Which word can replace "you and your friend"?', options: ["He", "She", "We", "It"], answer: "We", explanation: "We use we when talking about ourselves and others." },
+            { tag: "Application-Based – School Assembly", question: 'Many students are singing the national anthem. Which word can replace "the students"?', options: ["He", "She", "It", "They"], answer: "They", explanation: "They refers to more than one person." },
+            { tag: "Decision-Based – Choosing a Pronoun", question: 'A child wants to talk about one girl without repeating her name. Which word should be used?', options: ["He", "She", "They", "It"], answer: "She", explanation: "She is used for one female person." },
+            { tag: "Classification with Reasoning", question: 'Which pronoun would best replace "Rahul and Kabir"?', options: ["He", "She", "They", "It"], answer: "They", explanation: "Rahul and Kabir means more than one person." },
+            { tag: "Scenario-Based – Pet Context", question: 'A child sees a kitten playing with a ball. Which sentence is correct?', options: ["It is playing with a ball.", "They is playing with a ball.", "He are playing with a ball.", "She are playing with a ball."], answer: "It is playing with a ball.", explanation: "It can be used for one animal when gender is not known." },
+            { tag: "Big Idea – Why We Use Pronouns", question: 'Why do we use pronouns?', options: ["To replace naming words and make sentences easier to say", "To tell colours", "To count objects", "To measure things"], answer: "To replace naming words and make sentences easier to say", explanation: "Pronouns help us avoid repeating names again and again." }
+        ];
+
+        // Strict Configuration Matrices
+        let index = 0, score = 0, clock = 60, currentAttempt = 1;
+        let timerTicker = null, fxParticles = [], fxLoop = null, currentWrongCross = null;
+
+        const fxCanvas = document.getElementById("fx-canvas");
+        const fxCtx = fxCanvas.getContext("2d");
+
+        // Initialization Handling Setup
+        window.addEventListener("load", () => {
+            setupResponsiveCanvas();
+            spawnAmbientStreamers();
+            // Fallback rule if logo graphic missing
+            document.getElementById("brand-img").onerror = function() { this.style.display='none'; };
+            // Clear Splash Screen seamlessly after 5s matching structural mandate
+            setTimeout(() => {
+                const splash = document.getElementById("brand-splash");
+                splash.style.opacity = 0;
+                setTimeout(() => splash.style.display = "none", 500);
+            }, 5000);
+        });
+
+        window.addEventListener("resize", setupResponsiveCanvas);
+        function setupResponsiveCanvas() {
+            fxCanvas.width = window.innerWidth;
+            fxCanvas.height = window.innerHeight;
+        }
+
+        // Ambient Floating Background System Setup
+        function spawnAmbientStreamers() {
+            for(let i=0; i<8; i++){
+                const element = document.createElement("div");
+                element.className = "streamer";
+                element.style.width = element.style.height = `${Math.random()*40 + 20}px`;
+                element.style.left = `${Math.random()*100}vw`;
+                element.style.animationDelay = `${Math.random()*8}s`;
+                element.style.animationDuration = `${Math.random()*10 + 10}s`;
+                document.body.appendChild(element);
+            }
+        }
+
+        // Audio Handler
+        function fireAudio(id) {
+            const player = document.getElementById(id);
+            if(player) { player.currentTime = 0; player.play().catch(()=>{}); }
+        }
+
+        // Core Quiz Lifecycle Engines
+        function startQuizEngine() {
+            document.getElementById("intro-screen").style.display = "none";
+            document.getElementById("game-container").style.display = "block";
+            loadQuestionCard();
+        }
+
+        function loadQuestionCard() {
+            clearInterval(timerTicker);
+            currentAttempt = 1;
+            currentWrongCross = null;
+            document.getElementById("retry-hint").style.display = "none";
+            document.getElementById("explanation-box").style.display = "none";
+            document.getElementById("action-button").style.display = "none";
+
+            const data = database[index];
+            document.getElementById("ui-current-q").textContent = index + 1;
+            document.getElementById("ui-score").textContent = score;
+            document.getElementById("q-tag").textContent = data.tag;
+            document.getElementById("q-text").innerHTML = data.question;
+
+            const grid = document.getElementById("options-grid");
+            grid.innerHTML = "";
+
+            const bLabels = ["A", "B", "C", "D"];
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerHTML = `<span class="option-badge">${bLabels[idx]}</span> <span class="txt-node"></span>`;
+                btn.querySelector(".txt-node").textContent = opt;
+                btn.onclick = () => validateSelection(btn, opt);
+                grid.appendChild(btn);
+            });
+
+            startQuestionCountdown();
+        }
+
+        // Timer Mechanics Engine
+        function startQuestionCountdown() {
+            clock = 60; // Hardcoded 60s rule constraint for Grade 1
+            const bar = document.getElementById("timer-bar");
+            bar.style.width = "100%";
+            bar.style.backgroundColor = "var(--mint-green)";
+
+            timerTicker = setInterval(() => {
+                clock--;
+                const pct = (clock / 60) * 100;
+                bar.style.width = `${pct}%`;
+
+                if(clock <= 15) bar.style.backgroundColor = "var(--bubblegum-pink)";
+                
+                if(clock <= 0) {
+                    clearInterval(timerTicker);
+                    forceTimeoutReveal();
+                }
+            }, 1000);
+        }
+
+        // Runtime Option Selection Matrix
+        function validateSelection(selectedBtn, val) {
+            const data = database[index];
+            const allBtns = document.querySelectorAll(".option-btn");
+
+            if(val === data.answer) {
+                // Correct Answer Path Flow
+                clearInterval(timerTicker);
+                selectedBtn.classList.add("correct");
+                freezeInteraction();
+                score++;
+                document.getElementById("ui-score").textContent = score;
+                fireAudio("audio-correct");
+                triggerStarConfetti();
+                exposeExplanation();
+            } else {
+                // Incorrect Option Path Flow
+                if(currentAttempt === 1) {
+                    currentAttempt = 2;
+                    selectedBtn.classList.add("wrong-once");
+                    selectedBtn.classList.add("disabled"); // Lock this node out of subsequent click operations
+                    document.getElementById("retry-hint").style.display = "block";
+                    fireAudio("audio-wrong");
+                    triggerRedCrossOverlay();
+                } else {
+                    // Second Attempt Exhausted
+                    clearInterval(timerTicker);
+                    selectedBtn.classList.add("wrong-final");
+                    fireAudio("audio-wrong");
+                    triggerRedCrossOverlay();
+                    
+                    allBtns.forEach(b => {
+                        if(b.querySelector(".txt-node").textContent === data.answer) {
+                            b.classList.add("correct");
+                        }
+                    });
+                    freezeInteraction();
+                    document.getElementById("retry-hint").style.display = "none";
+                    exposeExplanation();
+                }
+            }
+        }
+
+        // Action Trigger Framework
+        function forceTimeoutReveal() {
+            const data = database[index];
+            const allBtns = document.querySelectorAll(".option-btn");
+            triggerRedCrossOverlay();
+            fireAudio("audio-wrong");
+            allBtns.forEach(b => {
+                if(b.querySelector(".txt-node").textContent === data.answer) b.classList.add("correct");
+            });
+            freezeInteraction();
+            exposeExplanation();
+        }
+
+        function freezeInteraction() {
+            document.querySelectorAll(".option-btn").forEach(b => b.classList.add("disabled"));
+        }
+
+        function exposeExplanation() {
+            document.getElementById("explanation-text").textContent = database[index].explanation;
+            document.getElementById("explanation-box").style.display = "block";
+            
+            const actionBtn = document.getElementById("action-button");
+            actionBtn.textContent = (index === database.length - 1) ? "View Summary Finish ✨" : "Next Sweet Question 🌟";
+            actionBtn.style.display = "flex";
+        }
+
+        function handleActionClick() {
+            if(index < database.length - 1) {
+                index++;
+                loadQuestionCard();
+            } else {
+                renderFinalSummary();
+            }
+        }
+
+        // Final Challenge/Score Evaluation Engine
+        function renderFinalSummary() {
+            document.getElementById("game-container").style.display = "none";
+            document.getElementById("results-screen").style.display = "block";
+            document.getElementById("final-score").textContent = score;
+
+            const t = document.getElementById("results-title");
+            const m = document.getElementById("results-msg");
+
+            if(score >= 13) {
+                t.textContent = "Superstar Crown! 👑";
+                m.textContent = "Amazing job! You have mastered pronouns perfectly! Go grab a real sweet treat!";
+                fireAudio("audio-cheer");
+            } else if(score >= 9) {
+                t.textContent = "Wonderful Effort! 🧁";
+                m.textContent = "Great job! You know your pronouns well, but you can get a perfect score next time!";
+            } else {
+                t.textContent = "Keep Practicing! 🍩";
+                m.textContent = "Good try! Reading the grammar tips will help you grow into a powerhouse speaker.";
+            }
+        }
+
+        function resetQuizEngine() {
+            index = 0; score = 0;
+            document.getElementById("results-screen").style.display = "none";
+            document.getElementById("intro-screen").style.display = "flex";
+        }
+
+        // Specialized Visual FX Layer Generators
+        function triggerStarConfetti() {
+            cancelAnimationFrame(fxLoop);
+            fxParticles = [];
+            for(let i=0; i<60; i++){
+                fxParticles.push({
+                    x: fxCanvas.width / 2,
+                    y: fxCanvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.6) * 14 - 4,
+                    size: Math.random() * 6 + 4,
+                    color: ['#FF85A2', '#9B5DE5', '#00F5D4', '#79CCFC', '#FFBE0B'][Math.floor(Math.random()*5)],
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.015
+                });
+            }
+            runParticleLoop();
+        }
+
+        function triggerRedCrossOverlay() {
+            currentWrongCross = { scale: 0, opacity: 1 };
+            if(fxParticles.length === 0) runParticleLoop();
+        }
+
+        function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function runParticleLoop() {
+            fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+            let active = false;
+
+            // Render Confetti Star Arrays
+            fxParticles.forEach((p, idx) => {
+                if(p.alpha > 0) {
+                    active = true;
+                    fxCtx.globalAlpha = p.alpha;
+                    drawStar(fxCtx, p.x, p.y, 5, p.size * 2, p.size, p.color);
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3; // Simulated gravity acceleration values
+                    p.alpha -= p.decay;
+                }
+            });
+
+            // Render Transient Red Error Cross
+            if(currentWrongCross && currentWrongCross.opacity > 0) {
+                active = true;
+                fxCtx.globalAlpha = currentWrongCross.opacity;
+                fxCtx.strokeStyle = "rgba(242,84,119,1)";
+                fxCtx.lineWidth = 14;
+                fxCtx.lineCap = "round";
+
+                const cx = fxCanvas.width / 2;
+                const cy = fxCanvas.height / 2;
+                const sz = 40 * currentWrongCross.scale;
+
+                fxCtx.beginPath();
+                fxCtx.moveTo(cx - sz, cy - sz);
+                fxCtx.lineTo(cx + sz, cy + sz);
+                fxCtx.moveTo(cx + sz, cy - sz);
+                fxCtx.lineTo(cx - sz, cy + sz);
+                fxCtx.stroke();
+
+                if(currentWrongCross.scale < 1) {
+                    currentWrongCross.scale += 0.15;
+                } else {
+                    currentWrongCross.opacity -= 0.03;
+                }
+            }
+
+            fxCtx.globalAlpha = 1.0; // Reset canvas structural transparency metrics
+            if(active) fxLoop = requestAnimationFrame(runParticleLoop);
+        }
+    </script>
+</body>
+</html>

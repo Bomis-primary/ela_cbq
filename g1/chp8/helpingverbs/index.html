@@ -20,10 +20,14 @@
       --radius:24px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
-      radial-gradient(circle at 10% 20%, rgba(255,255,255,.8) 0 12%, transparent 13%),
-      radial-gradient(circle at 80% 10%, rgba(255,255,255,.8) 0 10%, transparent 11%),
-      linear-gradient(135deg,var(--bg1),var(--bg2) 42%,var(--bg3));color:var(--ink);overflow-x:hidden}
+    html,body{
+      height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.8) 0 12%, transparent 13%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,.8) 0 10%, transparent 11%),
+        linear-gradient(135deg,var(--bg1),var(--bg2) 42%,var(--bg3));
+      color:var(--ink);overflow-x:hidden
+    }
     body::before,body::after{
       content:"";position:fixed;inset:-20vh -20vw;pointer-events:none;z-index:0;opacity:.35;
       background:
@@ -35,37 +39,69 @@
       filter: blur(.2px);
     }
     body::after{animation-duration:24s;opacity:.2;transform:scale(1.2)}
-    @keyframes drift{0%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(2vw,2vh,0) rotate(8deg)}100%{transform:translate3d(0,0,0) rotate(0deg)}}
-    .wrap{position:relative;z-index:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:14px}
-    .app{width:min(100%,980px);background:var(--card);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.6);border-radius:32px;box-shadow:var(--shadow);overflow:hidden}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(90deg,rgba(255,110,168,.14),rgba(124,124,255,.12));border-bottom:1px solid rgba(0,0,0,.04)}
-    .pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.05)}
+    @keyframes drift{
+      0%{transform:translate3d(0,0,0) rotate(0deg)}
+      50%{transform:translate3d(2vw,2vh,0) rotate(8deg)}
+      100%{transform:translate3d(0,0,0) rotate(0deg)}
+    }
+    .wrap{
+      position:relative;z-index:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:14px
+    }
+    .app{
+      width:min(100%,980px);background:var(--card);backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.6);border-radius:32px;box-shadow:var(--shadow);overflow:hidden
+    }
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;
+      background:linear-gradient(90deg,rgba(255,110,168,.14),rgba(124,124,255,.12));border-bottom:1px solid rgba(0,0,0,.04)
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;
+      font-size:14px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.05)
+    }
     .score{color:#ff4d95}
     .timer{color:#5b61ff}
     .content{padding:18px}
     .screen{display:none}
     .screen.active{display:block}
     .hero{display:grid;gap:18px;place-items:center;text-align:center;padding:26px 10px 14px}
-    .logoBox{width:min(240px,56vw);aspect-ratio:1;border-radius:28px;background:linear-gradient(145deg,#fff,#ffe7f1);box-shadow:inset 0 0 0 2px rgba(255,110,168,.15), 0 18px 40px rgba(255,110,168,.14);display:grid;place-items:center;overflow:hidden}
+    .logoBox{
+      width:min(240px,56vw);aspect-ratio:1;border-radius:28px;
+      background:linear-gradient(145deg,#fff,#ffe7f1);
+      box-shadow:inset 0 0 0 2px rgba(255,110,168,.15),0 18px 40px rgba(255,110,168,.14);
+      display:grid;place-items:center;overflow:hidden
+    }
     .logoBox img{max-width:80%;max-height:80%;object-fit:contain}
     h1{margin:0;font-size:clamp(28px,4vw,44px);line-height:1.05}
     .sub{margin:0;color:var(--muted);font-size:clamp(15px,2vw,18px);max-width:58ch}
     .grid{display:grid;gap:14px}
-    .card{background:#fff;border-radius:var(--radius);box-shadow:0 10px 28px rgba(67,42,84,.08);padding:16px}
+    .card{
+      background:#fff;border-radius:var(--radius);box-shadow:0 10px 28px rgba(67,42,84,.08);padding:16px
+    }
     .meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
-    .tag{background:#f8f4ff;border:1px solid #ebe5ff;color:#5a49a8;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}
+    .tag{
+      background:#f8f4ff;border:1px solid #ebe5ff;color:#5a49a8;border-radius:999px;padding:7px 11px;
+      font-size:13px;font-weight:700
+    }
     .qnum{font-weight:800;color:#ff4d95}
-    .question{font-size:clamp(18px,2.2vw,24px);font-weight:800;line-height:1.35;margin:4px 0 14px}
+    .question{
+      font-size:clamp(18px,2.2vw,24px);font-weight:800;line-height:1.35;margin:4px 0 14px
+    }
     .options{display:grid;gap:10px}
     .opt{
       border:1px solid #eadff3;border-radius:18px;padding:13px 14px;background:#fff;font-size:16px;
-      display:flex;align-items:flex-start;gap:12px;text-align:left;cursor:pointer;transition:.15s transform,.15s border-color,.15s background;
+      display:flex;align-items:flex-start;gap:12px;text-align:left;cursor:pointer;transition:.15s transform,.15s border-color,.15s background
     }
     .opt:hover{transform:translateY(-1px);border-color:#cdb8ff}
-    .opt .bubble{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f5eefb;font-weight:900;color:#6e58d8;flex:0 0 28px}
+    .opt .bubble{
+      width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f5eefb;
+      font-weight:900;color:#6e58d8;flex:0 0 28px
+    }
     .opt.correct{background:#ecfff4;border-color:#9be3b9}
     .opt.wrong{background:#fff1f1;border-color:#f3aaaa}
-    .feedback{min-height:28px;margin-top:12px;font-weight:700}
+    .feedback{
+      min-height:28px;margin-top:12px;font-weight:700
+    }
     .feedback.good{color:var(--good)}
     .feedback.bad{color:var(--bad)}
     .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
@@ -75,24 +111,35 @@
     }
     .btn.secondary{background:#eef1ff;color:#4a54c9;box-shadow:none}
     .btn:disabled{opacity:.55;cursor:not-allowed}
-    .bar{height:10px;background:#f2e9ff;border-radius:999px;overflow:hidden;margin-top:12px}
-    .bar > div{height:100%;width:0;background:linear-gradient(90deg,#ff73af,#8a7dff);border-radius:inherit;transition:width .25s ease}
+    .bar{
+      height:10px;background:#f2e9ff;border-radius:999px;overflow:hidden;margin-top:12px
+    }
+    .bar > div{
+      height:100%;width:0;background:linear-gradient(90deg,#ff73af,#8a7dff);border-radius:inherit;transition:width .25s ease
+    }
     .note{font-size:13px;color:var(--muted);margin-top:10px}
-    .center{text-align:center}
-    .resultScore{font-size:clamp(44px,8vw,68px);font-weight:900;color:#ff4d95;margin:6px 0}
-    .finalBadge{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#fff5db;color:#9a6d00;font-weight:800}
-    .confetti,.cross{position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden}
+    .resultScore{
+      font-size:clamp(44px,8vw,68px);font-weight:900;color:#ff4d95;margin:6px 0
+    }
+    .finalBadge{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#fff5db;color:#9a6d00;font-weight:800
+    }
+    .confetti,.cross{
+      position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden
+    }
     .star{
-      position:absolute;width:14px;height:14px;background:currentColor;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 72%,21% 91%,32% 57%,2% 35%,39% 35%);
-      animation: pop 900ms ease-out forwards;
+      position:absolute;width:14px;height:14px;background:currentColor;
+      clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 72%,21% 91%,32% 57%,2% 35%,39% 35%);
+      animation: pop 900ms ease-out forwards
     }
     @keyframes pop{
       0%{transform:translate(var(--x),var(--y)) scale(.3) rotate(0deg);opacity:1}
       100%{transform:translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(1.35) rotate(180deg);opacity:0}
     }
     .crossMark{
-      position:absolute;width:40px;height:40px;left:50%;top:46%;transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.9;animation: crosspop .9s ease-out forwards;
+      position:absolute;width:40px;height:40px;left:50%;top:46%;
+      transform:translate(-50%,-50%) rotate(45deg);
+      opacity:.9;animation: crosspop .9s ease-out forwards
     }
     .crossMark::before,.crossMark::after{
       content:"";position:absolute;background:#e45757;border-radius:6px
@@ -225,184 +272,240 @@ const quiz = [
   {q:"Why do we use helping verbs such as is, am and are?", o:["To help complete sentences correctly.","To show colours.","To name places.","To count objects."], a:0, e:"Helping verbs make sentences complete and meaningful."}
 ];
 
-let idx=0, score=0, attempts=1, locked=false, timer=45, timerId=null;
+let idx = 0, score = 0, attempts = 1, locked = false, timer = 45, timerId = null;
 
 const els = {
-  intro:document.getElementById('introScreen'),
-  quiz:document.getElementById('quizScreen'),
-  result:document.getElementById('resultScreen'),
-  startBtn:document.getElementById('startBtn'),
-  restartBtn:document.getElementById('restartBtn'),
-  nextBtn:document.getElementById('nextBtn'),
-  retryBtn:document.getElementById('retryBtn'),
-  qCount:document.getElementById('qCount'),
-  attemptTag:document.getElementById('attemptTag'),
-  questionText:document.getElementById('questionText'),
-  options:document.getElementById('options'),
-  feedback:document.getElementById('feedback'),
-  score:document.getElementById('score'),
-  total:document.getElementById('total'),
-  time:document.getElementById('time'),
-  progress:document.getElementById('progress'),
-  resultScore:document.getElementById('resultScore'),
-  resultText:document.getElementById('resultText'),
-  confetti:document.getElementById('confetti'),
-  cross:document.getElementById('cross'),
-  logoSplash:document.getElementById('logoSplash')
+  intro: document.getElementById('introScreen'),
+  quiz: document.getElementById('quizScreen'),
+  result: document.getElementById('resultScreen'),
+  startBtn: document.getElementById('startBtn'),
+  restartBtn: document.getElementById('restartBtn'),
+  nextBtn: document.getElementById('nextBtn'),
+  retryBtn: document.getElementById('retryBtn'),
+  qCount: document.getElementById('qCount'),
+  attemptTag: document.getElementById('attemptTag'),
+  questionText: document.getElementById('questionText'),
+  options: document.getElementById('options'),
+  feedback: document.getElementById('feedback'),
+  score: document.getElementById('score'),
+  total: document.getElementById('total'),
+  time: document.getElementById('time'),
+  progress: document.getElementById('progress'),
+  resultScore: document.getElementById('resultScore'),
+  resultText: document.getElementById('resultText'),
+  confetti: document.getElementById('confetti'),
+  cross: document.getElementById('cross'),
+  logoSplash: document.getElementById('logoSplash')
 };
 
 els.total.textContent = quiz.length;
 
-function showScreen(s){
+const sounds = {
+  correct: new Audio('assets/correct.mp3'),
+  wrong: new Audio('assets/wrong.mp3'),
+  clap: new Audio('assets/freesound_community-claps-44774.mp3')
+};
+
+Object.values(sounds).forEach(a => {
+  a.preload = 'auto';
+  a.volume = 0.9;
+});
+
+function playSound(audioEl) {
+  try {
+    audioEl.currentTime = 0;
+    const p = audioEl.play();
+    if (p && p.catch) p.catch(() => {});
+  } catch (e) {}
+}
+
+function unlockAudio() {
+  Object.values(sounds).forEach(a => {
+    try {
+      a.play().then(() => {
+        a.pause();
+        a.currentTime = 0;
+      }).catch(() => {});
+    } catch (e) {}
+  });
+}
+
+function showScreen(s) {
   [els.intro, els.quiz, els.result].forEach(el => el.classList.remove('active'));
   s.classList.add('active');
 }
-function startTimer(){
+
+function startTimer() {
   clearInterval(timerId);
   timer = 45;
   els.time.textContent = timer;
-  timerId = setInterval(()=>{
+  timerId = setInterval(() => {
     timer--;
     els.time.textContent = timer;
-    if(timer<=0){
+    if (timer <= 0) {
       clearInterval(timerId);
       handleWrong(true);
     }
-  },1000);
+  }, 1000);
 }
-function render(){
-  locked=false; attempts=1;
-  els.feedback.textContent='';
-  els.feedback.className='feedback';
-  els.nextBtn.disabled=true;
-  els.retryBtn.style.display='none';
-  els.attemptTag.textContent='Attempt 1/2';
-  els.qCount.textContent=`Question ${idx+1}`;
+
+function render() {
+  locked = false;
+  attempts = 1;
+  els.feedback.textContent = '';
+  els.feedback.className = 'feedback';
+  els.nextBtn.disabled = true;
+  els.retryBtn.style.display = 'none';
+  els.attemptTag.textContent = 'Attempt 1/2';
+  els.qCount.textContent = `Question ${idx + 1}`;
   els.questionText.textContent = quiz[idx].q;
-  els.options.innerHTML='';
-  els.progress.style.width = `${(idx/quiz.length)*100}%`;
-  quiz[idx].o.forEach((opt,i)=>{
+  els.options.innerHTML = '';
+  els.progress.style.width = `${(idx / quiz.length) * 100}%`;
+  quiz[idx].o.forEach((opt, i) => {
     const b = document.createElement('button');
-    b.className='opt';
-    b.innerHTML=`<span class="bubble">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
-    b.onclick=()=>select(i,b);
+    b.className = 'opt';
+    b.innerHTML = `<span class="bubble">${String.fromCharCode(65 + i)}</span><span>${opt}</span>`;
+    b.onclick = () => select(i, b);
     els.options.appendChild(b);
   });
   startTimer();
 }
-function select(i,btn){
-  if(locked) return;
-  locked=true;
+
+function select(i, btn) {
+  if (locked) return;
+  locked = true;
   clearInterval(timerId);
   const correct = quiz[idx].a;
   const buttons = [...els.options.children];
-  buttons.forEach((b,j)=>{
-    b.disabled=true;
-    if(j===correct) b.classList.add('correct');
+  buttons.forEach((b, j) => {
+    b.disabled = true;
+    if (j === correct) b.classList.add('correct');
   });
-  if(i===correct){
+
+  if (i === correct) {
     score++;
     els.score.textContent = score;
-    els.feedback.textContent='Correct!';
+    els.feedback.textContent = 'Correct!';
     els.feedback.classList.add('good');
+    playSound(sounds.correct);
     fireConfetti();
-    els.nextBtn.disabled=false;
-  }else{
+    els.nextBtn.disabled = false;
+  } else {
     btn.classList.add('wrong');
     handleWrong(false);
   }
 }
-function handleWrong(auto){
-  if(attempts===1){
-    attempts=2;
-    locked=false;
-    els.attemptTag.textContent='Attempt 2/2';
+
+function handleWrong(auto) {
+  playSound(sounds.wrong);
+
+  if (attempts === 1) {
+    attempts = 2;
+    locked = false;
+    els.attemptTag.textContent = 'Attempt 2/2';
     els.feedback.textContent = auto ? 'Time is up. Try one more time.' : 'Not quite. Try one more time.';
     els.feedback.classList.add('bad');
-    els.retryBtn.style.display='inline-block';
-    [...els.options.children].forEach(b=>b.disabled=false);
-    if(auto){
-      [...els.options.children].forEach((b,j)=>b.classList.remove('wrong'));
+    els.retryBtn.style.display = 'inline-block';
+    [...els.options.children].forEach(b => b.disabled = false);
+    if (auto) {
+      [...els.options.children].forEach(b => b.classList.remove('wrong'));
     }
     startTimer();
-  }else{
-    locked=true;
+  } else {
+    locked = true;
     clearInterval(timerId);
     const correct = quiz[idx].a;
-    [...els.options.children].forEach((b,j)=>{
-      b.disabled=true;
-      if(j===correct) b.classList.add('correct');
-      if(b.classList.contains('wrong')) b.classList.add('wrong');
+    [...els.options.children].forEach((b, j) => {
+      b.disabled = true;
+      if (j === correct) b.classList.add('correct');
+      if (b.classList.contains('wrong')) b.classList.add('wrong');
     });
     els.feedback.innerHTML = `Correct answer: <b>${quiz[idx].o[correct]}</b>. ${quiz[idx].e}`;
     els.feedback.classList.add('bad');
     showCross();
-    els.nextBtn.disabled=false;
-    els.retryBtn.style.display='none';
+    els.nextBtn.disabled = false;
+    els.retryBtn.style.display = 'none';
   }
 }
-function next(){
+
+function next() {
   idx++;
-  if(idx>=quiz.length){
+  if (idx >= quiz.length) {
     endQuiz();
-  }else{
+  } else {
     render();
   }
 }
-function endQuiz(){
+
+function endQuiz() {
   clearInterval(timerId);
+  playSound(sounds.clap);
   showScreen(els.result);
   els.resultScore.textContent = `${score}/${quiz.length}`;
-  const pct = Math.round(score/quiz.length*100);
-  els.resultText.textContent = pct >= 80 ? 'Excellent work! You used the helping verbs very well.' : pct >= 50 ? 'Good job! You are getting better with is, am, and are.' : 'Keep practicing. You will improve with a little more revision.';
-}
-function fireConfetti(){
-  els.confetti.innerHTML='';
-  const colors=['#ff6ea8','#7c7cff','#ffd86e','#27b36a','#ff8f5e'];
-  for(let i=0;i<20;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    s.style.color=colors[i%colors.length];
-    s.style.left='50%';
-    s.style.top='50%';
-    s.style.setProperty('--x','0px');
-    s.style.setProperty('--y','0px');
-    s.style.setProperty('--dx',`${(Math.random()*320-160).toFixed(0)}px`);
-    s.style.setProperty('--dy',`${(Math.random()*260-160).toFixed(0)}px`);
-    s.style.transform=`translate(-50%,-50%)`;
-    els.confetti.appendChild(s);
-  }
-  setTimeout(()=>els.confetti.innerHTML='',1000);
-}
-function showCross(){
-  els.cross.innerHTML='';
-  const c=document.createElement('div');
-  c.className='crossMark';
-  els.cross.appendChild(c);
-  setTimeout(()=>els.cross.innerHTML='',1000);
+  const pct = Math.round(score / quiz.length * 100);
+  els.resultText.textContent =
+    pct >= 80 ? 'Excellent work! You used the helping verbs very well.' :
+    pct >= 50 ? 'Good job! You are getting better with is, am, and are.' :
+    'Keep practicing. You will improve with a little more revision.';
 }
 
-els.startBtn.onclick=()=>{
-  idx=0; score=0; els.score.textContent=score;
+function fireConfetti() {
+  els.confetti.innerHTML = '';
+  const colors = ['#ff6ea8', '#7c7cff', '#ffd86e', '#27b36a', '#ff8f5e'];
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.color = colors[i % colors.length];
+    s.style.left = '50%';
+    s.style.top = '50%';
+    s.style.setProperty('--x', '0px');
+    s.style.setProperty('--y', '0px');
+    s.style.setProperty('--dx', `${(Math.random() * 320 - 160).toFixed(0)}px`);
+    s.style.setProperty('--dy', `${(Math.random() * 260 - 160).toFixed(0)}px`);
+    s.style.transform = `translate(-50%,-50%)`;
+    els.confetti.appendChild(s);
+  }
+  setTimeout(() => els.confetti.innerHTML = '', 1000);
+}
+
+function showCross() {
+  els.cross.innerHTML = '';
+  const c = document.createElement('div');
+  c.className = 'crossMark';
+  els.cross.appendChild(c);
+  setTimeout(() => els.cross.innerHTML = '', 1000);
+}
+
+els.startBtn.onclick = () => {
+  unlockAudio();
+  idx = 0;
+  score = 0;
+  els.score.textContent = score;
   showScreen(els.quiz);
   render();
-}
-els.nextBtn.onclick=next;
-els.retryBtn.onclick=()=>{
-  if(attempts===2){
-    locked=false;
-    els.retryBtn.style.display='none';
-    els.feedback.textContent='Choose again.';
-    els.feedback.className='feedback';
-    [...els.options.children].forEach(b=>b.disabled=false);
+};
+
+els.nextBtn.onclick = next;
+
+els.retryBtn.onclick = () => {
+  if (attempts === 2) {
+    locked = false;
+    els.retryBtn.style.display = 'none';
+    els.feedback.textContent = 'Choose again.';
+    els.feedback.className = 'feedback';
+    [...els.options.children].forEach(b => b.disabled = false);
     startTimer();
   }
-}
-els.restartBtn.onclick=()=>{
-  idx=0; score=0; els.score.textContent=score;
+};
+
+els.restartBtn.onclick = () => {
+  idx = 0;
+  score = 0;
+  els.score.textContent = score;
   showScreen(els.intro);
-}
-setTimeout(()=>els.logoSplash.classList.add('hide'),5000);
+};
+
+setTimeout(() => els.logoSplash.classList.add('hide'), 5000);
 </script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Naming Words Quiz</title>
+<title>Naming Words Adventure</title>
 <style>
   :root{
-    --bg1:#fff6bf;
+    --bg1:#fff5b8;
     --bg2:#dff7ff;
     --card:#ffffff;
     --ink:#24324a;
@@ -58,12 +58,6 @@
     from{opacity:0;transform:translateY(8px)}
     to{opacity:1;transform:none}
   }
-  .card{
-    background:var(--card);
-    border-radius:24px;
-    box-shadow:var(--shadow);
-    padding:22px;
-  }
   .hero{
     min-height:100vh;
     display:grid;
@@ -71,24 +65,24 @@
     text-align:center;
   }
   .splash-box{
-    max-width:540px;
     width:100%;
-  }
-  .logo{
-    width:140px;
-    height:140px;
-    object-fit:contain;
-    display:block;
-    margin:0 auto;
-    filter:drop-shadow(0 8px 18px rgba(0,0,0,.12));
+    max-width:560px;
   }
   .logo-only{
+    min-height:72vh;
     display:grid;
     place-items:center;
-    min-height:70vh;
   }
-  h1,h2{margin:0 0 10px}
-  p{margin:8px 0; line-height:1.5}
+  .logo{
+    width:150px;
+    height:150px;
+    object-fit:contain;
+    display:block;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    filter:none;
+  }
   .btn{
     border:0;
     border-radius:16px;
@@ -102,6 +96,19 @@
   }
   .btn.secondary{
     background:linear-gradient(135deg,var(--sec),#6dd5fa);
+  }
+  .card{
+    background:var(--card);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+  h1,h2{margin:0 0 10px}
+  p{margin:8px 0; line-height:1.5}
+  .intro-note{
+    margin-top:12px;
+    font-size:.98rem;
+    color:#52657e;
   }
   .topbar{
     display:flex;
@@ -191,14 +198,6 @@
     background:#fff2f2;
     color:#9d1c1c;
   }
-  .final{
-    display:none;
-    margin-top:14px;
-    padding:16px;
-    border-radius:18px;
-    background:#fff8e6;
-    border:2px dashed #f2c94c;
-  }
   .visual{
     position:relative;
     height:100px;
@@ -275,16 +274,12 @@
   @keyframes fall{
     to{transform:translateY(110vh) rotate(720deg);opacity:0}
   }
-  .intro-note{
-    margin-top:12px;
-    font-size:.98rem;
-    color:#52657e;
-  }
   @media (max-width:600px){
     .wrap{padding:12px}
     .card{padding:16px;border-radius:20px}
     .question{font-size:1.08rem}
     .opt{padding:12px 14px}
+    .logo{width:130px;height:130px}
   }
 </style>
 </head>
@@ -295,7 +290,6 @@
 <div class="stamp" id="stamp">Great job!</div>
 
 <div class="wrap">
-
   <section class="screen active hero" id="splashScreen">
     <div class="card splash-box">
       <div class="logo-only" id="logoOnly">
@@ -329,7 +323,6 @@
         <div class="question" id="question"></div>
         <div class="opts" id="opts"></div>
         <div class="feedback" id="feedback"></div>
-        <div class="final" id="finalChallenge"></div>
       </div>
     </div>
   </section>
@@ -377,6 +370,7 @@ for(let i = 0; i < 18; i++){
 
 const splashScreen = document.getElementById('splashScreen');
 const introContent = document.getElementById('introContent');
+const logoOnly = document.getElementById('logoOnly');
 const quizScreen = document.getElementById('quizScreen');
 const resultScreen = document.getElementById('resultScreen');
 const qIndex = document.getElementById('qIndex');
@@ -388,7 +382,6 @@ const questionEl = document.getElementById('question');
 const opts = document.getElementById('opts');
 const feedback = document.getElementById('feedback');
 const resultText = document.getElementById('resultText');
-const finalChallenge = document.getElementById('finalChallenge');
 const cross = document.getElementById('cross');
 const stamp = document.getElementById('stamp');
 
@@ -415,16 +408,16 @@ function showScreen(s){
 }
 
 function showIntroAfterSplash(){
-  introContent.style.display = 'block';
   logoOnly.style.display = 'none';
+  introContent.style.display = 'block';
 }
 
 function startQuiz(){
   idx = 0;
   score = 0;
   wrongAttempts = 0;
-  loadQ();
   showScreen(quizScreen);
+  loadQ();
 }
 
 function loadQ(){
@@ -438,7 +431,6 @@ function loadQ(){
   opts.innerHTML = '';
   feedback.className = 'feedback';
   feedback.textContent = '';
-  finalChallenge.style.display = 'none';
   timeEl.textContent = timeLeft;
   bar.style.width = ((idx) / total * 100) + '%';
 
@@ -517,7 +509,6 @@ function confettiBurst(){
   stamp.style.display = 'block';
   stamp.textContent = 'Great job!';
   setTimeout(() => stamp.style.display = 'none', 800);
-
   for(let i = 0; i < 18; i++){
     const c = document.createElement('i');
     c.style.left = (Math.random() * 100) + '%';
@@ -536,13 +527,13 @@ function finish(){
   play('clap');
 }
 
-startBtn.onclick = startQuiz;
-restartBtn.onclick = () => {
+startBtn.addEventListener('click', startQuiz);
+restartBtn.addEventListener('click', () => {
   showScreen(splashScreen);
   introContent.style.display = 'none';
   logoOnly.style.display = 'grid';
   setTimeout(showIntroAfterSplash, 5000);
-};
+});
 
 setTimeout(showIntroAfterSplash, 5000);
 </script>

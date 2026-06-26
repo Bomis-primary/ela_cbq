@@ -271,17 +271,11 @@
         .badge {
             font-family: var(--font-head); font-size: 1.8rem; color: var(--forest-deep); text-align: center; margin-bottom: 25px;
         }
-
-        #confetti-canvas {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none; z-index: 998;
-        }
     </style>
 </head>
 <body>
 
     <div class="ambient-layer" id="leaf-box"></div>
-    <canvas id="confetti-canvas"></canvas>
 
     <div id="brand-overlay">
         <img src="assets/logo.png" alt="Innovine" onerror="this.style.display='none';">
@@ -529,9 +523,7 @@
                 panel.innerHTML = `<strong>Splendid! You got it!</strong> ${data.x}`;
                 document.getElementById('next-action-btn').style.display = 'block';
 
-                // Put decoration audio/visual elements in safe mode so they never halt the flow
                 try { soundYes.play(); } catch(e){}
-                try { sprayStars(); } catch(e){}
             } else {
                 contextAttempts++;
                 try { soundNo.play(); } catch(e){}
@@ -605,49 +597,6 @@
         function retryGame() {
             document.getElementById('scr-over').classList.remove('active');
             initGame();
-        }
-
-        // --- SAFE CANVAS STARS SYSTEM ---
-        const canv = document.getElementById('confetti-canvas');
-        let context = null;
-        try { context = canv.getContext('2d'); } catch(e){}
-        let starFleet = [];
-
-        function sprayStars() {
-            if(!context) return;
-            canv.width = window.innerWidth; canv.height = window.innerHeight;
-            starFleet = [];
-            for(let i=0; i<45; i++) {
-                starFleet.push({
-                    x: window.innerWidth / 2, y: window.innerHeight * 0.45,
-                    dx: (Math.random() - 0.5) * 14, dy: (Math.random() * -12) - 4,
-                    r: Math.random() * 6 + 5,
-                    hue: `hsl(${Math.random() * 360}, 90%, 60%)`,
-                    ticks: 90
-                });
-            }
-            if(starFleet.length > 0) requestAnimationFrame(renderStars);
-        }
-
-        function renderStars() {
-            if(!context) return;
-            context.clearRect(0, 0, canv.width, canv.height);
-            let activeParticles = false;
-            starFleet.forEach(s => {
-                if(s.ticks > 0) {
-                    activeParticles = true;
-                    context.fillStyle = s.hue;
-                    context.beginPath();
-                    for(let i=0; i<5; i++) {
-                        context.lineTo(s.x + Math.cos((18 + i*72)*Math.PI/180)*s.r, s.y + Math.sin((18 + i*72)*Math.PI/180)*s.r);
-                        context.lineTo(s.x + Math.cos((54 + i*72)*Math.PI/180)*(s.r/2), s.y + Math.sin((54 + i*72)*Math.PI/180)*(s.r/2));
-                    }
-                    context.closePath(); context.fill();
-                    s.x += s.dx; s.y += s.dy; s.dy += 0.28; s.ticks--;
-                }
-            });
-            if(activeParticles) requestAnimationFrame(renderStars);
-            else context.clearRect(0, 0, canv.width, canv.height);
         }
     </script>
 </body>

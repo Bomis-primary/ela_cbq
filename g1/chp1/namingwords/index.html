@@ -6,7 +6,7 @@
 <title>Naming Words Adventure</title>
 <style>
   :root{
-    --bg1:#fff5b8;
+    --bg1:#fff6bf;
     --bg2:#dff7ff;
     --card:#ffffff;
     --ink:#24324a;
@@ -49,24 +49,23 @@
     margin:0 auto;
     padding:16px;
   }
-  .screen{
-    display:none;
-    animation:fade .25s ease;
-  }
-  .screen.active{display:block}
-  @keyframes fade{
-    from{opacity:0;transform:translateY(8px)}
-    to{opacity:1;transform:none}
-  }
-  .hero{
-    min-height:100vh;
+  .screen{display:none}
+  .screen.active{
     display:grid;
+    min-height:100vh;
     place-items:center;
-    text-align:center;
   }
-  .splash-box{
+  .card{
+    background:var(--card);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:22px;
     width:100%;
+    max-width:960px;
+  }
+  .splash-card{
     max-width:560px;
+    text-align:center;
   }
   .logo-only{
     min-height:72vh;
@@ -81,7 +80,6 @@
     background:transparent;
     border:0;
     box-shadow:none;
-    filter:none;
   }
   .btn{
     border:0;
@@ -96,12 +94,6 @@
   }
   .btn.secondary{
     background:linear-gradient(135deg,var(--sec),#6dd5fa);
-  }
-  .card{
-    background:var(--card);
-    border-radius:24px;
-    box-shadow:var(--shadow);
-    padding:22px;
   }
   h1,h2{margin:0 0 10px}
   p{margin:8px 0; line-height:1.5}
@@ -290,8 +282,9 @@
 <div class="stamp" id="stamp">Great job!</div>
 
 <div class="wrap">
-  <section class="screen active hero" id="splashScreen">
-    <div class="card splash-box">
+
+  <section class="screen active" id="splashScreen">
+    <div class="card splash-card">
       <div class="logo-only" id="logoOnly">
         <img src="assets/logo.png" alt="Innovine Logo" class="logo" />
       </div>
@@ -300,7 +293,7 @@
         <p>Choose the correct naming word in each question.</p>
         <p><strong>Chapter:</strong> Naming Words (Person, Place, Animal, Thing)</p>
         <p class="intro-note">You get one retry after a wrong answer. The quiz becomes slightly harder as you move ahead.</p>
-        <button class="btn" id="startBtn">Start Quiz</button>
+        <button class="btn" id="startBtn" type="button">Start Quiz</button>
       </div>
     </div>
   </section>
@@ -327,215 +320,227 @@
     </div>
   </section>
 
-  <section class="screen hero" id="resultScreen">
-    <div class="card splash-box">
+  <section class="screen" id="resultScreen">
+    <div class="card splash-card">
       <h2>Quiz Complete</h2>
       <p id="resultText"></p>
-      <button class="btn secondary" id="restartBtn">Play Again</button>
+      <button class="btn secondary" id="restartBtn" type="button">Play Again</button>
     </div>
   </section>
 </div>
 
 <script>
-const questions = [
-  {q:'Aditi wants to read a story during library time. Which naming word tells what she can hold and read?', o:['teacher','library','book','puppy'], a:2, e:'A book is a thing that can be read.'},
-  {q:"Neel's mother introduces him to Uncle Raj at a family gathering. Which naming word tells who the person is?", o:['house','Uncle Raj','table','puppy'], a:1, e:'Uncle Raj is the name of a person.'},
-  {q:'Priya goes somewhere every morning to learn, read and play with friends. What is this place?', o:['school','pencil','dog','teacher'], a:0, e:'Children go to school to learn.'},
-  {q:'A child is making a list of places. Which word should be added?', o:['cat','table','Mumbai','pencil'], a:2, e:'Mumbai is the name of a place.'},
-  {q:'Rohan plays with his puppy every evening. Which naming word tells about the animal?', o:['puppy','Rohan','garden','ball'], a:0, e:'Puppy is an animal.'},
-  {q:'Students are writing in class. Which naming word tells what they are using?', o:['write','pencil','quickly','speak'], a:1, e:'A pencil is a thing used for writing.'},
-  {q:'Meera goes to a shop with her mother. Which pair shows a place and a person?', o:['shop, mother','shop, go','mother, go','go, shop'], a:0, e:'Shop is a place and mother is a person.'},
-  {q:'A child is grouping animals together. Which word does not belong?', o:['tiger','elephant','apple','dog'], a:2, e:'Apple is a thing, not an animal.'},
-  {q:'A teacher teaches in a school. Which pair shows a person and a place?', o:['teacher, school','teacher, teach','school, teach','teach, teacher'], a:0, e:'Teacher is a person and school is a place.'},
-  {q:'The dog is sleeping under the table. Which pair names an animal and a thing?', o:['dog, table','dog, under','under, table','is, dog'], a:0, e:'Dog is an animal and table is a thing.'},
-  {q:'Aarav wants to play on swings and slides with his friends. Where will he go?', o:['park','tiger','pencil','teacher'], a:0, e:'A park is a place where children play.'},
-  {q:'Riya uses an eraser in her classroom. Which pair shows a thing and a place?', o:['eraser, classroom','eraser, use','classroom, use','use, eraser'], a:0, e:'Eraser is a thing and classroom is a place.'},
-  {q:'A child is collecting things to keep in a school bag. Which group contains only things?', o:['lion, tiger, dog','table, book, pencil','school, park, city','boy, girl, teacher'], a:1, e:'All the words in option b are things.'},
-  {q:'You visit a zoo with your family. Which group are you most likely to see there?', o:['teacher, chalk, board','lion, elephant, zebra','table, chair, bag','run, jump, play'], a:1, e:'Zoos have animals.'},
-  {q:'Meera goes to the park with Uncle Raj and sees a dog. Which option shows a person, an animal and a place?', o:['Uncle Raj, dog, park','dog, park, sees','Uncle Raj, sees, dog','sees, dog, park'], a:0, e:'Uncle Raj is a person, dog is an animal and park is a place.'}
-];
+document.addEventListener('DOMContentLoaded', () => {
+  const questions = [
+    {q:'Aditi wants to read a story during library time. Which naming word tells what she can hold and read?', o:['teacher','library','book','puppy'], a:2, e:'A book is a thing that can be read.'},
+    {q:"Neel's mother introduces him to Uncle Raj at a family gathering. Which naming word tells who the person is?", o:['house','Uncle Raj','table','puppy'], a:1, e:'Uncle Raj is the name of a person.'},
+    {q:'Priya goes somewhere every morning to learn, read and play with friends. What is this place?', o:['school','pencil','dog','teacher'], a:0, e:'Children go to school to learn.'},
+    {q:'A child is making a list of places. Which word should be added?', o:['cat','table','Mumbai','pencil'], a:2, e:'Mumbai is the name of a place.'},
+    {q:'Rohan plays with his puppy every evening. Which naming word tells about the animal?', o:['puppy','Rohan','garden','ball'], a:0, e:'Puppy is an animal.'},
+    {q:'Students are writing in class. Which naming word tells what they are using?', o:['write','pencil','quickly','speak'], a:1, e:'A pencil is a thing used for writing.'},
+    {q:'Meera goes to a shop with her mother. Which pair shows a place and a person?', o:['shop, mother','shop, go','mother, go','go, shop'], a:0, e:'Shop is a place and mother is a person.'},
+    {q:'A child is grouping animals together. Which word does not belong?', o:['tiger','elephant','apple','dog'], a:2, e:'Apple is a thing, not an animal.'},
+    {q:'A teacher teaches in a school. Which pair shows a person and a place?', o:['teacher, school','teacher, teach','school, teach','teach, teacher'], a:0, e:'Teacher is a person and school is a place.'},
+    {q:'The dog is sleeping under the table. Which pair names an animal and a thing?', o:['dog, table','dog, under','under, table','is, dog'], a:0, e:'Dog is an animal and table is a thing.'},
+    {q:'Aarav wants to play on swings and slides with his friends. Where will he go?', o:['park','tiger','pencil','teacher'], a:0, e:'A park is a place where children play.'},
+    {q:'Riya uses an eraser in her classroom. Which pair shows a thing and a place?', o:['eraser, classroom','eraser, use','classroom, use','use, eraser'], a:0, e:'Eraser is a thing and classroom is a place.'},
+    {q:'A child is collecting things to keep in a school bag. Which group contains only things?', o:['lion, tiger, dog','table, book, pencil','school, park, city','boy, girl, teacher'], a:1, e:'All the words in option b are things.'},
+    {q:'You visit a zoo with your family. Which group are you most likely to see there?', o:['teacher, chalk, board','lion, elephant, zebra','table, chair, bag','run, jump, play'], a:1, e:'Zoos have animals.'},
+    {q:'Meera goes to the park with Uncle Raj and sees a dog. Which option shows a person, an animal and a place?', o:['Uncle Raj, dog, park','dog, park, sees','Uncle Raj, sees, dog','sees, dog, park'], a:0, e:'Uncle Raj is a person, dog is an animal and park is a place.'}
+  ];
 
-let idx = 0, score = 0, timeLeft = 45, timer = null, wrongAttempts = 0;
-const total = questions.length;
-qTotal.textContent = total;
+  let idx = 0;
+  let score = 0;
+  let timeLeft = 45;
+  let timer = null;
+  let wrongAttempts = 0;
+  const total = questions.length;
 
-for(let i = 0; i < 18; i++){
-  const s = document.createElement('div');
-  s.className = 'star';
-  s.style.left = (Math.random() * 100) + '%';
-  s.style.animationDelay = (Math.random() * 10) + 's';
-  s.style.animationDuration = (8 + Math.random() * 8) + 's';
-  document.getElementById('bgStars').appendChild(s);
-}
+  const splashScreen = document.getElementById('splashScreen');
+  const logoOnly = document.getElementById('logoOnly');
+  const introContent = document.getElementById('introContent');
+  const quizScreen = document.getElementById('quizScreen');
+  const resultScreen = document.getElementById('resultScreen');
+  const qIndex = document.getElementById('qIndex');
+  const qTotal = document.getElementById('qTotal');
+  const scoreEl = document.getElementById('score');
+  const timeEl = document.getElementById('time');
+  const bar = document.getElementById('bar');
+  const qNo = document.getElementById('qNo');
+  const questionEl = document.getElementById('question');
+  const opts = document.getElementById('opts');
+  const feedback = document.getElementById('feedback');
+  const resultText = document.getElementById('resultText');
+  const cross = document.getElementById('cross');
+  const stamp = document.getElementById('stamp');
+  const bgStars = document.getElementById('bgStars');
+  const confettiLayer = document.getElementById('confetti');
 
-const splashScreen = document.getElementById('splashScreen');
-const introContent = document.getElementById('introContent');
-const logoOnly = document.getElementById('logoOnly');
-const quizScreen = document.getElementById('quizScreen');
-const resultScreen = document.getElementById('resultScreen');
-const qIndex = document.getElementById('qIndex');
-const scoreEl = document.getElementById('score');
-const timeEl = document.getElementById('time');
-const bar = document.getElementById('bar');
-const qNo = document.getElementById('qNo');
-const questionEl = document.getElementById('question');
-const opts = document.getElementById('opts');
-const feedback = document.getElementById('feedback');
-const resultText = document.getElementById('resultText');
-const cross = document.getElementById('cross');
-const stamp = document.getElementById('stamp');
+  qTotal.textContent = total;
 
-const sounds = {
-  correct: new Audio('assets/correct.mp3'),
-  wrong: new Audio('assets/wrong.mp3'),
-  clap: new Audio('assets/freesound_community-claps-44774.mp3')
-};
-Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.6; });
+  const sounds = {
+    correct: new Audio('assets/correct.mp3'),
+    wrong: new Audio('assets/wrong.mp3'),
+    clap: new Audio('assets/freesound_community-claps-44774.mp3')
+  };
+  Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.6; });
 
-function play(name){
-  try{
-    const a = sounds[name];
-    if(a){
-      a.currentTime = 0;
-      a.play();
-    }
-  }catch(e){}
-}
+  function play(name){
+    try{
+      const a = sounds[name];
+      if(a){
+        a.currentTime = 0;
+        a.play();
+      }
+    }catch(e){}
+  }
 
-function showScreen(s){
-  [splashScreen, quizScreen, resultScreen].forEach(x => x.classList.remove('active'));
-  s.classList.add('active');
-}
+  function showScreen(s){
+    [splashScreen, quizScreen, resultScreen].forEach(x => x.classList.remove('active'));
+    s.classList.add('active');
+  }
 
-function showIntroAfterSplash(){
-  logoOnly.style.display = 'none';
-  introContent.style.display = 'block';
-}
+  function showIntroAfterSplash(){
+    logoOnly.style.display = 'none';
+    introContent.style.display = 'block';
+  }
 
-function startQuiz(){
-  idx = 0;
-  score = 0;
-  wrongAttempts = 0;
-  showScreen(quizScreen);
-  loadQ();
-}
+  function startQuiz(){
+    idx = 0;
+    score = 0;
+    wrongAttempts = 0;
+    showScreen(quizScreen);
+    loadQ();
+  }
 
-function loadQ(){
-  clearInterval(timer);
-  const q = questions[idx];
-  timeLeft = 45;
-  qIndex.textContent = idx + 1;
-  scoreEl.textContent = score;
-  qNo.textContent = `Q${idx + 1}.`;
-  questionEl.textContent = q.q;
-  opts.innerHTML = '';
-  feedback.className = 'feedback';
-  feedback.textContent = '';
-  timeEl.textContent = timeLeft;
-  bar.style.width = ((idx) / total * 100) + '%';
-
-  timer = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if(timeLeft <= 0){
-      clearInterval(timer);
-      handleWrong(true);
-    }
-  }, 1000);
-
-  q.o.forEach((t, i) => {
-    const b = document.createElement('button');
-    b.className = 'opt';
-    b.textContent = String.fromCharCode(97 + i) + ') ' + t;
-    b.onclick = () => answer(i, b);
-    opts.appendChild(b);
-  });
-}
-
-function answer(choice, btn){
-  clearInterval(timer);
-  const q = questions[idx];
-  const buttons = [...document.querySelectorAll('.opt')];
-  buttons.forEach(x => x.disabled = true);
-
-  if(choice === q.a){
-    btn.classList.add('correct');
-    score++;
+  function loadQ(){
+    clearInterval(timer);
+    const q = questions[idx];
+    timeLeft = 45;
+    qIndex.textContent = idx + 1;
     scoreEl.textContent = score;
-    feedback.className = 'feedback good show';
-    feedback.textContent = 'Correct! ' + q.e;
-    play('correct');
-    confettiBurst();
-    setTimeout(next, 900);
-  }else{
-    handleWrong(false, btn);
+    qNo.textContent = `Q${idx + 1}.`;
+    questionEl.textContent = q.q;
+    opts.innerHTML = '';
+    feedback.className = 'feedback';
+    feedback.textContent = '';
+    timeEl.textContent = timeLeft;
+    bar.style.width = ((idx) / total * 100) + '%';
+
+    timer = setInterval(() => {
+      timeLeft--;
+      timeEl.textContent = timeLeft;
+      if(timeLeft <= 0){
+        clearInterval(timer);
+        handleWrong(true);
+      }
+    }, 1000);
+
+    q.o.forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.type = 'button';
+      b.textContent = String.fromCharCode(97 + i) + ') ' + t;
+      b.addEventListener('click', () => answer(i, b));
+      opts.appendChild(b);
+    });
   }
-}
 
-function handleWrong(fromTime, btn){
-  wrongAttempts++;
-  const q = questions[idx];
+  function answer(choice, btn){
+    clearInterval(timer);
+    const q = questions[idx];
+    [...document.querySelectorAll('.opt')].forEach(x => x.disabled = true);
 
-  if(btn) btn.classList.add('wrong');
-  cross.classList.add('show');
-  cross.style.left = '50%';
-  cross.style.top = '50%';
-  setTimeout(() => cross.classList.remove('show'), 450);
-  play('wrong');
+    if(choice === q.a){
+      btn.classList.add('correct');
+      score++;
+      scoreEl.textContent = score;
+      feedback.className = 'feedback good show';
+      feedback.textContent = 'Correct! ' + q.e;
+      play('correct');
+      confettiBurst();
+      setTimeout(next, 900);
+    } else {
+      handleWrong(false, btn);
+    }
+  }
 
-  if(wrongAttempts === 1 && !fromTime){
+  function handleWrong(fromTime, btn){
+    wrongAttempts++;
+    const q = questions[idx];
+
+    if(btn) btn.classList.add('wrong');
+    cross.classList.add('show');
+    cross.style.left = '50%';
+    cross.style.top = '50%';
+    setTimeout(() => cross.classList.remove('show'), 450);
+    play('wrong');
+
+    if(wrongAttempts === 1 && !fromTime){
+      feedback.className = 'feedback bad show';
+      feedback.textContent = 'Try once more.';
+      [...document.querySelectorAll('.opt')].forEach(x => x.disabled = false);
+      return;
+    }
+
     feedback.className = 'feedback bad show';
-    feedback.textContent = 'Try once more.';
-    [...document.querySelectorAll('.opt')].forEach(x => x.disabled = false);
-    return;
+    feedback.textContent = `Correct answer: ${String.fromCharCode(97 + q.a)}) ${q.o[q.a]}. ${q.e}`;
+    [...document.querySelectorAll('.opt')].forEach((x, i) => {
+      if(i === q.a) x.classList.add('correct');
+    });
+    setTimeout(next, 1400);
   }
 
-  feedback.className = 'feedback bad show';
-  feedback.textContent = `Correct answer: ${String.fromCharCode(97 + q.a)}) ${q.o[q.a]}. ${q.e}`;
-  [...document.querySelectorAll('.opt')].forEach((x, i) => {
-    if(i === q.a) x.classList.add('correct');
+  function next(){
+    idx++;
+    bar.style.width = ((idx) / total * 100) + '%';
+    if(idx < total) loadQ();
+    else finish();
+  }
+
+  function confettiBurst(){
+    stamp.style.display = 'block';
+    stamp.textContent = 'Great job!';
+    setTimeout(() => stamp.style.display = 'none', 800);
+
+    for(let i = 0; i < 18; i++){
+      const c = document.createElement('i');
+      c.style.left = (Math.random() * 100) + '%';
+      c.style.background = ['#ffd166','#ff7b54','#4b7bec','#22c55e','#ff9ff3'][i % 5];
+      c.style.animationDuration = (.8 + Math.random() * .7) + 's';
+      confettiLayer.appendChild(c);
+      setTimeout(() => c.remove(), 1600);
+    }
+  }
+
+  function finish(){
+    clearInterval(timer);
+    showScreen(resultScreen);
+    const pct = Math.round((score / total) * 100);
+    resultText.innerHTML = `You scored <strong>${score}/${total}</strong> (${pct}%). ${pct >= 80 ? 'Excellent!' : 'Nice work!'} Final challenge complete.`;
+    play('clap');
+  }
+
+  document.getElementById('startBtn').addEventListener('click', startQuiz);
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    showScreen(splashScreen);
+    introContent.style.display = 'none';
+    logoOnly.style.display = 'grid';
+    setTimeout(showIntroAfterSplash, 5000);
   });
-  setTimeout(next, 1400);
-}
 
-function next(){
-  idx++;
-  bar.style.width = ((idx) / total * 100) + '%';
-  if(idx < total) loadQ();
-  else finish();
-}
-
-function confettiBurst(){
-  stamp.style.display = 'block';
-  stamp.textContent = 'Great job!';
-  setTimeout(() => stamp.style.display = 'none', 800);
   for(let i = 0; i < 18; i++){
-    const c = document.createElement('i');
-    c.style.left = (Math.random() * 100) + '%';
-    c.style.background = ['#ffd166','#ff7b54','#4b7bec','#22c55e','#ff9ff3'][i % 5];
-    c.style.animationDuration = (.8 + Math.random() * .7) + 's';
-    document.getElementById('confetti').appendChild(c);
-    setTimeout(() => c.remove(), 1600);
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.animationDelay = (Math.random() * 10) + 's';
+    s.style.animationDuration = (8 + Math.random() * 8) + 's';
+    bgStars.appendChild(s);
   }
-}
 
-function finish(){
-  clearInterval(timer);
-  showScreen(resultScreen);
-  const pct = Math.round((score / total) * 100);
-  resultText.innerHTML = `You scored <strong>${score}/${total}</strong> (${pct}%). ${pct >= 80 ? 'Excellent!' : 'Nice work!'} Final challenge complete.`;
-  play('clap');
-}
-
-startBtn.addEventListener('click', startQuiz);
-restartBtn.addEventListener('click', () => {
-  showScreen(splashScreen);
-  introContent.style.display = 'none';
-  logoOnly.style.display = 'grid';
   setTimeout(showIntroAfterSplash, 5000);
 });
-
-setTimeout(showIntroAfterSplash, 5000);
 </script>
 </body>
 </html>

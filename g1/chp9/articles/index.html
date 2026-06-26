@@ -1,1 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 1 Grammar Quest: Treehouse Articles! 🌳</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-sky: #E0F2FE;
+            --grass-green: #4ADE80;
+            --meadow-dark: #166534;
+            --sun-yellow: #FEF08A;
+            --wood-brown: #854D0E;
+            --paper-cream: #FCF9F2;
+            --text-dark: #292524;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-sky) 0%, #F0FDF4 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Performance-Safe Floating Leaves */
+        .leaf {
+            position: absolute;
+            background: rgba(74, 222, 128, 0.3);
+            border-radius: 0 100% 0 100%;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatLeaf 14s infinite linear;
+        }
+        @keyframes floatLeaf {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) translateX(50px) rotate(180deg); opacity: 0; }
+        }
+
+        /* Mandatory Branding Screen (First 5 Seconds Overlay) */
+        #brand-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .brand-logo {
+            max-width: 220px;
+            max-height: 120px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .brand-loading-bar {
+            width: 150px;
+            height: 6px;
+            background: #EEE;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .brand-loading-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--meadow-dark);
+            animation: loadSplash 5s linear forwards;
+        }
+
+        @keyframes loadSplash {
+            to { width: 100%; }
+        }
+
+        /* Intro Screen State Layout */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            margin: auto;
+            max-width: 500px;
+            z-index: 10;
+        }
+
+        .intro-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 36px;
+            color: var(--meadow-dark);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        .intro-card {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 12px 24px rgba(22, 101, 52, 0.06);
+            border: 4px solid var(--sun-yellow);
+            width: 100%;
+        }
+
+        .start-btn {
+            background: var(--grass-green);
+            color: var(--meadow-dark);
+            border: none;
+            padding: 16px 40px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #15803D;
+            transition: all 0.1s ease;
+            margin-top: 20px;
+        }
+
+        .start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #15803D;
+        }
+
+        /* Interactive Main Game Container Layout */
+        #game-container {
+            display: none;
+            width: 90%;
+            max-width: 650px;
+            margin: auto;
+            padding: 20px 0;
+            z-index: 10;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stats-pill {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 15px;
+            border: 3px solid var(--grass-green);
+            box-shadow: 0 4px 0 var(--grass-green);
+        }
+
+        /* Visual Timer Track Bar */
+        .timer-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid white;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--grass-green);
+            transition: width 1s linear, background-color 0.3s ease;
+        }
+
+        /* Dynamic Main Question Quiz Card Layout */
+        .quiz-card {
+            background: var(--paper-cream);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 12px 0px rgba(133, 77, 14, 0.15), 0 16px 24px rgba(0, 0, 0, 0.05);
+            border: 4px solid var(--wood-brown);
+            position: relative;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: white;
+            color: var(--wood-brown);
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 2px dashed var(--wood-brown);
+        }
+
+        .question-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .option-btn {
+            background: white;
+            border: 3px solid #E7E5E4;
+            border-radius: 16px;
+            padding: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 #E7E5E4;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #E7E5E4;
+            border-color: var(--wood-brown);
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #E7E5E4;
+        }
+
+        .option-badge {
+            background: #F5F5F4;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            color: var(--wood-brown);
+            border: 2px solid #E7E5E4;
+            flex-shrink: 0;
+        }
+
+        /* Option Validation Visual Modifiers */
+        .option-btn.correct {
+            background: #DCFCE7 !important;
+            border-color: var(--grass-green) !important;
+            box-shadow: 0 4px 0 var(--grass-green) !important;
+        }
+        .option-btn.correct .option-badge {
+            background: var(--grass-green);
+            color: var(--meadow-dark);
+            border-color: var(--grass-green);
+        }
+
+        .option-btn.wrong-once {
+            background: #FEF3C7 !important;
+            border-color: #F59E0B !important;
+            box-shadow: 0 4px 0 #F59E0B !important;
+            opacity: 0.85;
+        }
+
+        .option-btn.wrong-final {
+            background: #FEE2E2 !important;
+            border-color: #EF4444 !important;
+            box-shadow: 0 4px 0 #EF4444 !important;
+        }
+        .option-btn.wrong-final .option-badge {
+            background: #EF4444;
+            color: white;
+            border-color: #EF4444;
+        }
+
+        .option-btn.disabled {
+            pointer-events: none;
+        }
+
+        /* Feedback Elements overlay */
+        .attempt-indicator {
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #B91C1C;
+            display: none;
+            text-align: center;
+        }
+
+        .explanation-box {
+            margin-top: 15px;
+            background: white;
+            border-left: 5px solid var(--wood-brown);
+            border-radius: 8px;
+            padding: 12px;
+            display: none;
+        }
+
+        .explanation-box p {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .action-btn {
+            margin-top: 15px;
+            width: 100%;
+            background: var(--wood-brown);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 16px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #451A03;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #451A03;
+        }
+
+        /* Results Summary Screen Display */
+        #results-screen {
+            display: none;
+            text-align: center;
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            z-index: 10;
+        }
+
+        .score-hero {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--wood-brown);
+            margin: 15px 0;
+            text-shadow: 2px 2px 0 white;
+        }
+
+        /* Full Canvas Renderers Layer */
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fx-canvas"></canvas>
+
+    <audio id="audio-correct" src="assets/correct.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/wrong.mp3" preload="auto"></audio>
+    <audio id="audio-cheer" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+    <div id="brand-splash">
+        <img src="assets/logo.png" alt="Innovine Logo" class="brand-logo" id="brand-img">
+        <div class="brand-loading-bar">
+            <div class="brand-loading-fill"></div>
+        </div>
+    </div>
+
+    <div id="intro-screen">
+        <h1 class="intro-title">Treehouse Articles! 🌳</h1>
+        <div class="intro-card">
+            <p style="font-weight:700; font-size:16px; margin-bottom:15px;">Welcome to your Grammar Adventure! Let's choose 'a' and 'an' perfectly to complete today's challenges.</p>
+            <p style="font-size:13px; color:#666; margin-bottom:20px;">⚡ Rules: 60 seconds per question. You get 1 retry if you make a mistake!</p>
+            <button class="start-btn" onclick="startQuizEngine()">Start Adventure ✨</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <header>
+            <div class="stats-pill">🍃 Q: <span id="ui-current-q">1</span>/15</div>
+            <div class="stats-pill" style="border-color:var(--wood-brown); box-shadow:0 4px 0 var(--wood-brown);">⭐ Score: <span id="ui-score">0</span></div>
+        </header>
+
+        <div class="timer-container">
+            <div id="timer-bar" class="timer-bar"></div>
+        </div>
+
+        <div class="quiz-card">
+            <div id="q-tag" class="tag-pill">Scenario-Based</div>
+            <div id="q-text" class="question-text">Loading question details...</div>
+            
+            <div id="options-grid" class="options-grid"></div>
+
+            <div id="retry-hint" class="attempt-indicator">🌿 Close! Give it another try. You can do it!</div>
+
+            <div id="explanation-box" class="explanation-box">
+                <p><strong>💡 Explanation:</strong> <span id="explanation-text"></span></p>
+            </div>
+
+            <button id="action-button" class="action-btn" onclick="handleActionClick()">Next Question 🌟</button>
+        </div>
+    </div>
+
+    <div id="results-screen">
+        <h1 class="intro-title" id="results-title">Great Adventure!</h1>
+        <div class="intro-card">
+            <div style="font-size:50px;">🏆</div>
+            <div class="score-hero"><span id="final-score">0</span> / 15</div>
+            <p id="results-msg" style="font-weight:700; margin-bottom:25px;"></p>
+            <button class="start-btn" style="background:var(--sun-yellow); box-shadow:0 6px 0 #EAB308; color:#713F12;" onclick="resetQuizEngine()">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // Production Competency Quiz Dataset Architecture - Articles (A, An)
+        const database = [
+            { tag: "Scenario-Based – Fruit Basket", question: 'A child wants one apple from a fruit basket. Which sentence should the child use?', options: ["I want a apple.", "I want an apple.", "I want apple.", "I want an apples."], answer: "I want an apple.", explanation: "We use an before words that begin with a vowel sound." },
+            { tag: "Application-Based – School Supplies", question: 'A student needs one pencil for class. Which sentence is correct?', options: ["I need an pencil.", "I need a pencil.", "I need pencil.", "I need a pencils."], answer: "I need a pencil.", explanation: "We use a before words beginning with a consonant sound." },
+            { tag: "Scenario-Based – At the Zoo", question: 'A child sees an elephant during a zoo visit. Which sentence is correct?', options: ["I saw a elephant.", "I saw an elephant.", "I saw elephant.", "I saw an elephants."], answer: "I saw an elephant.", explanation: "Elephant begins with a vowel sound." },
+            { tag: "Decision-Based – Packing for Rain", question: 'Dark clouds are in the sky and a child is leaving home. Which sentence is correct?', options: ["I need a umbrella.", "I need an umbrella.", "I need umbrella.", "I need an umbrellas."], answer: "I need an umbrella.", explanation: "Umbrella begins with a vowel sound." },
+            { tag: "Application-Based – Classroom Objects", question: 'A teacher asks a child to pick up one eraser. Which sentence is correct?', options: ["I picked up a eraser.", "I picked up an eraser.", "I picked up eraser.", "I picked up an erasers."], answer: "I picked up an eraser.", explanation: "Eraser begins with a vowel sound." },
+            { tag: "Classification with Reasoning", question: 'Which group uses the correct article?', options: ["a dog, a book, a pencil", "an dog, an book, an pencil", "a apple, a elephant, a umbrella", "an dog, a apple, an pencil"], answer: "a dog, a book, a pencil", explanation: "Dog, book and pencil begin with consonant sounds." },
+            { tag: "Scenario-Based – Birthday Party", question: 'A child is given one orange at a party. Which sentence is correct?', options: ["I got a orange.", "I got an orange.", "I got orange.", "I got an oranges."], answer: "I got an orange.", explanation: "Orange begins with a vowel sound." },
+            { tag: "Decision-Based – Shopping Trip", question: 'A parent asks a child to buy one ball from a shop. Which sentence should the child use?', options: ["I want an ball.", "I want a ball.", "I want ball.", "I want a balls."], answer: "I want a ball.", explanation: "Ball begins with a consonant sound." },
+            { tag: "Application-Based – Looking at the Sky", question: 'A child sees one aeroplane flying overhead. Which sentence is correct?', options: ["I can see a aeroplane.", "I can see an aeroplane.", "I can see aeroplane.", "I can see an aeroplanes."], answer: "I can see an aeroplane.", explanation: "Aeroplane begins with a vowel sound." },
+            { tag: "Classification with Reasoning", question: 'Which word should use an?', options: ["cat", "umbrella", "ball", "toy"], answer: "umbrella", explanation: "Umbrella begins with a vowel sound." },
+            { tag: "Scenario-Based – Art Class", question: 'A child wants one paintbrush before starting an art activity. Which sentence is correct?', options: ["I need an paintbrush.", "I need a paintbrush.", "I need paintbrush.", "I need a paintbrushes."], answer: "I need a paintbrush.", explanation: "Paintbrush begins with a consonant sound." },
+            { tag: "Application-Based – Healthy Eating", question: 'A child chooses one egg for breakfast. Which sentence is correct?', options: ["I ate a egg.", "I ate an egg.", "I ate egg.", "I ate an eggs."], answer: "I ate an egg.", explanation: "Egg begins with a vowel sound." },
+            { tag: "Classification with Reasoning", question: 'Which pair is correct?', options: ["an apple, a toy", "a apple, an toy", "an apple, an toy", "a apple, a toy"], answer: "an apple, a toy", explanation: "Apple takes an, toy takes a." },
+            { tag: "Scenario-Based – Classroom Sharing", question: 'A child lends one ruler to a friend. Which sentence is correct?', options: ["I gave an ruler to my friend.", "I gave a ruler to my friend.", "I gave ruler to my friend.", "I gave a rulers to my friend."], answer: "I gave a ruler to my friend.", explanation: "Ruler begins with a consonant sound." },
+            { tag: "Big Idea – Using Articles", question: 'Why do we use a and an before some naming words?', options: ["To talk about one person, animal, place or thing correctly", "To show colours", "To show actions", "To tell time"], answer: "To talk about one person, animal, place or thing correctly", explanation: "Articles help us talk correctly about one person, place, animal or thing." }
+        ];
+
+        // Core Management Engine Configuration Matrices
+        let index = 0, score = 0, clock = 60, currentAttempt = 1;
+        let timerTicker = null, fxParticles = [], fxLoop = null, currentWrongCross = null;
+
+        const fxCanvas = document.getElementById("fx-canvas");
+        const fxCtx = fxCanvas.getContext("2d");
+
+        // Initialization Handling Setup
+        window.addEventListener("load", () => {
+            setupResponsiveCanvas();
+            spawnAmbientLeaves();
+            document.getElementById("brand-img").onerror = function() { this.style.display='none'; };
+            setTimeout(() => {
+                const splash = document.getElementById("brand-splash");
+                splash.style.opacity = 0;
+                setTimeout(() => splash.style.display = "none", 500);
+            }, 5000);
+        });
+
+        window.addEventListener("resize", setupResponsiveCanvas);
+        function setupResponsiveCanvas() {
+            fxCanvas.width = window.innerWidth;
+            fxCanvas.height = window.innerHeight;
+        }
+
+        // Performance-safe Floating Elements
+        function spawnAmbientLeaves() {
+            for(let i=0; i<6; i++){
+                const element = document.createElement("div");
+                element.className = "leaf";
+                element.style.width = element.style.height = `${Math.random()*25 + 15}px`;
+                element.style.left = `${Math.random()*100}vw`;
+                element.style.animationDelay = `${Math.random()*6}s`;
+                element.style.animationDuration = `${Math.random()*8 + 10}s`;
+                document.body.appendChild(element);
+            }
+        }
+
+        function fireAudio(id) {
+            const player = document.getElementById(id);
+            if(player) { player.currentTime = 0; player.play().catch(()=>{}); }
+        }
+
+        function startQuizEngine() {
+            document.getElementById("intro-screen").style.display = "none";
+            document.getElementById("game-container").style.display = "block";
+            loadQuestionCard();
+        }
+
+        function loadQuestionCard() {
+            clearInterval(timerTicker);
+            currentAttempt = 1;
+            currentWrongCross = null;
+            document.getElementById("retry-hint").style.display = "none";
+            document.getElementById("explanation-box").style.display = "none";
+            document.getElementById("action-button").style.display = "none";
+
+            const data = database[index];
+            document.getElementById("ui-current-q").textContent = index + 1;
+            document.getElementById("ui-score").textContent = score;
+            document.getElementById("q-tag").textContent = data.tag;
+            document.getElementById("q-text").innerHTML = data.question;
+
+            const grid = document.getElementById("options-grid");
+            grid.innerHTML = "";
+
+            const bLabels = ["A", "B", "C", "D"];
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerHTML = `<span class="option-badge">${bLabels[idx]}</span> <span class="txt-node"></span>`;
+                btn.querySelector(".txt-node").textContent = opt;
+                btn.onclick = () => validateSelection(btn, opt);
+                grid.appendChild(btn);
+            });
+
+            startQuestionCountdown();
+        }
+
+        function startQuestionCountdown() {
+            clock = 60; // 60-second limit rule enforcement for Grade 1
+            const bar = document.getElementById("timer-bar");
+            bar.style.width = "100%";
+            bar.style.backgroundColor = "var(--grass-green)";
+
+            timerTicker = setInterval(() => {
+                clock--;
+                const pct = (clock / 60) * 100;
+                bar.style.width = `${pct}%`;
+
+                if(clock <= 15) bar.style.backgroundColor = "#F59E0B";
+                
+                if(clock <= 0) {
+                    clearInterval(timerTicker);
+                    forceTimeoutReveal();
+                }
+            }, 1000);
+        }
+
+        function validateSelection(selectedBtn, val) {
+            const data = database[index];
+            const allBtns = document.querySelectorAll(".option-btn");
+
+            if(val === data.answer) {
+                clearInterval(timerTicker);
+                selectedBtn.classList.add("correct");
+                freezeInteraction();
+                score++;
+                document.getElementById("ui-score").textContent = score;
+                fireAudio("audio-correct");
+                triggerStarConfetti();
+                exposeExplanation();
+            } else {
+                if(currentAttempt === 1) {
+                    currentAttempt = 2;
+                    selectedBtn.classList.add("wrong-once");
+                    selectedBtn.classList.add("disabled");
+                    document.getElementById("retry-hint").style.display = "block";
+                    fireAudio("audio-wrong");
+                    triggerRedCrossOverlay();
+                } else {
+                    clearInterval(timerTicker);
+                    selectedBtn.classList.add("wrong-final");
+                    fireAudio("audio-wrong");
+                    triggerRedCrossOverlay();
+                    
+                    allBtns.forEach(b => {
+                        if(b.querySelector(".txt-node").textContent === data.answer) {
+                            b.classList.add("correct");
+                        }
+                    });
+                    freezeInteraction();
+                    document.getElementById("retry-hint").style.display = "none";
+                    exposeExplanation();
+                }
+            }
+        }
+
+        function forceTimeoutReveal() {
+            const data = database[index];
+            triggerRedCrossOverlay();
+            fireAudio("audio-wrong");
+            document.querySelectorAll(".option-btn").forEach(b => {
+                if(b.querySelector(".txt-node").textContent === data.answer) b.classList.add("correct");
+            });
+            freezeInteraction();
+            exposeExplanation();
+        }
+
+        function freezeInteraction() {
+            document.querySelectorAll(".option-btn").forEach(b => b.classList.add("disabled"));
+        }
+
+        function exposeExplanation() {
+            document.getElementById("explanation-text").textContent = database[index].explanation;
+            document.getElementById("explanation-box").style.display = "block";
+            
+            const actionBtn = document.getElementById("action-button");
+            actionBtn.textContent = (index === database.length - 1) ? "Finish Adventure ✨" : "Next Adventure 🌟";
+            actionBtn.style.display = "flex";
+        }
+
+        function handleActionClick() {
+            if(index < database.length - 1) {
+                index++;
+                loadQuestionCard();
+            } else {
+                renderFinalSummary();
+            }
+        }
+
+        function renderFinalSummary() {
+            document.getElementById("game-container").style.display = "none";
+            document.getElementById("results-screen").style.display = "block";
+            document.getElementById("final-score").textContent = score;
+
+            const t = document.getElementById("results-title");
+            const m = document.getElementById("results-msg");
+
+            if(score >= 13) {
+                t.textContent = "Meadow Master Explorer! 👑";
+                m.textContent = "Incredible work! You know exactly when to use 'a' and 'an'. Perfect performance!";
+                fireAudio("audio-cheer");
+            } else if(score >= 9) {
+                t.textContent = "Bright Explorer! 🌤️";
+                m.textContent = "Wonderful effort! You did great with your articles. Just a little more practice makes perfect.";
+            } else {
+                t.textContent = "Keep Climbing! 🌳";
+                m.textContent = "Good attempt! Reviewing whether words start with vowel or consonant sounds will make you an expert next time.";
+            }
+        }
+
+        function resetQuizEngine() {
+            index = 0; score = 0;
+            document.getElementById("results-screen").style.display = "none";
+            document.getElementById("intro-screen").style.display = "flex";
+        }
+
+        // Specialized Vector Star-Confetti & Cross Render Logic Layers
+        function triggerStarConfetti() {
+            cancelAnimationFrame(fxLoop);
+            fxParticles = [];
+            for(let i=0; i<60; i++){
+                fxParticles.push({
+                    x: fxCanvas.width / 2,
+                    y: fxCanvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.6) * 14 - 4,
+                    size: Math.random() * 6 + 4,
+                    color: ['#4ADE80', '#3B82F6', '#F59E0B', '#EF4444', '#EC4899'][Math.floor(Math.random()*5)],
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.015
+                });
+            }
+            runParticleLoop();
+        }
+
+        function triggerRedCrossOverlay() {
+            currentWrongCross = { scale: 0, opacity: 1 };
+            if(fxParticles.length === 0) runParticleLoop();
+        }
+
+        function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function runParticleLoop() {
+            fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+            let active = false;
+
+            fxParticles.forEach((p, idx) => {
+                if(p.alpha > 0) {
+                    active = true;
+                    fxCtx.globalAlpha = p.alpha;
+                    drawStar(fxCtx, p.x, p.y, 5, p.size * 2, p.size, p.color);
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3;
+                    p.alpha -= p.decay;
+                }
+            });
+
+            if(currentWrongCross && currentWrongCross.opacity > 0) {
+                active = true;
+                fxCtx.globalAlpha = currentWrongCross.opacity;
+                fxCtx.strokeStyle = "#EF4444";
+                fxCtx.lineWidth = 14;
+                fxCtx.lineCap = "round";
+
+                const cx = fxCanvas.width / 2;
+                const cy = fxCanvas.height / 2;
+                const sz = 40 * currentWrongCross.scale;
+
+                fxCtx.beginPath();
+                fxCtx.moveTo(cx - sz, cy - sz);
+                fxCtx.lineTo(cx + sz, cy + sz);
+                fxCtx.moveTo(cx + sz, cy - sz);
+                fxCtx.lineTo(cx - sz, cy + sz);
+                fxCtx.stroke();
+
+                if(currentWrongCross.scale < 1) {
+                    currentWrongCross.scale += 0.15;
+                } else {
+                    currentWrongCross.opacity -= 0.03;
+                }
+            }
+
+            fxCtx.globalAlpha = 1.0;
+            if(active) fxLoop = requestAnimationFrame(runParticleLoop);
+        }
+    </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght=500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* BRAND NEW MAGIC FOREST & SUNSET PALETTE */
+            /* MAGIC FOREST & SUNSET PALETTE */
             --forest-deep: #1E4620; /* Deep Jungle Moss */
             --mint-light: #E8F5E9; /* Soft Pastel Grass */
             --sunset-orange: #FB8500; /* Warm Sunset */
@@ -48,7 +48,6 @@
         .leaf-shape {
             position: absolute;
             background-color: rgba(45, 106, 79, 0.12);
-            /* Smooth organic leaf geometry shape code */
             border-radius: 80% 0 80% 0;
             transform-origin: center;
             animation: leafTumble 14s infinite ease-in-out;
@@ -85,7 +84,7 @@
         }
         @keyframes progress { to { width: 100%; } }
 
-        /* --- JUNGLY THEMED CARD CONTAINER --- */
+        /* --- CARD CONTAINER --- */
         .game-container {
             width: 95%;
             max-width: 740px;
@@ -141,7 +140,7 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 0px #C76200; }
         .btn:active { transform: translateY(6px); box-shadow: 0 2px 0px #C76200; }
 
-        /* --- HEAD TRACKERS --- */
+        /* --- TRACKERS --- */
         .game-header {
             display: flex;
             justify-content: space-between;
@@ -200,7 +199,7 @@
         }
         .option-tile {
             background-color: #FFFFFF;
-            border: 5px solid #E2EFE0; /* Thick Bouncy Edge */
+            border: 5px solid #E2EFE0;
             padding: 20px;
             border-radius: 25px;
             text-align: left;
@@ -221,7 +220,6 @@
         }
         @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
-        /* Plural Game Feedback Modifiers */
         .option-tile.correct {
             background-color: #E8F5E9 !important;
             color: var(--success-green) !important;
@@ -237,7 +235,7 @@
         .option-tile.correct::after { content: '🌿'; position: absolute; top: 15px; right: 20px; font-size: 1.2rem; }
         .option-tile.wrong::after { content: '🍂'; position: absolute; top: 15px; right: 20px; font-size: 1.2rem; }
 
-        /* --- NATURE FEEDBACK MODULE --- */
+        /* --- FEEDBACK BOXES --- */
         .feedback-box {
             margin-top: 20px;
             padding: 20px;
@@ -257,7 +255,7 @@
             background-color: #E2ECE9; color: var(--forest-deep); border: 3px solid var(--success-green);
         }
 
-        /* --- MEDAL COMPONENT --- */
+        /* --- SUMMARY MEDAL --- */
         .score-medal {
             background: radial-gradient(circle, var(--sunset-gold) 0%, var(--sunset-orange) 100%);
             color: white;
@@ -311,8 +309,7 @@
 
                 <h2 class="question-title" id="question-text">Loading game cards...</h2>
                 
-                <div class="options-grid" id="options-holder">
-                    </div>
+                <div class="options-grid" id="options-holder"></div>
 
                 <div id="feedback-panel" class="feedback-box"></div>
                 
@@ -601,7 +598,7 @@
             initGame();
         }
 
-        // --- CANVA STARS SYSTEM ---
+        // --- STARS ANIMATION ENGINE ---
         const canv = document.getElementById('confetti-canvas');
         const context = canv.getContext('2d');
         let starFleet = [];

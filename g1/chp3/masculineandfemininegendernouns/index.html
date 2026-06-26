@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gender Nouns CBQ Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body{
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(to bottom, #f0f8ff, #ffffff);
+    text-align:center;
+}
+
+/* INTRO */
+#intro{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+}
+
+/* GAME */
+#game{
+    display:none;
+    padding:20px;
+}
+
+.card{
+    max-width:650px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.option{
+    display:block;
+    margin:10px;
+    padding:12px;
+    border:2px solid #2196f3;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.option:hover{
+    background:#e3f2fd;
+}
+
+#score,#timer{
+    font-weight:bold;
+    margin:10px;
+}
+
+#timer{color:red;}
+
+#nextBtn{
+    display:none;
+    padding:10px 20px;
+    background:green;
+    color:white;
+    border:none;
+    border-radius:8px;
+}
+
+/* END */
+#end{
+    display:none;
+    padding:30px;
+}
+
+.correct{background:#c8e6c9 !important;}
+.wrong{background:#ffcdd2 !important;}
+
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+    <img src="assets/logo.png" width="180">
+    <h2>CBQ Adventure</h2>
+    <p>Masculine & Feminine Gender Nouns</p>
+</div>
+
+<!-- GAME -->
+<div id="game">
+
+    <div id="score">Score: 0</div>
+    <div id="timer">Time: 60</div>
+
+    <div class="card">
+        <h3 id="question"></h3>
+        <div id="options"></div>
+        <button id="nextBtn" onclick="nextQ()">Next</button>
+    </div>
+
+</div>
+
+<!-- END -->
+<div id="end">
+    <h1>🎉 Well Done!</h1>
+    <h2 id="finalScore"></h2>
+</div>
+
+<!-- AUDIO -->
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+
+const questions = [
+{q:"The class welcomes a female principal. What is correct?",o:["He is principal","She is principal","Him is principal","They is principal"],a:1,ex:"She is used for female."},
+{q:"Your aunt visits home.",o:["He is aunt","She is aunt","Him is aunt","They is aunt"],a:1,ex:"Aunt is female."},
+{q:"Peahen is:",o:["Male peacock","Female peacock","Baby","Not bird"],a:1,ex:"Peahen is female peacock."},
+{q:"Incorrect sentence:",o:["Uncle talks","Mother cooks","Sister helps","Grandmother his story"],a:3,ex:"Should be her story."},
+{q:"Female doctor:",o:["He checked","She checked","Him checked","They checked"],a:1,ex:"She is correct."},
+{q:"Why 'he' is wrong for female?",o:["For males","For animals","For things","For places"],a:0,ex:"He = male."},
+{q:"Female deer:",o:["Doe","Buck","Deerer","Deeress"],a:0,ex:"Doe is female deer."},
+{q:"Woman marrying:",o:["Bride","Groom","Uncle","Brother"],a:0,ex:"Bride is correct."},
+{q:"King-Queen is:",o:["Gender pair","Place","Animal","Thing"],a:0,ex:"Correct gender pair."},
+{q:"Waitress correction:",o:["to waiter","to waitress","to is","to are"],a:1,ex:"Female = waitress."},
+{q:"Father sister:",o:["Aunt","Uncle","Brother","Son"],a:0,ex:"Aunt is correct."},
+{q:"Female lion:",o:["Lioness","Lioner","King lion","Boy lion"],a:0,ex:"Lioness is female."},
+{q:"Feminine group:",o:["Queen mother aunt","King boy father","Tiger lion dog","Chair table book"],a:0,ex:"All feminine."},
+{q:"Female teacher:",o:["He teaches","She teaches","Him teaches","They teaches"],a:1,ex:"She is correct."},
+{q:"Why learn gender nouns?",o:["Identify male/female","Measure","Time","Color"],a:0,ex:"To identify gender."}
+];
+
+let i=0;
+let score=0;
+let time=60;
+let attempts=0;
+let timer;
+
+setTimeout(()=>{
+    document.getElementById("intro").style.display="none";
+    document.getElementById("game").style.display="block";
+    loadQ();
+    startTimer();
+},3000);
+
+function startTimer(){
+    timer=setInterval(()=>{
+        time--;
+        document.getElementById("timer").innerText="Time: "+time;
+        if(time<=0){
+            nextQ();
+        }
+    },1000);
+}
+
+function loadQ(){
+    attempts=0;
+    time=60;
+
+    let q=questions[i];
+    document.getElementById("question").innerText=q.q;
+
+    let html="";
+    q.o.forEach((opt,idx)=>{
+        html+=`<div class='option' onclick='check(${idx})'>${opt}</div>`;
+    });
+
+    document.getElementById("options").innerHTML=html;
+    document.getElementById("nextBtn").style.display="none";
+}
+
+function check(x){
+    let q=questions[i];
+
+    if(x===q.a){
+        document.querySelectorAll(".option")[x].classList.add("correct");
+        document.getElementById("correctSound").play();
+        score++;
+        document.getElementById("score").innerText="Score: "+score;
+        document.getElementById("nextBtn").style.display="block";
+    }else{
+        attempts++;
+        document.querySelectorAll(".option")[x].classList.add("wrong");
+        document.getElementById("wrongSound").play();
+
+        if(attempts>=2){
+            alert("Correct Answer: "+q.o[q.a]+"\n\n"+q.ex);
+            document.getElementById("nextBtn").style.display="block";
+        }
+    }
+}
+
+function nextQ(){
+    i++;
+    if(i>=questions.length){
+        endGame();
+        return;
+    }
+    loadQ();
+}
+
+function endGame(){
+    clearInterval(timer);
+    document.getElementById("game").style.display="none";
+    document.getElementById("end").style.display="block";
+    document.getElementById("finalScore").innerText=score+" / "+questions.length;
+    document.getElementById("clapSound").play();
+}
+
+</script>
+
+</body>
+</html>

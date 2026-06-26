@@ -444,23 +444,27 @@
             document.getElementById('max-idx').innerText = coreQuiz.length;
             setTimeout(() => {
                 const overlay = document.getElementById('brand-overlay');
-                overlay.style.opacity = '0';
-                setTimeout(() => overlay.style.display = 'none', 600);
+                if(overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 600);
+                }
             }, 5000);
         });
 
         function initLeafBackground() {
-            const container = document.getElementById('leaf-box');
-            for(let i=0; i<14; i++) {
-                const l = document.createElement('div');
-                l.classList.add('leaf-shape');
-                const w = Math.random() * 25 + 15;
-                l.style.width = w + 'px'; l.style.height = (w * 1.4) + 'px';
-                l.style.left = Math.random() * 100 + 'vw';
-                l.style.animationDuration = (Math.random() * 6 + 10) + 's';
-                l.style.animationDelay = (Math.random() * 5) + 's';
-                container.appendChild(l);
-            }
+            try {
+                const container = document.getElementById('leaf-box');
+                for(let i=0; i<14; i++) {
+                    const l = document.createElement('div');
+                    l.classList.add('leaf-shape');
+                    const w = Math.random() * 25 + 15;
+                    l.style.width = w + 'px'; l.style.height = (w * 1.4) + 'px';
+                    l.style.left = Math.random() * 100 + 'vw';
+                    l.style.animationDuration = (Math.random() * 6 + 10) + 's';
+                    l.style.animationDelay = (Math.random() * 5) + 's';
+                    container.appendChild(l);
+                }
+            } catch(e) {}
         }
 
         function initGame() {
@@ -515,19 +519,22 @@
                 clearInterval(engineTimer);
                 element.classList.add('correct');
                 freezeTiles();
-                try { soundYes.play(); } catch(e){}
-                sprayStars();
                 
                 if(contextAttempts === 0) {
                     points++;
                     document.getElementById('score-label').innerText = points;
                 }
+                
                 panel.className = "feedback-box reveal visible";
                 panel.innerHTML = `<strong>Splendid! You got it!</strong> ${data.x}`;
                 document.getElementById('next-action-btn').style.display = 'block';
+
+                // Put decoration audio/visual elements in safe mode so they never halt the flow
+                try { soundYes.play(); } catch(e){}
+                try { sprayStars(); } catch(e){}
             } else {
-                try { soundNo.play(); } catch(e){}
                 contextAttempts++;
+                try { soundNo.play(); } catch(e){}
                 
                 if(contextAttempts === 1) {
                     element.classList.add('wrong');
@@ -538,7 +545,8 @@
                     clearInterval(engineTimer);
                     element.classList.add('wrong');
                     freezeTiles();
-                    collection[data.c].classList.add('correct');
+                    if(collection[data.c]) collection[data.c].classList.add('correct');
+                    
                     panel.className = "feedback-box reveal visible";
                     panel.innerHTML = `<strong>Let's learn!</strong> ${data.x}`;
                     document.getElementById('next-action-btn').style.display = 'block';
@@ -551,7 +559,8 @@
             const data = coreQuiz[playHead];
             const panel = document.getElementById('feedback-panel');
             const collection = document.querySelectorAll('.option-tile');
-            collection[data.c].classList.add('correct');
+            if(collection[data.c]) collection[data.c].classList.add('correct');
+            
             panel.className = "feedback-box reveal visible";
             panel.innerHTML = `<strong>Time flew away!</strong> ${data.x}`;
             document.getElementById('next-action-btn').style.display = 'block';
@@ -598,12 +607,14 @@
             initGame();
         }
 
-        // --- STARS ANIMATION ENGINE ---
+        // --- SAFE CANVAS STARS SYSTEM ---
         const canv = document.getElementById('confetti-canvas');
-        const context = canv.getContext('2d');
+        let context = null;
+        try { context = canv.getContext('2d'); } catch(e){}
         let starFleet = [];
 
         function sprayStars() {
+            if(!context) return;
             canv.width = window.innerWidth; canv.height = window.innerHeight;
             starFleet = [];
             for(let i=0; i<45; i++) {
@@ -619,6 +630,7 @@
         }
 
         function renderStars() {
+            if(!context) return;
             context.clearRect(0, 0, canv.width, canv.height);
             let activeParticles = false;
             starFleet.forEach(s => {

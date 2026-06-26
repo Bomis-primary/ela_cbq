@@ -1,1 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Action Words · Verbs — Grade 1 English</title>
+<style>
+:root {
+  --amber:   #ff6f00;
+  --yellow:  #ffc107;
+  --coral:   #ff5252;
+  --teal:    #00897b;
+  --dteal:   #00695c;
+  --purple:  #6a1b9a;
+  --ink:     #1c1b2e;
+  --cream:   #fffdf5;
+  --pale:    #fff8e1;
+  --radius:  20px;
+  --shadow:  0 8px 32px rgba(0,0,0,.13);
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+  min-height: 100vh;
+  background: #1c1b2e;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── STARFIELD ── */
+#starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle linear infinite;
+  opacity: 0;
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0; transform: scale(.6); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── SHOOTING STARS ── */
+.shoot {
+  position: absolute;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, white, transparent);
+  border-radius: 99px;
+  animation: shoot linear infinite;
+  opacity: 0;
+}
+@keyframes shoot {
+  0%   { opacity: 0; transform: translateX(0) translateY(0) rotate(-30deg); }
+  10%  { opacity: 1; }
+  60%  { opacity: 0; transform: translateX(300px) translateY(150px) rotate(-30deg); }
+  100% { opacity: 0; transform: translateX(300px) translateY(150px) rotate(-30deg); }
+}
+
+/* ── GRADIENT GLOW ORBS ── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat ease-in-out infinite alternate;
+}
+.orb1 { width: 320px; height: 320px; background: rgba(106,27,154,.35); top: -80px; left: -80px; animation-duration: 7s; }
+.orb2 { width: 280px; height: 280px; background: rgba(0,137,123,.3);  bottom: -60px; right: -60px; animation-duration: 9s; animation-delay: -3s; }
+.orb3 { width: 200px; height: 200px; background: rgba(255,111,0,.2);  top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 11s; animation-delay: -5s; }
+@keyframes orbFloat {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,20px) scale(1.08); }
+}
+
+/* ── APP WRAPPER ── */
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; width: 100%; max-width: 700px; animation: popIn .45s cubic-bezier(.34,1.56,.64,1); }
+.screen.active { display: block; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.88) translateY(28px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── CARD ── */
+.card {
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 34px 30px;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--amber), var(--yellow), var(--coral), var(--purple));
+}
+
+/* ── SPLASH ── */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: radial-gradient(ellipse at center, #2d1b4e 0%, #0d0d1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 22px;
+}
+#splash img {
+  width: min(240px, 65vw);
+  filter: drop-shadow(0 0 30px rgba(255,193,7,.4));
+  animation: splashPulse 2s ease-in-out infinite alternate;
+}
+@keyframes splashPulse {
+  from { transform: scale(1);    filter: drop-shadow(0 0 20px rgba(255,193,7,.3)); }
+  to   { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(255,193,7,.6)); }
+}
+#splash p { color: rgba(255,255,255,.65); font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; }
+#splash-bar { width: min(240px,65vw); height: 5px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; }
+#splash-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--yellow)); border-radius: 99px; width: 0%; }
+
+/* ── INTRO ── */
+.intro-top { text-align: center; margin-bottom: 24px; }
+.subject-pill {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--amber), var(--coral));
+  color: white;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 99px;
+  margin-bottom: 16px;
+}
+.hero-emoji { font-size: 4.5rem; display: block; margin-bottom: 10px; animation: wiggle 2s ease-in-out infinite; }
+@keyframes wiggle {
+  0%,100% { transform: rotate(-5deg); }
+  50%      { transform: rotate(5deg); }
+}
+h1.title { font-size: clamp(1.4rem,4vw,2rem); font-weight: 800; line-height: 1.25; margin-bottom: 10px; color: white; }
+.subtitle { font-size: .92rem; color: rgba(255,255,255,.7); line-height: 1.65; margin-bottom: 26px; }
+
+.meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 26px;
+}
+.chip {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-size: .82rem;
+  color: rgba(255,255,255,.9);
+  font-weight: 600;
+}
+
+.rules-panel {
+  background: rgba(255,193,7,.1);
+  border: 1.5px solid rgba(255,193,7,.3);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 26px;
+  text-align: left;
+}
+.rules-panel h3 { font-size: .82rem; color: var(--yellow); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+.rules-panel ul { list-style: none; }
+.rules-panel li { font-size: .86rem; color: rgba(255,255,255,.8); margin-bottom: 6px; padding-left: 2px; }
+.rules-panel li::before { content: '🔥 '; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-block;
+  padding: 14px 38px;
+  border-radius: 99px;
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, filter .15s;
+  letter-spacing: .03em;
+}
+.btn:active { transform: scale(.95); }
+.btn-fire {
+  background: linear-gradient(135deg, var(--amber), var(--coral));
+  color: white;
+  box-shadow: 0 5px 20px rgba(255,111,0,.45);
+}
+.btn-fire:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 26px rgba(255,111,0,.55); }
+.btn-teal {
+  background: linear-gradient(135deg, var(--teal), var(--dteal));
+  color: white;
+  box-shadow: 0 5px 20px rgba(0,137,123,.4);
+}
+.btn-teal:hover { filter: brightness(1.1); transform: translateY(-2px); }
+.btn-block { display: block; width: 100%; text-align: center; }
+
+/* ── HUD ── */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.score-pill {
+  background: linear-gradient(135deg, var(--amber), var(--coral));
+  border-radius: 14px;
+  padding: 8px 18px;
+  font-size: .85rem;
+  font-weight: 800;
+  color: white;
+  min-width: 88px;
+  text-align: center;
+}
+.score-pill span { display: block; font-size: 1.35rem; line-height: 1.1; }
+.prog-wrap { flex: 1; min-width: 120px; }
+.prog-label { font-size: .75rem; color: rgba(255,255,255,.6); margin-bottom: 5px; text-align: center; }
+.prog-bar { height: 10px; background: rgba(255,255,255,.12); border-radius: 99px; overflow: hidden; }
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--yellow));
+  border-radius: 99px;
+  transition: width .45s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Timer */
+.timer-box { display: flex; flex-direction: column; align-items: center; }
+.timer-lbl  { font-size: .7rem; color: rgba(255,255,255,.55); margin-bottom: 2px; }
+.timer-ring { width: 56px; height: 56px; position: relative; }
+.timer-ring svg { transform: rotate(-90deg); }
+.timer-ring circle { fill: none; stroke-width: 5; }
+.t-bg  { stroke: rgba(255,255,255,.12); }
+.t-arc { stroke: var(--yellow); stroke-dasharray: 138; stroke-dashoffset: 0; stroke-linecap: round; transition: stroke-dashoffset .9s linear, stroke .3s; }
+.t-num {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; font-weight: 800; color: white;
+}
+
+/* ── QUESTION AREA ── */
+.q-badge {
+  display: inline-block;
+  background: rgba(255,193,7,.15);
+  border: 1px solid rgba(255,193,7,.35);
+  border-radius: 8px;
+  padding: 3px 13px;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 14px;
+  letter-spacing: .05em;
+}
+.q-text {
+  font-size: clamp(1rem,2.6vw,1.18rem);
+  font-weight: 600;
+  color: white;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+/* Attempt dots */
+.dots-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.dots-row span { font-size: .75rem; color: rgba(255,255,255,.5); }
+.dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.25);
+  background: transparent;
+  transition: all .3s;
+}
+.dot.used { background: var(--coral); border-color: var(--coral); box-shadow: 0 0 8px rgba(255,82,82,.6); }
+
+/* OPTIONS */
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .options { grid-template-columns: 1fr; } }
+
+.opt-btn {
+  background: rgba(255,255,255,.07);
+  border: 2px solid rgba(255,255,255,.15);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: .92rem;
+  color: rgba(255,255,255,.9);
+  cursor: pointer;
+  text-align: left;
+  transition: all .2s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.opt-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,.14);
+  border-color: var(--yellow);
+  transform: translateY(-2px);
+  color: white;
+}
+.opt-btn.correct {
+  background: rgba(0,137,123,.25);
+  border-color: var(--teal);
+  color: #80cbc4;
+  font-weight: 700;
+}
+.opt-btn.wrong {
+  background: rgba(255,82,82,.18);
+  border-color: var(--coral);
+  color: #ff8a80;
+  font-weight: 700;
+}
+.opt-btn:disabled { cursor: default; }
+
+.opt-letter {
+  width: 28px; height: 28px;
+  border-radius: 9px;
+  background: rgba(255,193,7,.2);
+  border: 1.5px solid rgba(255,193,7,.4);
+  color: var(--yellow);
+  font-size: .8rem;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.opt-btn.correct .opt-letter { background: rgba(0,137,123,.35); border-color: var(--teal); color: #80cbc4; }
+.opt-btn.wrong   .opt-letter { background: rgba(255,82,82,.3);  border-color: var(--coral); color: #ff8a80; }
+
+/* Retry hint */
+.retry-hint { text-align: center; font-size: .88rem; color: var(--yellow); font-weight: 700; margin-top: 12px; display: none; }
+.retry-hint.show { display: block; }
+
+/* Feedback */
+.fb-box { margin-top: 18px; border-radius: 14px; padding: 14px 18px; font-size: .88rem; line-height: 1.55; display: none; }
+.fb-box.show        { display: block; }
+.fb-box.fb-correct  { background: rgba(0,137,123,.2);  border: 1.5px solid rgba(0,137,123,.5); color: #80cbc4; }
+.fb-box.fb-wrong    { background: rgba(255,111,0,.15); border: 1.5px solid rgba(255,111,0,.4); color: #ffcc80; }
+.fb-box.fb-reveal   { background: rgba(106,27,154,.2); border: 1.5px solid rgba(106,27,154,.5); color: #ce93d8; }
+
+.next-wrap { text-align: center; margin-top: 20px; display: none; }
+.next-wrap.show { display: block; }
+
+/* ── RESULT ── */
+.res-top { text-align: center; padding-bottom: 16px; }
+.res-emoji { font-size: 5rem; display: block; margin-bottom: 10px; animation: bounce 1.1s ease infinite alternate; }
+@keyframes bounce { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-14px) rotate(3deg); } }
+.res-title { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 6px; }
+.res-msg   { font-size: .95rem; color: rgba(255,255,255,.65); margin-bottom: 20px; }
+.stars-row { font-size: 2.2rem; letter-spacing: 8px; margin-bottom: 20px; }
+
+.score-showcase {
+  background: linear-gradient(135deg, rgba(255,111,0,.3), rgba(106,27,154,.4));
+  border: 1.5px solid rgba(255,193,7,.25);
+  border-radius: 20px;
+  padding: 26px;
+  text-align: center;
+  margin-bottom: 22px;
+}
+.score-big  { font-size: 3.8rem; font-weight: 800; color: var(--yellow); line-height: 1; }
+.score-out  { font-size: .95rem; color: rgba(255,255,255,.6); margin-top: 4px; }
+.score-pct  { font-size: 1.15rem; font-weight: 700; color: white; margin-top: 8px; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.stat { border-radius: 14px; padding: 18px; text-align: center; border: 1.5px solid; }
+.stat.s-correct { background: rgba(0,137,123,.15); border-color: rgba(0,137,123,.4); }
+.stat.s-wrong   { background: rgba(255,82,82,.12);  border-color: rgba(255,82,82,.35); }
+.stat-num { font-size: 2.2rem; font-weight: 800; }
+.stat.s-correct .stat-num { color: #80cbc4; }
+.stat.s-wrong   .stat-num { color: #ff8a80; }
+.stat-lbl { font-size: .8rem; color: rgba(255,255,255,.55); margin-top: 3px; }
+
+.res-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+
+/* ── CONFETTI CANVAS ── */
+#confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 997; }
+
+/* ── CROSS FLASH ── */
+#crossFlash {
+  position: fixed; inset: 0; z-index: 996;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0; transition: opacity .15s;
+}
+#crossFlash.show { opacity: 1; }
+.cross-icon { font-size: 9rem; animation: crossPop .35s cubic-bezier(.34,1.56,.64,1); filter: drop-shadow(0 0 24px rgba(255,82,82,.7)); }
+@keyframes crossPop { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1) rotate(0); } }
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div id="starfield"></div>
+
+<canvas id="confetti-canvas"></canvas>
+<div id="crossFlash"><span class="cross-icon">❌</span></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <img src="assets/logo.png" alt="Innovine" onerror="this.style.display='none'">
+  <p>Powering up your adventure…</p>
+  <div id="splash-bar"><div id="splash-fill"></div></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="card">
+      <div class="intro-top">
+        <span class="subject-pill">Grade 1 · English · Chapter 6</span>
+        <span class="hero-emoji">⚡</span>
+        <h1 class="title">Action Words<br><span style="color:var(--yellow)">Verbs</span></h1>
+        <p class="subtitle">
+          Discover words that show what people, animals and things <strong>do</strong>.<br>
+          Run, jump, sing, write — let's find them all!
+        </p>
+      </div>
+      <div class="meta-strip">
+        <span class="chip">📚 16 Questions</span>
+        <span class="chip">⏱ 60 sec each</span>
+        <span class="chip">🎯 1 retry allowed</span>
+      </div>
+      <div class="rules-panel">
+        <h3>Mission Rules</h3>
+        <ul>
+          <li>Read every question with care.</li>
+          <li>Tap the best answer.</li>
+          <li>You get ONE retry on a wrong answer.</li>
+          <li>Two wrong tries? We reveal the answer!</li>
+          <li>Collect points and aim for 3 stars! 🌟</li>
+        </ul>
+      </div>
+      <button class="btn btn-fire btn-block" onclick="startQuiz()">Start Mission ⚡</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="card">
+      <div class="hud">
+        <div class="score-pill">⚡ Score<span id="scoreDisplay">0</span></div>
+        <div class="prog-wrap">
+          <div class="prog-label" id="progLabel">Question 1 of 16</div>
+          <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        </div>
+        <div class="timer-box">
+          <div class="timer-lbl">Time</div>
+          <div class="timer-ring">
+            <svg viewBox="0 0 46 46" width="56" height="56">
+              <circle class="t-bg"  cx="23" cy="23" r="22"/>
+              <circle class="t-arc" id="tArc" cx="23" cy="23" r="22"/>
+            </svg>
+            <div class="t-num" id="tNum">60</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dots-row">
+        <span>Attempts:</span>
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+      </div>
+
+      <div class="q-badge" id="qBadge">Scenario-Based</div>
+      <div class="q-text"  id="qText">Loading…</div>
+      <div class="options"  id="optGrid"></div>
+      <div class="retry-hint" id="retryHint">⚡ Wrong! One more chance — choose wisely!</div>
+      <div class="fb-box"  id="fbBox"></div>
+      <div class="next-wrap" id="nextWrap">
+        <button class="btn btn-teal" id="nextBtn" onclick="nextQ()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="card">
+      <div class="res-top">
+        <span class="res-emoji" id="resEmoji">🏆</span>
+        <div class="res-title" id="resTitle">Outstanding!</div>
+        <div class="res-msg"   id="resMsg">You're a verb superstar!</div>
+        <div class="stars-row" id="starsRow">⭐⭐⭐</div>
+      </div>
+      <div class="score-showcase">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-out" id="scoreOut">out of 160 pts</div>
+        <div class="score-pct" id="scorePct">0% Accuracy</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat s-correct"><div class="stat-num" id="stCorrect">0</div><div class="stat-lbl">✅ Correct</div></div>
+        <div class="stat s-wrong">  <div class="stat-num" id="stWrong">0</div>  <div class="stat-lbl">❌ Incorrect</div></div>
+      </div>
+      <div class="res-btns">
+        <button class="btn btn-fire" onclick="restartQuiz()">🔄 Try Again</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- AUDIO -->
+<audio id="sndOk"   src="assets/correct.mp3"  preload="auto"></audio>
+<audio id="sndNo"   src="assets/wrong.mp3"    preload="auto"></audio>
+<audio id="sndClap" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<script>
+/* ── DATA ── */
+const QS = [
+  { type:"Scenario-Based", text:"During games period, a child moves quickly across the playground to catch a ball. Which action word best describes what the child is doing?", options:["running","sleeping","reading","drawing"], correct:0, exp:"<b>Running</b> is an action that helps a child move quickly." },
+  { type:"Scenario-Based", text:"A child is sitting quietly and looking at the pages of a storybook. Which action word best describes this activity?", options:["reading","jumping","swimming","singing"], correct:0, exp:"<b>Reading</b> is the action of looking at and understanding words in a book." },
+  { type:"Application-Based", text:"Students are using pencils to make words in their notebooks. Which action word describes what they are doing?", options:["writing","dancing","climbing","sleeping"], correct:0, exp:"<b>Writing</b> is the action of making letters and words." },
+  { type:"Classification", text:"Which word is an action word?", options:["chair","jump","school","pencil"], correct:1, exp:"<b>Jump</b> is something we can do — it is an action word." },
+  { type:"Scenario-Based", text:"A person is using a knife to prepare vegetables for dinner. Which action word best describes the activity?", options:["cutting","sleeping","reading","counting"], correct:0, exp:"<b>Cutting</b> is an action used to prepare food." },
+  { type:"Decision-Based", text:"A baby is tired after playing all day. Which action word best describes what the baby should do?", options:["sleep","clap","write","swim"], correct:0, exp:"<b>Sleeping</b> helps the body rest." },
+  { type:"Scenario-Based", text:"A dog makes loud sounds when a stranger comes near the gate. Which action word describes what the dog is doing?", options:["barking","drawing","reading","cooking"], correct:0, exp:"Dogs <b>bark</b> to communicate or alert others." },
+  { type:"Application-Based", text:"Children are using their voices to perform a song. Which action word best describes this activity?", options:["singing","sleeping","painting","climbing"], correct:0, exp:"<b>Singing</b> is an action done with the voice." },
+  { type:"Classification", text:"Which group contains only action words?", options:["run, jump, clap","chair, table, book","school, park, zoo","happy, red, tall"], correct:0, exp:"<b>Run</b>, <b>jump</b> and <b>clap</b> are all actions we can do." },
+  { type:"Scenario-Based", text:"A child is using colours to make a picture of a butterfly. Which action word best describes this activity?", options:["painting","sleeping","swimming","eating"], correct:0, exp:"<b>Painting</b> is the action of making pictures using colours." },
+  { type:"Error Detection", text:"A student says, \"Pencil is an action word.\" Why is this incorrect?", options:["Pencil is a thing, not an action.","Pencil is a colour.","Pencil is a place.","Pencil is an animal."], correct:0, exp:"Action words show what someone or something <b>does</b>. Pencil is a thing." },
+  { type:"Scenario-Based", text:"Before leaving for school, a child uses a toothbrush. Which action word best describes the activity?", options:["brushing","jumping","reading","climbing"], correct:0, exp:"<b>Brushing</b> is an action done to clean teeth." },
+  { type:"Decision-Based", text:"Your parent asks you to move a toy box from one room to another. Which action word best describes what you will do?", options:["carry","sleep","sing","read"], correct:0, exp:"<b>Carry</b> means moving something from one place to another." },
+  { type:"Application-Based", text:"A football player moves a ball with the foot towards the goal. Which action word describes this?", options:["kicking","reading","painting","sleeping"], correct:0, exp:"<b>Kicking</b> is an action used in football." },
+  { type:"🏆 Final Challenge", text:"Which word does NOT show an action?", options:["dance","swim","book","laugh"], correct:2, exp:"<b>Book</b> is a thing, while dance, swim and laugh are all actions." },
+  { type:"🏆 Final Challenge", text:"Why do we use action words in sentences?", options:["To tell what a person, animal or thing is doing","To tell colours only","To tell places only","To tell names only"], correct:0, exp:"Action words show what someone or something <b>does</b> — they bring sentences to life!" }
+];
+
+const TMAX = 60;
+let S = {};
+
+function initS() {
+  S = { qi:0, score:0, correct:0, wrong:0, attempts:0, answered:false, tv:TMAX, tiv:null };
+}
+
+/* ── AUDIO ── */
+function sfx(id) {
+  try { const a=document.getElementById(id); if(a){a.currentTime=0;a.play().catch(()=>{});} } catch(e){}
+}
+
+/* ── STARFIELD ── */
+(function buildStars(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2.5+.8;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    sf.appendChild(s);
+  }
+  for(let i=0;i<5;i++){
+    const sh=document.createElement('div');
+    sh.className='shoot';
+    sh.style.cssText=`top:${5+Math.random()*40}%;left:${Math.random()*60}%;animation-duration:${4+Math.random()*5}s;animation-delay:${Math.random()*8}s`;
+    sf.appendChild(sh);
+  }
+})();
+
+/* ── SPLASH ── */
+(function splash(){
+  const fill=document.getElementById('splash-fill');
+  const sp=document.getElementById('splash');
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=2; fill.style.width=p+'%';
+    if(p>=100){ clearInterval(iv); setTimeout(()=>{ sp.style.transition='opacity .6s'; sp.style.opacity='0'; setTimeout(()=>sp.remove(),600); },200); }
+  },100);
+})();
+
+/* ── SCREENS ── */
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen-'+id).classList.add('active'); }
+
+function startQuiz(){ initS(); show('quiz'); loadQ(); }
+function restartQuiz(){ startQuiz(); }
+
+/* ── LOAD Q ── */
+function loadQ(){
+  const q=QS[S.qi];
+  S.attempts=0; S.answered=false;
+  const fin=S.qi>=QS.length-2;
+  const badge=document.getElementById('qBadge');
+  badge.textContent=q.type;
+  badge.style.background=fin?'rgba(106,27,154,.25)':'rgba(255,193,7,.15)';
+  badge.style.borderColor=fin?'rgba(106,27,154,.5)':'rgba(255,193,7,.35)';
+  badge.style.color=fin?'#ce93d8':'#ffc107';
+  document.getElementById('qText').textContent=q.text;
+  updateHUD(); resetDots(); hideFB(); hideNext();
+  document.getElementById('retryHint').classList.remove('show');
+  renderOpts(); startTimer();
+}
+
+function renderOpts(){
+  const q=QS[S.qi]; const labels=['A','B','C','D'];
+  const g=document.getElementById('optGrid'); g.innerHTML='';
+  q.options.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';
+    b.innerHTML=`<span class="opt-letter">${labels[i]}</span>${o}`;
+    b.onclick=()=>pick(i,b);
+    g.appendChild(b);
+  });
+}
+
+/* ── HUD ── */
+function updateHUD(){
+  const t=QS.length, i=S.qi+1;
+  document.getElementById('scoreDisplay').textContent=S.score;
+  document.getElementById('progLabel').textContent=`Question ${i} of ${t}`;
+  document.getElementById('progFill').style.width=((S.qi/t)*100)+'%';
+}
+function resetDots(){ document.getElementById('dot1').className='dot'; document.getElementById('dot2').className='dot'; }
+function markDot(n){ document.getElementById('dot'+n).classList.add('used'); }
+
+/* ── TIMER ── */
+function startTimer(){
+  clearInterval(S.tiv); S.tv=TMAX; drawTimer();
+  S.tiv=setInterval(()=>{ S.tv--; drawTimer(); if(S.tv<=0){ clearInterval(S.tiv); if(!S.answered) timeUp(); } },1000);
+}
+function stopTimer(){ clearInterval(S.tiv); }
+function drawTimer(){
+  const v=S.tv, arc=document.getElementById('tArc');
+  arc.style.strokeDashoffset=138-(v/TMAX)*138;
+  arc.style.stroke=v>15?'#ffc107':v>8?'#ff8c00':'#ff5252';
+  const tn=document.getElementById('tNum');
+  tn.textContent=v;
+  tn.style.color=v>15?'white':v>8?'#ff8c00':'#ff5252';
+}
+function timeUp(){
+  if(S.answered)return;
+  S.answered=true; S.wrong++;
+  disableOpts(); revealCorrect();
+  showFB('reveal',`⏰ Time's up! See the correct answer above.<br>💡 ${QS[S.qi].exp}`);
+  showNext();
+}
+
+/* ── PICK ── */
+function pick(chosen, btn){
+  if(S.answered)return;
+  const q=QS[S.qi];
+  if(chosen===q.correct){
+    stopTimer(); S.answered=true;
+    S.score+=(S.attempts===0)?10:5; S.correct++;
+    btn.classList.add('correct'); disableOpts(); updateHUD();
+    sfx('sndOk'); launchStars();
+    showFB('correct',`✅ Correct! Brilliant! 🎉<br>💡 ${q.exp}`);
+    showNext();
+  } else {
+    S.attempts++; markDot(S.attempts);
+    btn.classList.add('wrong'); btn.disabled=true;
+    flashCross(); sfx('sndNo');
+    if(S.attempts<2){
+      document.getElementById('retryHint').classList.add('show');
+      showFB('wrong','❌ Not quite! Give it one more try.');
+    } else {
+      stopTimer(); S.answered=true; S.wrong++;
+      disableOpts(); revealCorrect();
+      showFB('reveal',`💡 The answer is highlighted above.<br>${q.exp}`);
+      showNext();
+    }
+  }
+}
+
+function disableOpts(){ document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true); }
+function revealCorrect(){ document.querySelectorAll('.opt-btn')[QS[S.qi].correct].classList.add('correct'); }
+
+/* ── FEEDBACK ── */
+function showFB(type,html){
+  const b=document.getElementById('fbBox');
+  b.className='fb-box show fb-'+(type==='correct'?'correct':type==='wrong'?'wrong':'reveal');
+  b.innerHTML=html;
+}
+function hideFB(){ const b=document.getElementById('fbBox'); b.className='fb-box'; b.innerHTML=''; }
+
+/* ── NEXT ── */
+function showNext(){
+  document.getElementById('nextWrap').classList.add('show');
+  const btn=document.getElementById('nextBtn');
+  if(S.qi>=QS.length-1) btn.textContent='🎉 See Results!';
+  else if(S.qi===QS.length-3) btn.textContent='🏆 Final Challenge →';
+  else btn.textContent='Next →';
+}
+function hideNext(){ document.getElementById('nextWrap').classList.remove('show'); }
+
+function nextQ(){
+  S.qi++;
+  if(S.qi>=QS.length) showResults();
+  else loadQ();
+}
+
+/* ── RESULTS ── */
+function showResults(){
+  stopTimer();
+  const t=QS.length, pct=Math.round((S.correct/t)*100);
+  const stars=pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
+  const emoji=pct>=90?'🏆':pct>=70?'🎉':'💪';
+  const title=pct>=90?'Outstanding!':pct>=70?'Great Job!':'Keep Going!';
+  const msg=pct>=90?"You're a verb superstar! Every action word is yours! ⚡"
+           :pct>=70?"You've got great action power! Keep practising! 💪"
+           :"Action words are tricky — but you're getting there! 🌱";
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resMsg').textContent=msg;
+  document.getElementById('starsRow').textContent=stars;
+  document.getElementById('scoreBig').textContent=S.score;
+  document.getElementById('scoreOut').textContent=`out of ${t*10} pts`;
+  document.getElementById('scorePct').textContent=`${pct}% Accuracy`;
+  document.getElementById('stCorrect').textContent=S.correct;
+  document.getElementById('stWrong').textContent=S.wrong;
+  show('result');
+  if(pct>=70){ sfx('sndClap'); bigBurst(); }
+}
+
+/* ── CONFETTI ── */
+const cv=document.getElementById('confetti-canvas');
+const cx2=cv.getContext('2d');
+let parts=[], rId=null;
+function resizeCv(){ cv.width=window.innerWidth; cv.height=window.innerHeight; }
+window.addEventListener('resize',resizeCv); resizeCv();
+
+function Pt(x,y,big){
+  const sh=['⚡','★','✦','●','▲'];
+  this.x=x; this.y=y;
+  this.size=big?(12+Math.random()*14):(8+Math.random()*9);
+  this.sh=sh[Math.floor(Math.random()*sh.length)];
+  this.color=`hsl(${Math.random()*360},95%,60%)`;
+  this.vx=(Math.random()-.5)*(big?6:3.5);
+  this.vy=-(2.5+Math.random()*(big?7:4));
+  this.g=.2; this.a=1; this.rot=Math.random()*Math.PI*2;
+  this.rs=(Math.random()-.5)*.22;
+  this.life=1; this.decay=big?.007+Math.random()*.005:.014+Math.random()*.01;
+}
+Pt.prototype.update=function(){ this.vy+=this.g; this.x+=this.vx; this.y+=this.vy; this.rot+=this.rs; this.life-=this.decay; this.a=this.life; };
+Pt.prototype.draw=function(){ cx2.save(); cx2.globalAlpha=Math.max(0,this.a); cx2.fillStyle=this.color; cx2.font=`${this.size}px serif`; cx2.translate(this.x,this.y); cx2.rotate(this.rot); cx2.fillText(this.sh,-this.size/2,this.size/2); cx2.restore(); };
+
+function animPts(){
+  cx2.clearRect(0,0,cv.width,cv.height);
+  parts=parts.filter(p=>p.life>0);
+  parts.forEach(p=>{p.update();p.draw();});
+  if(parts.length>0) rId=requestAnimationFrame(animPts);
+  else cx2.clearRect(0,0,cv.width,cv.height);
+}
+function launchStars(){
+  const mx=cv.width/2;
+  for(let i=0;i<24;i++) parts.push(new Pt(mx+(Math.random()-.5)*220, cv.height*.52, false));
+  if(!rId||parts.length<5){rId=null;animPts();}
+}
+function bigBurst(){
+  for(let i=0;i<90;i++) setTimeout(()=>{ parts.push(new Pt(Math.random()*cv.width, cv.height*.28, true)); },i*38);
+  animPts();
+}
+
+/* ── CROSS FLASH ── */
+function flashCross(){
+  const el=document.getElementById('crossFlash');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),600);
+}
+</script>
+</body>
+</html>

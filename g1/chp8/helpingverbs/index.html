@@ -1,1 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Helping Verbs Quiz</title>
+  <style>
+    :root{
+      --bg1:#fff7fb;
+      --bg2:#fdf2d7;
+      --bg3:#eaf7ff;
+      --card:#ffffffee;
+      --ink:#2b2b35;
+      --muted:#6c6f7d;
+      --brand:#ff6ea8;
+      --brand2:#7c7cff;
+      --good:#27b36a;
+      --bad:#e45757;
+      --shadow:0 18px 50px rgba(76, 52, 93, .12);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,.8) 0 12%, transparent 13%),
+      radial-gradient(circle at 80% 10%, rgba(255,255,255,.8) 0 10%, transparent 11%),
+      linear-gradient(135deg,var(--bg1),var(--bg2) 42%,var(--bg3));color:var(--ink);overflow-x:hidden}
+    body::before,body::after{
+      content:"";position:fixed;inset:-20vh -20vw;pointer-events:none;z-index:0;opacity:.35;
+      background:
+        radial-gradient(circle at 10% 20%, #ff8cc8 0 8px, transparent 9px),
+        radial-gradient(circle at 30% 70%, #ffd86e 0 7px, transparent 8px),
+        radial-gradient(circle at 70% 30%, #8fd3ff 0 8px, transparent 9px),
+        radial-gradient(circle at 85% 80%, #b89cff 0 7px, transparent 8px);
+      animation: drift 18s linear infinite;
+      filter: blur(.2px);
+    }
+    body::after{animation-duration:24s;opacity:.2;transform:scale(1.2)}
+    @keyframes drift{0%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(2vw,2vh,0) rotate(8deg)}100%{transform:translate3d(0,0,0) rotate(0deg)}}
+    .wrap{position:relative;z-index:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:14px}
+    .app{width:min(100%,980px);background:var(--card);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.6);border-radius:32px;box-shadow:var(--shadow);overflow:hidden}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(90deg,rgba(255,110,168,.14),rgba(124,124,255,.12));border-bottom:1px solid rgba(0,0,0,.04)}
+    .pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.05)}
+    .score{color:#ff4d95}
+    .timer{color:#5b61ff}
+    .content{padding:18px}
+    .screen{display:none}
+    .screen.active{display:block}
+    .hero{display:grid;gap:18px;place-items:center;text-align:center;padding:26px 10px 14px}
+    .logoBox{width:min(240px,56vw);aspect-ratio:1;border-radius:28px;background:linear-gradient(145deg,#fff,#ffe7f1);box-shadow:inset 0 0 0 2px rgba(255,110,168,.15), 0 18px 40px rgba(255,110,168,.14);display:grid;place-items:center;overflow:hidden}
+    .logoBox img{max-width:80%;max-height:80%;object-fit:contain}
+    h1{margin:0;font-size:clamp(28px,4vw,44px);line-height:1.05}
+    .sub{margin:0;color:var(--muted);font-size:clamp(15px,2vw,18px);max-width:58ch}
+    .grid{display:grid;gap:14px}
+    .card{background:#fff;border-radius:var(--radius);box-shadow:0 10px 28px rgba(67,42,84,.08);padding:16px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+    .tag{background:#f8f4ff;border:1px solid #ebe5ff;color:#5a49a8;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}
+    .qnum{font-weight:800;color:#ff4d95}
+    .question{font-size:clamp(18px,2.2vw,24px);font-weight:800;line-height:1.35;margin:4px 0 14px}
+    .options{display:grid;gap:10px}
+    .opt{
+      border:1px solid #eadff3;border-radius:18px;padding:13px 14px;background:#fff;font-size:16px;
+      display:flex;align-items:flex-start;gap:12px;text-align:left;cursor:pointer;transition:.15s transform,.15s border-color,.15s background;
+    }
+    .opt:hover{transform:translateY(-1px);border-color:#cdb8ff}
+    .opt .bubble{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f5eefb;font-weight:900;color:#6e58d8;flex:0 0 28px}
+    .opt.correct{background:#ecfff4;border-color:#9be3b9}
+    .opt.wrong{background:#fff1f1;border-color:#f3aaaa}
+    .feedback{min-height:28px;margin-top:12px;font-weight:700}
+    .feedback.good{color:var(--good)}
+    .feedback.bad{color:var(--bad)}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{
+      border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;
+      background:linear-gradient(135deg,var(--brand),#ff8fc2);color:#fff;box-shadow:0 12px 25px rgba(255,110,168,.22)
+    }
+    .btn.secondary{background:#eef1ff;color:#4a54c9;box-shadow:none}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .bar{height:10px;background:#f2e9ff;border-radius:999px;overflow:hidden;margin-top:12px}
+    .bar > div{height:100%;width:0;background:linear-gradient(90deg,#ff73af,#8a7dff);border-radius:inherit;transition:width .25s ease}
+    .note{font-size:13px;color:var(--muted);margin-top:10px}
+    .center{text-align:center}
+    .resultScore{font-size:clamp(44px,8vw,68px);font-weight:900;color:#ff4d95;margin:6px 0}
+    .finalBadge{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#fff5db;color:#9a6d00;font-weight:800}
+    .confetti,.cross{position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden}
+    .star{
+      position:absolute;width:14px;height:14px;background:currentColor;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 72%,21% 91%,32% 57%,2% 35%,39% 35%);
+      animation: pop 900ms ease-out forwards;
+    }
+    @keyframes pop{
+      0%{transform:translate(var(--x),var(--y)) scale(.3) rotate(0deg);opacity:1}
+      100%{transform:translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(1.35) rotate(180deg);opacity:0}
+    }
+    .crossMark{
+      position:absolute;width:40px;height:40px;left:50%;top:46%;transform:translate(-50%,-50%) rotate(45deg);
+      opacity:.9;animation: crosspop .9s ease-out forwards;
+    }
+    .crossMark::before,.crossMark::after{
+      content:"";position:absolute;background:#e45757;border-radius:6px
+    }
+    .crossMark::before{left:16px;top:0;width:8px;height:40px}
+    .crossMark::after{top:16px;left:0;width:40px;height:8px}
+    @keyframes crosspop{
+      0%{transform:translate(-50%,-50%) scale(.4) rotate(45deg);opacity:0}
+      20%{opacity:1}
+      100%{transform:translate(-50%,-60%) scale(1.1) rotate(45deg);opacity:0}
+    }
+    .logoSplash{
+      position:fixed;inset:0;background:linear-gradient(135deg,rgba(255,245,250,.98),rgba(255,244,226,.98));
+      z-index:30;display:grid;place-items:center;transition:opacity .4s ease,visibility .4s ease
+    }
+    .logoSplash.hide{opacity:0;visibility:hidden}
+    .splashCard{
+      width:min(88vw,420px);padding:26px;border-radius:30px;background:#fff;box-shadow:var(--shadow);text-align:center
+    }
+    .splashCard img{max-width:180px;max-height:180px;object-fit:contain}
+    .small{font-size:14px;color:var(--muted)}
+    @media (min-width:800px){
+      .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+      .hero{padding:32px 24px}
+      .content{padding:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="logoSplash" id="logoSplash">
+    <div class="splashCard">
+      <img src="assets/logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
+      <h2 style="margin:14px 0 8px">Innovine</h2>
+      <div class="small">Loading your quiz...</div>
+    </div>
+  </div>
 
+  <div class="confetti" id="confetti"></div>
+  <div class="cross" id="cross"></div>
+
+  <div class="wrap">
+    <div class="app">
+      <div class="topbar">
+        <div class="pill">Score: <span class="score" id="score">0</span>/<span id="total">15</span></div>
+        <div class="pill timer">Time: <span id="time">45</span>s</div>
+      </div>
+
+      <div class="content">
+        <div class="screen active" id="introScreen">
+          <div class="hero">
+            <div class="logoBox">
+              <img src="assets/logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
+            </div>
+            <h1>Helping Verbs Quiz</h1>
+            <p class="sub">Choose the correct helping verb: is, am, or are. Read each sentence carefully and answer step by step.</p>
+            <div class="grid" style="width:min(100%,620px)">
+              <div class="card">
+                <div class="meta">
+                  <span class="tag">Grade 1</span>
+                  <span class="tag">15 Questions</span>
+                  <span class="tag">Candy Theme</span>
+                  <span class="tag">Mobile Friendly</span>
+                </div>
+                <p class="small" style="margin:0 0 8px">You get one retry after a wrong answer. After the second wrong attempt, the correct answer and a short explanation will appear.</p>
+                <button class="btn" id="startBtn">Start Quiz</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" id="quizScreen">
+          <div class="layout">
+            <div class="card">
+              <div class="meta">
+                <span class="tag qnum" id="qCount">Question 1</span>
+                <span class="tag" id="attemptTag">Attempt 1/2</span>
+              </div>
+              <div class="bar"><div id="progress"></div></div>
+              <div class="question" id="questionText"></div>
+              <div class="options" id="options"></div>
+              <div class="feedback" id="feedback"></div>
+              <div class="controls">
+                <button class="btn secondary" id="retryBtn" style="display:none">Try Again</button>
+                <button class="btn" id="nextBtn" disabled>Next</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="finalBadge">Final Challenge</div>
+              <p style="margin:12px 0 8px;font-weight:800">Stay focused and finish strong.</p>
+              <p class="small" style="margin:0">The questions become slightly more detailed as you move ahead. The last few questions check if you can choose the right helping verb in real sentences.</p>
+              <div class="note">Tip: I goes with <b>am</b>, one person or thing goes with <b>is</b>, and more than one goes with <b>are</b>.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" id="resultScreen">
+          <div class="hero">
+            <div class="logoBox">
+              <img src="assets/logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
+            </div>
+            <h1>Quiz Complete!</h1>
+            <div class="resultScore" id="resultScore">0/15</div>
+            <p class="sub" id="resultText"></p>
+            <div class="card" style="width:min(100%,640px)">
+              <button class="btn" id="restartBtn">Play Again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const quiz = [
+  {q:"A child is packing a school bag and talking about himself. Which sentence is correct?", o:["I am packing my bag.","I is packing my bag.","I are packing my bag.","I packing my bag."], a:0, e:"We use am with I."},
+  {q:"A teacher is reading a story to the class. Which sentence is correct?", o:["The teacher are reading.","The teacher am reading.","The teacher is reading.","The teacher reading."], a:2, e:"We use is for one person."},
+  {q:"Three friends are playing football together. Which sentence is correct?", o:["The friends is playing.","The friends am playing.","The friends are playing.","The friends playing."], a:2, e:"We use are for more than one person."},
+  {q:"A child writes, 'I are happy today.' Which word should be used instead?", o:["is","am","were","be"], a:1, e:"We use am with I."},
+  {q:"A puppy is sleeping in a basket. Which sentence is correct?", o:["The puppy are sleeping.","The puppy am sleeping.","The puppy is sleeping.","The puppy sleeping."], a:2, e:"A puppy is one animal, so we use is."},
+  {q:"Many students are drawing pictures. Which sentence is correct?", o:["The students is drawing.","The students are drawing.","The students am drawing.","The students drawing."], a:1, e:"We use are with more than one person."},
+  {q:"You are eating lunch. Which sentence would you say?", o:["I is eating lunch.","I are eating lunch.","I am eating lunch.","I eating lunch."], a:2, e:"We use am when talking about ourselves."},
+  {q:"Which sentence talks about more than one person correctly?", o:["The boys are running.","The boys is running.","The boys am running.","The boys running."], a:0, e:"We use are with plural nouns."},
+  {q:"A family is at a picnic. Two sisters are flying a kite together. Which sentence is correct?", o:["The sisters is flying a kite.","The sisters are flying a kite.","The sisters am flying a kite.","The sisters flying a kite."], a:1, e:"Sisters means more than one person."},
+  {q:"A child wants to describe one bird sitting on a branch. Which sentence should be used?", o:["The bird are on the branch.","The bird am on the branch.","The bird is on the branch.","The bird on the branch."], a:2, e:"Bird refers to one animal, so we use is."},
+  {q:"A child looks outside and sees many clouds. Which sentence is correct?", o:["The clouds is dark.","The clouds are dark.","The clouds am dark.","The clouds dark."], a:1, e:"Clouds means more than one cloud."},
+  {q:"A student says, 'My brother are hungry.' Which word should replace are?", o:["am","is","were","be"], a:1, e:"Brother means one person, so we use is."},
+  {q:"Many children are standing in assembly. Which sentence is correct?", o:["The children is standing.","The children are standing.","The children am standing.","The children standing."], a:1, e:"Children means more than one child."},
+  {q:"A child sees one friend reading quietly. Which sentence is correct?", o:["My friend are reading.","My friend am reading.","My friend is reading.","My friend reading."], a:2, e:"Friend refers to one person."},
+  {q:"Why do we use helping verbs such as is, am and are?", o:["To help complete sentences correctly.","To show colours.","To name places.","To count objects."], a:0, e:"Helping verbs make sentences complete and meaningful."}
+];
+
+let idx=0, score=0, attempts=1, locked=false, timer=45, timerId=null;
+
+const els = {
+  intro:document.getElementById('introScreen'),
+  quiz:document.getElementById('quizScreen'),
+  result:document.getElementById('resultScreen'),
+  startBtn:document.getElementById('startBtn'),
+  restartBtn:document.getElementById('restartBtn'),
+  nextBtn:document.getElementById('nextBtn'),
+  retryBtn:document.getElementById('retryBtn'),
+  qCount:document.getElementById('qCount'),
+  attemptTag:document.getElementById('attemptTag'),
+  questionText:document.getElementById('questionText'),
+  options:document.getElementById('options'),
+  feedback:document.getElementById('feedback'),
+  score:document.getElementById('score'),
+  total:document.getElementById('total'),
+  time:document.getElementById('time'),
+  progress:document.getElementById('progress'),
+  resultScore:document.getElementById('resultScore'),
+  resultText:document.getElementById('resultText'),
+  confetti:document.getElementById('confetti'),
+  cross:document.getElementById('cross'),
+  logoSplash:document.getElementById('logoSplash')
+};
+
+els.total.textContent = quiz.length;
+
+function showScreen(s){
+  [els.intro, els.quiz, els.result].forEach(el => el.classList.remove('active'));
+  s.classList.add('active');
+}
+function startTimer(){
+  clearInterval(timerId);
+  timer = 45;
+  els.time.textContent = timer;
+  timerId = setInterval(()=>{
+    timer--;
+    els.time.textContent = timer;
+    if(timer<=0){
+      clearInterval(timerId);
+      handleWrong(true);
+    }
+  },1000);
+}
+function render(){
+  locked=false; attempts=1;
+  els.feedback.textContent='';
+  els.feedback.className='feedback';
+  els.nextBtn.disabled=true;
+  els.retryBtn.style.display='none';
+  els.attemptTag.textContent='Attempt 1/2';
+  els.qCount.textContent=`Question ${idx+1}`;
+  els.questionText.textContent = quiz[idx].q;
+  els.options.innerHTML='';
+  els.progress.style.width = `${(idx/quiz.length)*100}%`;
+  quiz[idx].o.forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.className='opt';
+    b.innerHTML=`<span class="bubble">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
+    b.onclick=()=>select(i,b);
+    els.options.appendChild(b);
+  });
+  startTimer();
+}
+function select(i,btn){
+  if(locked) return;
+  locked=true;
+  clearInterval(timerId);
+  const correct = quiz[idx].a;
+  const buttons = [...els.options.children];
+  buttons.forEach((b,j)=>{
+    b.disabled=true;
+    if(j===correct) b.classList.add('correct');
+  });
+  if(i===correct){
+    score++;
+    els.score.textContent = score;
+    els.feedback.textContent='Correct!';
+    els.feedback.classList.add('good');
+    fireConfetti();
+    els.nextBtn.disabled=false;
+  }else{
+    btn.classList.add('wrong');
+    handleWrong(false);
+  }
+}
+function handleWrong(auto){
+  if(attempts===1){
+    attempts=2;
+    locked=false;
+    els.attemptTag.textContent='Attempt 2/2';
+    els.feedback.textContent = auto ? 'Time is up. Try one more time.' : 'Not quite. Try one more time.';
+    els.feedback.classList.add('bad');
+    els.retryBtn.style.display='inline-block';
+    [...els.options.children].forEach(b=>b.disabled=false);
+    if(auto){
+      [...els.options.children].forEach((b,j)=>b.classList.remove('wrong'));
+    }
+    startTimer();
+  }else{
+    locked=true;
+    clearInterval(timerId);
+    const correct = quiz[idx].a;
+    [...els.options.children].forEach((b,j)=>{
+      b.disabled=true;
+      if(j===correct) b.classList.add('correct');
+      if(b.classList.contains('wrong')) b.classList.add('wrong');
+    });
+    els.feedback.innerHTML = `Correct answer: <b>${quiz[idx].o[correct]}</b>. ${quiz[idx].e}`;
+    els.feedback.classList.add('bad');
+    showCross();
+    els.nextBtn.disabled=false;
+    els.retryBtn.style.display='none';
+  }
+}
+function next(){
+  idx++;
+  if(idx>=quiz.length){
+    endQuiz();
+  }else{
+    render();
+  }
+}
+function endQuiz(){
+  clearInterval(timerId);
+  showScreen(els.result);
+  els.resultScore.textContent = `${score}/${quiz.length}`;
+  const pct = Math.round(score/quiz.length*100);
+  els.resultText.textContent = pct >= 80 ? 'Excellent work! You used the helping verbs very well.' : pct >= 50 ? 'Good job! You are getting better with is, am, and are.' : 'Keep practicing. You will improve with a little more revision.';
+}
+function fireConfetti(){
+  els.confetti.innerHTML='';
+  const colors=['#ff6ea8','#7c7cff','#ffd86e','#27b36a','#ff8f5e'];
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.color=colors[i%colors.length];
+    s.style.left='50%';
+    s.style.top='50%';
+    s.style.setProperty('--x','0px');
+    s.style.setProperty('--y','0px');
+    s.style.setProperty('--dx',`${(Math.random()*320-160).toFixed(0)}px`);
+    s.style.setProperty('--dy',`${(Math.random()*260-160).toFixed(0)}px`);
+    s.style.transform=`translate(-50%,-50%)`;
+    els.confetti.appendChild(s);
+  }
+  setTimeout(()=>els.confetti.innerHTML='',1000);
+}
+function showCross(){
+  els.cross.innerHTML='';
+  const c=document.createElement('div');
+  c.className='crossMark';
+  els.cross.appendChild(c);
+  setTimeout(()=>els.cross.innerHTML='',1000);
+}
+
+els.startBtn.onclick=()=>{
+  idx=0; score=0; els.score.textContent=score;
+  showScreen(els.quiz);
+  render();
+}
+els.nextBtn.onclick=next;
+els.retryBtn.onclick=()=>{
+  if(attempts===2){
+    locked=false;
+    els.retryBtn.style.display='none';
+    els.feedback.textContent='Choose again.';
+    els.feedback.className='feedback';
+    [...els.options.children].forEach(b=>b.disabled=false);
+    startTimer();
+  }
+}
+els.restartBtn.onclick=()=>{
+  idx=0; score=0; els.score.textContent=score;
+  showScreen(els.intro);
+}
+setTimeout(()=>els.logoSplash.classList.add('hide'),5000);
+</script>
+</body>
+</html>

@@ -1,1 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>This · That · These · Those — Grade 1 English</title>
+<style>
+  /* ── TOKENS ─────────────────────────────────────────── */
+  :root {
+    --sky:    #e0f4ff;
+    --cloud:  #ffffff;
+    --sun:    #ffd94a;
+    --grass:  #6dbe6d;
+    --leaf:   #4da84d;
+    --blue:   #2196f3;
+    --dblue:  #1565c0;
+    --orange: #ff8c00;
+    --red:    #e53935;
+    --green:  #2e7d32;
+    --purple: #7b1fa2;
+    --ink:    #1a1a2e;
+    --soft:   #f5fbff;
+    --radius: 18px;
+    --shadow: 0 6px 24px rgba(0,0,0,.12);
+  }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #c9e8ff 0%, #e8f6ff 55%, #d4f5d0 100%);
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .cloud {
+    position: fixed;
+    background: white;
+    border-radius: 50px;
+    opacity: .75;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift linear infinite;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  .cloud.c1 { width: 120px; height: 40px; top: 8%;  left: -130px; animation-duration: 28s; }
+  .cloud.c1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
+  .cloud.c1::after  { width: 40px; height: 40px; top: -20px; left: 55px; }
+  .cloud.c2 { width: 90px;  height: 30px; top: 20%; left: -100px; animation-duration: 38s; animation-delay: -12s; }
+  .cloud.c2::before { width: 45px; height: 45px; top: -22px; left: 10px; }
+  .cloud.c2::after  { width: 30px; height: 30px; top: -14px; left: 40px; }
+  .cloud.c3 { width: 100px; height: 34px; top: 35%; left: -110px; animation-duration: 32s; animation-delay: -6s; }
+  .cloud.c3::before { width: 50px; height: 50px; top: -25px; left: 12px; }
+  .cloud.c3::after  { width: 35px; height: 35px; top: -17px; left: 48px; }
+  @keyframes drift { from { left: -150px; } to { left: 110vw; } }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .screen {
+    display: none;
+    width: 100%;
+    max-width: 680px;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .screen.active { display: block; }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(.9) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card {
+    background: var(--cloud);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--blue), var(--sun), var(--grass));
+  }
+
+  /* SPLASH */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  #splash img {
+    width: min(260px, 70vw);
+    animation: logoFloat 1.5s ease-in-out infinite alternate;
+  }
+  #splash p { color: rgba(255,255,255,.8); font-size: 1rem; letter-spacing: .08em; }
+  @keyframes logoFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-10px); }
+  }
+  #splash-bar {
+    width: min(260px, 70vw);
+    height: 6px;
+    background: rgba(255,255,255,.2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  #splash-fill {
+    height: 100%;
+    background: var(--sun);
+    border-radius: 99px;
+    width: 0%;
+    transition: width .05s linear;
+  }
+
+  /* INTRO */
+  .intro-hero { text-align: center; padding-bottom: 20px; }
+  .intro-emoji { font-size: 4rem; margin-bottom: 8px; display: block; }
+  .chapter-tag {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 14px;
+  }
+  h1.title { font-size: clamp(1.4rem, 4vw, 2rem); color: var(--ink); line-height: 1.3; margin-bottom: 10px; }
+  .subtitle { color: #555; font-size: .95rem; line-height: 1.6; margin-bottom: 24px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 28px; }
+  .badge {
+    background: var(--soft);
+    border: 1.5px solid #cce4ff;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: .85rem;
+    color: var(--dblue);
+    font-weight: 600;
+  }
+  .rules-box {
+    background: #fff8e1;
+    border-left: 4px solid var(--sun);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .rules-box h3 { font-size: .85rem; color: var(--orange); font-weight: 700; margin-bottom: 8px; }
+  .rules-box ul { list-style: none; }
+  .rules-box ul li { font-size: .88rem; color: #444; margin-bottom: 5px; }
+  .rules-box ul li::before { content: '⭐ '; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border-radius: 99px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: .02em;
+  }
+  .btn:active { transform: scale(.96); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--dblue));
+    color: white;
+    box-shadow: 0 4px 16px rgba(33,150,243,.4);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 22px rgba(33,150,243,.55); transform: translateY(-2px); }
+  .btn-success {
+    background: linear-gradient(135deg, var(--grass), var(--leaf));
+    color: white;
+    box-shadow: 0 4px 16px rgba(109,190,109,.4);
+  }
+  .btn-block { display: block; width: 100%; text-align: center; }
+
+  /* HUD */
+  .hud {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hud-score {
+    background: linear-gradient(135deg, var(--blue), var(--dblue));
+    color: white;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: .9rem;
+    font-weight: 700;
+    min-width: 90px;
+    text-align: center;
+  }
+  .hud-score span { display: block; font-size: 1.3rem; }
+  .hud-progress { flex: 1; min-width: 120px; }
+  .progress-label { font-size: .78rem; color: #666; margin-bottom: 4px; text-align: center; }
+  .progress-bar { height: 10px; background: #e0e0e0; border-radius: 99px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--grass), var(--blue));
+    border-radius: 99px;
+    transition: width .4s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* Timer */
+  .timer-wrap { display: flex; flex-direction: column; align-items: center; }
+  .timer-label { font-size: .72rem; color: #666; margin-bottom: 2px; }
+  .timer-ring { width: 54px; height: 54px; position: relative; }
+  .timer-ring svg { transform: rotate(-90deg); }
+  .timer-ring circle { fill: none; stroke-width: 5; }
+  .timer-bg  { stroke: #e0e0e0; }
+  .timer-arc { stroke: var(--blue); stroke-dasharray: 138; stroke-dashoffset: 0; stroke-linecap: round; transition: stroke-dashoffset .9s linear, stroke .3s; }
+  .timer-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  /* QUESTION */
+  .q-type-tag {
+    display: inline-block;
+    background: #e8f4fd;
+    color: var(--blue);
+    border-radius: 8px;
+    padding: 3px 12px;
+    font-size: .75rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+    color: var(--ink);
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+
+  /* Options */
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .options { grid-template-columns: 1fr; } }
+  .option-btn {
+    background: var(--soft);
+    border: 2.5px solid #cce4ff;
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-size: .95rem;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: all .2s;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--blue); background: #e3f2fd; transform: translateY(-2px); }
+  .option-btn.correct { background: #e8f5e9; border-color: var(--grass); color: var(--green); font-weight: 700; }
+  .option-btn.wrong   { background: #ffebee; border-color: var(--red);   color: var(--red);   font-weight: 700; }
+  .option-btn:disabled { cursor: default; }
+  .option-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    background: var(--blue);
+    color: white;
+    border-radius: 8px;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .option-btn.correct .option-letter { background: var(--grass); }
+  .option-btn.wrong   .option-letter { background: var(--red); }
+
+  /* Attempt dots */
+  .attempt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .attempt-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid #bbb;
+    background: white;
+    transition: background .3s, border-color .3s;
+  }
+  .attempt-dot.used { background: var(--red); border-color: var(--red); }
+
+  /* Feedback */
+  .feedback-box {
+    margin-top: 18px;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: .9rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback-box.show       { display: block; }
+  .feedback-box.correct-fb { background: #e8f5e9; border: 1.5px solid #81c784; color: var(--green); }
+  .feedback-box.wrong-fb   { background: #fff3e0; border: 1.5px solid #ffb74d; color: #e65c00; }
+  .feedback-box.reveal-fb  { background: #e8eaf6; border: 1.5px solid #7986cb; color: #283593; }
+  .next-btn-wrap { text-align: center; margin-top: 18px; display: none; }
+  .next-btn-wrap.show { display: block; }
+
+  /* Retry hint */
+  .retry-hint { text-align: center; margin-top: 12px; font-size: .9rem; color: var(--orange); font-weight: 600; display: none; }
+  .retry-hint.show { display: block; }
+
+  /* RESULT */
+  .result-hero { text-align: center; padding-bottom: 10px; }
+  .result-emoji { font-size: 5rem; display: block; margin-bottom: 10px; animation: bounce 1s ease infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+  .result-title { font-size: 1.8rem; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+  .result-msg   { color: #555; font-size: 1rem; margin-bottom: 22px; }
+  .score-display {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    border-radius: 20px;
+    padding: 24px;
+    color: white;
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .score-display .score-big { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+  .score-display .score-out { font-size: 1rem; opacity: .8; margin-top: 4px; }
+  .score-display .score-pct { font-size: 1.2rem; margin-top: 8px; font-weight: 600; }
+  .stars-row { font-size: 2rem; margin: 12px 0; letter-spacing: 6px; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .stat-card { border-radius: 14px; padding: 16px; text-align: center; }
+  .stat-card.correct-card { background: #e8f5e9; }
+  .stat-card.wrong-card   { background: #ffebee; }
+  .stat-card .stat-num { font-size: 2rem; font-weight: 800; }
+  .stat-card .stat-lbl { font-size: .8rem; color: #555; margin-top: 2px; }
+  .correct-card .stat-num { color: var(--green); }
+  .wrong-card   .stat-num { color: var(--red); }
+  .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* CONFETTI */
+  #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 998; }
+
+  /* CROSS FLASH */
+  .cross-flash {
+    position: fixed; inset: 0; z-index: 997;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; opacity: 0; transition: opacity .2s;
+  }
+  .cross-flash.show { opacity: 1; }
+  .cross-flash .cross-icon {
+    font-size: 8rem;
+    filter: drop-shadow(0 0 20px rgba(229,57,53,.6));
+    animation: crossPop .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes crossPop { from { transform: scale(0); } to { transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<div class="cloud c1"></div>
+<div class="cloud c2"></div>
+<div class="cloud c3"></div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="cross-flash" id="crossFlash">
+  <span class="cross-icon">❌</span>
+</div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <img src="assets/logo.png" alt="Innovine Logo" onerror="this.style.display='none'">
+  <p>Loading your adventure…</p>
+  <div id="splash-bar"><div id="splash-fill"></div></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="card">
+      <div class="intro-hero">
+        <span class="intro-emoji">🌟</span>
+        <span class="chapter-tag">Grade 1 · English · Chapter 5</span>
+        <h1 class="title">This · That · These · Those</h1>
+        <p class="subtitle">
+          Learn when to use these special words to talk about things<br>
+          that are <strong>near</strong> or <strong>far</strong>, <strong>one</strong> or <strong>many</strong>!
+        </p>
+      </div>
+      <div class="meta-row">
+        <span class="badge">📚 16 Questions</span>
+        <span class="badge">⏱ 60 sec each</span>
+        <span class="badge">🎯 1 retry allowed</span>
+      </div>
+      <div class="rules-box">
+        <h3>How to Play</h3>
+        <ul>
+          <li>Read each question carefully.</li>
+          <li>Pick the best answer.</li>
+          <li>You get ONE retry if you go wrong.</li>
+          <li>After 2 wrong tries, we show you the answer!</li>
+          <li>Earn stars for a great score. Good luck! 🌈</li>
+        </ul>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="startQuiz()">Let's Begin! 🚀</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="card">
+      <div class="hud">
+        <div class="hud-score">⭐ Score<span id="scoreDisplay">0</span></div>
+        <div class="hud-progress">
+          <div class="progress-label" id="progressLabel">Question 1 of 16</div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <div class="timer-wrap">
+          <div class="timer-label">Time</div>
+          <div class="timer-ring">
+            <svg viewBox="0 0 46 46" width="54" height="54">
+              <circle class="timer-bg" cx="23" cy="23" r="22"/>
+              <circle class="timer-arc" id="timerArc" cx="23" cy="23" r="22"/>
+            </svg>
+            <div class="timer-num" id="timerNum">60</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="attempt-row">
+        <span style="font-size:.8rem;color:#777">Attempts:</span>
+        <div class="attempt-dot" id="dot1"></div>
+        <div class="attempt-dot" id="dot2"></div>
+      </div>
+
+      <div class="q-type-tag" id="qTypeTag">Scenario-Based</div>
+      <div class="q-text" id="qText">Loading…</div>
+      <div class="options" id="optionsGrid"></div>
+      <div class="retry-hint" id="retryHint">❗ Wrong! You have one more try. Choose carefully!</div>
+      <div class="feedback-box" id="feedbackBox"></div>
+      <div class="next-btn-wrap" id="nextWrap">
+        <button class="btn btn-success" id="nextBtn" onclick="nextQuestion()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="card">
+      <div class="result-hero">
+        <span class="result-emoji" id="resultEmoji">🏆</span>
+        <div class="result-title" id="resultTitle">Amazing!</div>
+        <div class="result-msg" id="resultMsg">You're a star!</div>
+        <div class="stars-row" id="starsRow">⭐⭐⭐</div>
+      </div>
+      <div class="score-display">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-out" id="scoreOut">out of 160 pts</div>
+        <div class="score-pct" id="scorePct">0%</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card correct-card">
+          <div class="stat-num" id="statCorrect">0</div>
+          <div class="stat-lbl">✅ Correct</div>
+        </div>
+        <div class="stat-card wrong-card">
+          <div class="stat-num" id="statWrong">0</div>
+          <div class="stat-lbl">❌ Incorrect</div>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="restartQuiz()">🔄 Play Again</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- AUDIO -->
+<audio id="sndCorrect" src="assets/correct.mp3" preload="auto"></audio>
+<audio id="sndWrong"   src="assets/wrong.mp3"   preload="auto"></audio>
+<audio id="sndClap"    src="assets/claps.mp3"   preload="auto"></audio>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "Scenario-Based",
+    text: "A child sees many birds flying far away in the sky. What should the child say?",
+    options: ["These birds are flying.", "Those birds are flying.", "This bird is flying.", "That birds are flying."],
+    correct: 1,
+    explanation: "We use <b>those</b> for more than one thing that is far away."
+  },
+  {
+    type: "Application-Based",
+    text: "You are holding a storybook and looking at another book on a table across the room. Which sentence is correct?",
+    options: ["This is my book. Is that book yours?", "This is my book. Is this book yours?", "Those is my book. Is that yours?", "These are my book. Is these yours?"],
+    correct: 0,
+    explanation: "<b>This</b> is used for one thing near us and <b>that</b> for one thing far away."
+  },
+  {
+    type: "Classification",
+    text: "Which word would you use for many pencils lying on your desk?",
+    options: ["this", "that", "these", "those"],
+    correct: 2,
+    explanation: "We use <b>these</b> for more than one thing that is near us."
+  },
+  {
+    type: "Error Detection",
+    text: "Which sentence is incorrect?",
+    options: ["This is my bag.", "That is my house.", "These are my pencils.", "These is my pencil."],
+    correct: 3,
+    explanation: "<b>These</b> is used with <b>are</b>, not <b>is</b>."
+  },
+  {
+    type: "Decision-Based",
+    text: "A child points to a billboard far away and wants to talk about it. Which sentence is correct?",
+    options: ["This billboard is colourful.", "That billboard is colourful.", "These billboard is colourful.", "Those billboard is colourful."],
+    correct: 1,
+    explanation: "We use <b>that</b> for one thing that is far away."
+  },
+  {
+    type: "Reasoning-Based",
+    text: "A child stands next to a friend and says, \"That is my friend.\" Why is this not the best choice?",
+    options: ["That is usually used for things that are farther away.", "That is only used for animals.", "That cannot be used in sentences.", "That is used only for many things."],
+    correct: 0,
+    explanation: "For one person near us, <b>this</b> is usually a better choice."
+  },
+  {
+    type: "Scenario-Based",
+    text: "You are holding two crayons in your hand. Which sentence is correct?",
+    options: ["These are my crayons.", "This is my crayons.", "Those is my crayons.", "That are my crayons."],
+    correct: 0,
+    explanation: "We use <b>these</b> for more than one thing near us."
+  },
+  {
+    type: "Application-Based",
+    text: "You see several rabbits hopping at the other end of a field. Which sentence is correct?",
+    options: ["These rabbits are hopping.", "Those rabbits are hopping.", "This rabbit are hopping.", "That rabbits are hopping."],
+    correct: 1,
+    explanation: "We use <b>those</b> for many things that are far away."
+  },
+  {
+    type: "Decision-Based",
+    text: "A child is folding several dresses lying beside her. Which sentence should she use?",
+    options: ["These dresses are neat.", "Those dresses are neat.", "This dresses are neat.", "That dresses are neat."],
+    correct: 0,
+    explanation: "The dresses are near her and there is more than one, so we use <b>these</b>."
+  },
+  {
+    type: "Error Detection",
+    text: "A student says, \"These is my notebook.\" What should be corrected?",
+    options: ["These → This", "is → are", "notebook → notebooks", "my → mine"],
+    correct: 0,
+    explanation: "There is only one notebook, so <b>this</b> should be used."
+  },
+  {
+    type: "Scenario-Based",
+    text: "A teacher points to doors near her and doors at the end of the corridor. Which sentence is correct?",
+    options: ["These are the doors near us and those are the doors far away.", "These are the doors near us and these are the doors far away.", "Those are the doors near us and these are the doors far away.", "This is the doors near us and those are the doors far away."],
+    correct: 0,
+    explanation: "<b>These</b> is for near objects and <b>those</b> for far objects."
+  },
+  {
+    type: "Error Detection",
+    text: "A student writes, \"This are my shoes.\" What is the mistake?",
+    options: ["This should change because it is used for one thing.", "Are should change because it is used for many things.", "Shoes should not be used.", "There is no mistake."],
+    correct: 0,
+    explanation: "<b>Shoes</b> means more than one, so <b>these</b> should be used instead of <b>this</b>."
+  },
+  {
+    type: "Application-Based",
+    text: "A child picks up one pencil from the desk. Which sentence is correct?",
+    options: ["This is my pencil.", "These are my pencil.", "Those are my pencil.", "That are my pencil."],
+    correct: 0,
+    explanation: "We use <b>this</b> for one thing near us."
+  },
+  {
+    type: "Picture-Based",
+    text: "A child is standing near one toy and looking at several kites flying far away. Which pair of words would best describe them?",
+    options: ["this, these", "that, this", "this, those", "these, that"],
+    correct: 2,
+    explanation: "<b>This</b> is used for one nearby thing and <b>those</b> for many things far away."
+  },
+  {
+    type: "🏆 Final Challenge",
+    text: "During a nature walk, students see birds flying far away. Which sentence is correct?",
+    options: ["This is birds.", "Those are birds.", "That is birds.", "These is birds."],
+    correct: 1,
+    explanation: "We use <b>those</b> for many things that are far away."
+  },
+  {
+    type: "🏆 Final Challenge",
+    text: "Why do we use words such as this, that, these and those?",
+    options: ["To show whether things are near or far, and one or many", "To describe colours", "To show actions", "To name people"],
+    correct: 0,
+    explanation: "These words help us talk about <b>distance</b> (near/far) and <b>number</b> (one/many)."
+  }
+];
+
+const TIMER_MAX = 60;
+let state = {};
+
+function initState() {
+  state = { qIndex: 0, score: 0, correctCount: 0, wrongCount: 0, attempts: 0, answered: false, timerVal: TIMER_MAX, timerInterval: null };
+}
+
+function playSound(id) {
+  try { const el = document.getElementById(id); if (el) { el.currentTime = 0; el.play().catch(()=>{}); } } catch(e) {}
+}
+
+// SPLASH — 5 seconds
+(function runSplash() {
+  const fill = document.getElementById('splash-fill');
+  const splash = document.getElementById('splash');
+  let pct = 0;
+  const iv = setInterval(() => {
+    pct += 2;
+    fill.style.width = pct + '%';
+    if (pct >= 100) {
+      clearInterval(iv);
+      setTimeout(() => {
+        splash.style.opacity = '0';
+        splash.style.transition = 'opacity .5s';
+        setTimeout(() => splash.remove(), 500);
+      }, 300);
+    }
+  }, 100);
+})();
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function startQuiz() {
+  initState();
+  showScreen('quiz');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = QUESTIONS[state.qIndex];
+  state.attempts = 0;
+  state.answered = false;
+  const isFinal = state.qIndex >= QUESTIONS.length - 2;
+  document.getElementById('qTypeTag').textContent = q.type;
+  document.getElementById('qTypeTag').style.background = isFinal ? '#f3e5f5' : '#e8f4fd';
+  document.getElementById('qTypeTag').style.color      = isFinal ? '#7b1fa2' : '#2196f3';
+  document.getElementById('qText').textContent = q.text;
+  updateHUD();
+  resetDots();
+  hideFeedback();
+  hideNext();
+  document.getElementById('retryHint').classList.remove('show');
+  renderOptions();
+  startTimer();
+}
+
+function renderOptions() {
+  const q = QUESTIONS[state.qIndex];
+  const labels = ['A','B','C','D'];
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${labels[i]}</span>${opt}`;
+    btn.onclick = () => handleAnswer(i, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function updateHUD() {
+  const total = QUESTIONS.length;
+  document.getElementById('scoreDisplay').textContent = state.score;
+  document.getElementById('progressLabel').textContent = `Question ${state.qIndex + 1} of ${total}`;
+  document.getElementById('progressFill').style.width = ((state.qIndex / total) * 100) + '%';
+}
+
+function resetDots() {
+  document.getElementById('dot1').className = 'attempt-dot';
+  document.getElementById('dot2').className = 'attempt-dot';
+}
+function markDot(n) { document.getElementById('dot' + n).classList.add('used'); }
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerVal = TIMER_MAX;
+  updateTimerUI();
+  state.timerInterval = setInterval(() => {
+    state.timerVal--;
+    updateTimerUI();
+    if (state.timerVal <= 0) { clearInterval(state.timerInterval); if (!state.answered) timeUp(); }
+  }, 1000);
+}
+function stopTimer() { clearInterval(state.timerInterval); }
+
+function updateTimerUI() {
+  const v = state.timerVal;
+  const arc = document.getElementById('timerArc');
+  arc.style.strokeDashoffset = 138 - (v / TIMER_MAX) * 138;
+  arc.style.stroke = v > 15 ? '#2196f3' : v > 8 ? '#ff8c00' : '#e53935';
+  document.getElementById('timerNum').textContent = v;
+  document.getElementById('timerNum').style.color = v > 15 ? 'var(--ink)' : v > 8 ? 'var(--orange)' : 'var(--red)';
+}
+
+function timeUp() {
+  if (state.answered) return;
+  state.answered = true;
+  state.wrongCount++;
+  disableOptions();
+  revealCorrect();
+  showFeedback('reveal', `⏰ Time's up! The correct answer is highlighted above.<br>💡 ${QUESTIONS[state.qIndex].explanation}`);
+  showNext();
+}
+
+function handleAnswer(chosen, btn) {
+  if (state.answered) return;
+  const q = QUESTIONS[state.qIndex];
+  const isCorrect = chosen === q.correct;
+  if (isCorrect) {
+    stopTimer();
+    state.answered = true;
+    state.score += (state.attempts === 0) ? 10 : 5;
+    state.correctCount++;
+    btn.classList.add('correct');
+    disableOptions();
+    updateHUD();
+    playSound('sndCorrect');
+    launchStarConfetti();
+    showFeedback('correct', `✅ Correct! Well done! 🎉<br>💡 ${q.explanation}`);
+    showNext();
+  } else {
+    state.attempts++;
+    markDot(state.attempts);
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    showCrossFlash();
+    playSound('sndWrong');
+    if (state.attempts < 2) {
+      document.getElementById('retryHint').classList.add('show');
+      showFeedback('wrong', `❌ Not quite! Try one more time.`);
+    } else {
+      stopTimer();
+      state.answered = true;
+      state.wrongCount++;
+      disableOptions();
+      revealCorrect();
+      showFeedback('reveal', `💡 The correct answer is highlighted.<br>${q.explanation}`);
+      showNext();
+    }
+  }
+}
+
+function disableOptions() { document.querySelectorAll('.option-btn').forEach(b => b.disabled = true); }
+function revealCorrect() { document.querySelectorAll('.option-btn')[QUESTIONS[state.qIndex].correct].classList.add('correct'); }
+
+function showFeedback(type, html) {
+  const box = document.getElementById('feedbackBox');
+  box.className = 'feedback-box show';
+  if (type === 'correct') box.classList.add('correct-fb');
+  else if (type === 'wrong') box.classList.add('wrong-fb');
+  else box.classList.add('reveal-fb');
+  box.innerHTML = html;
+}
+function hideFeedback() { const b = document.getElementById('feedbackBox'); b.className = 'feedback-box'; b.innerHTML = ''; }
+
+function showNext() {
+  document.getElementById('nextWrap').classList.add('show');
+  const btn = document.getElementById('nextBtn');
+  if (state.qIndex >= QUESTIONS.length - 1) btn.textContent = '🎉 See My Results!';
+  else if (state.qIndex === QUESTIONS.length - 3) btn.textContent = '🏆 Final Challenge →';
+  else btn.textContent = 'Next →';
+}
+function hideNext() { document.getElementById('nextWrap').classList.remove('show'); }
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= QUESTIONS.length) showResults();
+  else loadQuestion();
+}
+
+function showResults() {
+  stopTimer();
+  const total = QUESTIONS.length;
+  const pct   = Math.round((state.correctCount / total) * 100);
+  const stars = pct >= 90 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : '⭐';
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : '🌱';
+  const title = pct >= 90 ? 'Outstanding!' : pct >= 70 ? 'Great Job!' : 'Keep Practising!';
+  const msg   = pct >= 90 ? "You're a grammar superstar! 🌟" : pct >= 70 ? "You've got a good grip on this! 💪" : "Every mistake helps you learn. Try again! 📚";
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent   = msg;
+  document.getElementById('starsRow').textContent    = stars;
+  document.getElementById('scoreBig').textContent    = state.score;
+  document.getElementById('scoreOut').textContent    = `out of ${total * 10} pts`;
+  document.getElementById('scorePct').textContent    = `${pct}% Accuracy`;
+  document.getElementById('statCorrect').textContent = state.correctCount;
+  document.getElementById('statWrong').textContent   = state.wrongCount;
+  showScreen('result');
+  if (pct >= 70) { playSound('sndClap'); bigConfetti(); }
+}
+
+function restartQuiz() { startQuiz(); }
+
+// CONFETTI
+const canvas = document.getElementById('confetti-canvas');
+const ctx    = canvas.getContext('2d');
+let particles = [], rafId = null;
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function Particle(x, y, big) {
+  const shapes = ['★','✦','●','▲','♦'];
+  this.x = x; this.y = y;
+  this.size  = big ? (10 + Math.random()*14) : (8 + Math.random()*8);
+  this.shape = shapes[Math.floor(Math.random()*shapes.length)];
+  this.color = `hsl(${Math.random()*360},90%,55%)`;
+  this.vx    = (Math.random()-.5)*(big?5:3);
+  this.vy    = -(2+Math.random()*(big?6:3));
+  this.gravity   = .18;
+  this.alpha     = 1;
+  this.rotation  = Math.random()*Math.PI*2;
+  this.rotSpeed  = (Math.random()-.5)*.2;
+  this.life  = 1;
+  this.decay = big ? .008+Math.random()*.006 : .015+Math.random()*.01;
+}
+Particle.prototype.update = function() {
+  this.vy += this.gravity; this.x += this.vx; this.y += this.vy;
+  this.rotation += this.rotSpeed; this.life -= this.decay; this.alpha = this.life;
+};
+Particle.prototype.draw = function() {
+  ctx.save(); ctx.globalAlpha = Math.max(0, this.alpha);
+  ctx.fillStyle = this.color; ctx.font = `${this.size}px serif`;
+  ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+  ctx.fillText(this.shape, -this.size/2, this.size/2); ctx.restore();
+};
+function animateParticles() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => { p.update(); p.draw(); });
+  if (particles.length > 0) rafId = requestAnimationFrame(animateParticles);
+  else ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+function launchStarConfetti() {
+  const cx = canvas.width/2;
+  for (let i=0;i<22;i++) particles.push(new Particle(cx+(Math.random()-.5)*200, canvas.height*.55, false));
+  if (!rafId||particles.length<5) { rafId=null; animateParticles(); }
+}
+function bigConfetti() {
+  for (let i=0;i<80;i++) setTimeout(()=>{ particles.push(new Particle(Math.random()*canvas.width, canvas.height*.3, true)); }, i*40);
+  animateParticles();
+}
+
+// CROSS FLASH
+function showCrossFlash() {
+  const el = document.getElementById('crossFlash');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 600);
+}
+</script>
+</body>
+</html>

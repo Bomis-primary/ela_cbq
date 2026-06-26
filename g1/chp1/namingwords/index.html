@@ -1,1 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Naming Words Quiz</title>
+<style>
+  :root{
+    --bg1:#fff7cc;
+    --bg2:#e6f7ff;
+    --card:#ffffff;
+    --ink:#234;
+    --pri:#ff7a59;
+    --sec:#4b7bec;
+    --good:#2ecc71;
+    --bad:#e74c3c;
+    --shadow:0 10px 30px rgba(0,0,0,.08)
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    min-height:100vh;
+    overflow-x:hidden
+  }
+  .bg-stars{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.35;
+    overflow:hidden
+  }
+  .star{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:#fff2a8;
+    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    animation:float 10s linear infinite
+  }
+  @keyframes float{
+    from{transform:translateY(110vh) rotate(0)}
+    to{transform:translateY(-20vh) rotate(360deg)}
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:18px
+  }
+  .screen{
+    display:none;
+    animation:fade .25s ease
+  }
+  .screen.active{display:block}
+  @keyframes fade{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+  }
+  .card{
+    background:var(--card);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:22px
+  }
+  .hero{
+    display:grid;
+    place-items:center;
+    min-height:100vh;
+    text-align:center
+  }
+  .logo{
+    width:120px;
+    height:120px;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 12px;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,.12))
+  }
+  h1,h2{margin:0 0 10px}
+  p{line-height:1.5;margin:8px 0}
+  .btn{
+    border:0;
+    border-radius:16px;
+    padding:14px 18px;
+    font-weight:700;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--pri),#ffb347);
+    color:#fff;
+    box-shadow:0 8px 18px rgba(255,122,89,.25);
+    transition:transform .15s ease,opacity .15s ease
+  }
+  .btn:active{transform:scale(.98)}
+  .btn.secondary{
+    background:linear-gradient(135deg,var(--sec),#6dd5fa)
+  }
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:14px
+  }
+  .pill{
+    background:#f3f7ff;
+    border-radius:999px;
+    padding:10px 14px;
+    font-weight:700
+  }
+  .score{color:#1f7a1f}
+  .timer{color:#b35c00}
+  .progress{
+    height:12px;
+    background:#edf2ff;
+    border-radius:999px;
+    overflow:hidden;
+    margin:12px 0 18px
+  }
+  .bar{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#4b7bec,#57e2a7);
+    transition:width .3s ease
+  }
+  .qbox{
+    background:linear-gradient(180deg,#fff,#fffaf0);
+    border:2px solid #f1e6c7;
+    border-radius:22px;
+    padding:18px
+  }
+  .qno{
+    font-size:.95rem;
+    font-weight:700;
+    color:#7a5c19
+  }
+  .question{
+    font-size:1.2rem;
+    font-weight:800;
+    margin:10px 0 16px
+  }
+  .opts{
+    display:grid;
+    gap:12px
+  }
+  .opt{
+    width:100%;
+    text-align:left;
+    padding:14px 16px;
+    border-radius:16px;
+    border:2px solid #e7edf8;
+    background:#fff;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:700
+  }
+  .opt:hover{
+    border-color:#9fc0ff;
+    background:#f8fbff
+  }
+  .opt.correct{
+    background:#eafff2;
+    border-color:var(--good)
+  }
+  .opt.wrong{
+    background:#fff1f1;
+    border-color:var(--bad)
+  }
+  .feedback{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none
+  }
+  .feedback.show{display:block}
+  .feedback.good{
+    background:#ecfff4;
+    color:#176b35
+  }
+  .feedback.bad{
+    background:#fff2f2;
+    color:#8d1d1d
+  }
+  .final{
+    display:none;
+    margin-top:14px;
+    padding:16px;
+    border-radius:18px;
+    background:#fff8e6;
+    border:2px dashed #f2c94c
+  }
+  .visual{
+    position:relative;
+    height:110px;
+    overflow:hidden;
+    margin:8px 0 0
+  }
+  .blob{
+    position:absolute;
+    border-radius:999px;
+    filter:blur(2px);
+    opacity:.5;
+    animation:drift 14s ease-in-out infinite alternate
+  }
+  @keyframes drift{
+    from{transform:translateX(0)}
+    to{transform:translateX(40px)}
+  }
+  .blob.b1{width:90px;height:90px;background:#ffeaa7;left:4%;top:12px}
+  .blob.b2{width:70px;height:70px;background:#c8f7f0;right:8%;top:18px}
+  .blob.b3{width:52px;height:52px;background:#ffd6e7;left:45%;top:44px}
+  .stamp{
+    position:fixed;
+    inset:auto 16px 16px auto;
+    background:rgba(255,255,255,.92);
+    padding:10px 12px;
+    border-radius:999px;
+    box-shadow:var(--shadow);
+    font-weight:800;
+    display:none
+  }
+  .cross{
+    position:fixed;
+    width:70px;
+    height:70px;
+    inset:auto;
+    pointer-events:none;
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.5);
+    transition:.25s
+  }
+  .cross.show{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1)
+  }
+  .cross:before,.cross:after{
+    content:"";
+    position:absolute;
+    left:33px;
+    top:10px;
+    width:6px;
+    height:50px;
+    background:var(--bad);
+    border-radius:10px
+  }
+  .cross:before{transform:rotate(45deg)}
+  .cross:after{transform:rotate(-45deg)}
+  .confetti{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden
+  }
+  .confetti i{
+    position:absolute;
+    top:-20px;
+    width:10px;
+    height:10px;
+    background:#fff;
+    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    animation:fall 1s linear forwards
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(720deg);opacity:0}
+  }
+  @media (max-width:600px){
+    .wrap{padding:12px}
+    .card{padding:16px;border-radius:20px}
+    .question{font-size:1.08rem}
+    .opt{padding:12px 14px}
+  }
+</style>
+</head>
+<body>
+<div class="bg-stars" id="bgStars"></div>
+<div class="confetti" id="confetti"></div>
+<div class="cross" id="cross"></div>
+<div class="stamp" id="stamp">Correct!</div>
 
+<div class="wrap">
+  <section class="screen active hero" id="introScreen">
+    <div class="card" style="max-width:560px;width:100%">
+      <img src="assets/logo.png" alt="Innovine Logo" class="logo" id="logo" />
+      <h1>Naming Words Adventure</h1>
+      <p>Pick the naming word that matches each question. You get one retry after a wrong answer.</p>
+      <p><strong>Chapter:</strong> Naming Words (Person, Place, Animal, Thing)</p>
+      <button class="btn" id="startBtn">Start Quiz</button>
+    </div>
+  </section>
+
+  <section class="screen" id="quizScreen">
+    <div class="card">
+      <div class="topbar">
+        <div class="pill">Question <span id="qIndex">1</span>/<span id="qTotal">15</span></div>
+        <div class="pill score">Score: <span id="score">0</span></div>
+        <div class="pill timer">Time: <span id="time">45</span>s</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="visual">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+      </div>
+      <div class="qbox">
+        <div class="qno" id="qNo"></div>
+        <div class="question" id="question"></div>
+        <div class="opts" id="opts"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="final" id="finalChallenge"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen hero" id="resultScreen">
+    <div class="card" style="max-width:560px;width:100%">
+      <h2>Quiz Complete</h2>
+      <p id="resultText"></p>
+      <button class="btn secondary" id="restartBtn">Play Again</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const questions = [
+  {q:'Aditi wants to read a story during library time. Which naming word tells what she can hold and read?', o:['teacher','library','book','puppy'], a:2, e:'A book is a thing that can be read.'},
+  {q:"Neel's mother introduces him to Uncle Raj at a family gathering. Which naming word tells who the person is?", o:['house','Uncle Raj','table','puppy'], a:1, e:'Uncle Raj is the name of a person.'},
+  {q:'Priya goes somewhere every morning to learn, read and play with friends. What is this place?', o:['school','pencil','dog','teacher'], a:0, e:'Children go to school to learn.'},
+  {q:'A child is making a list of places. Which word should be added?', o:['cat','table','Mumbai','pencil'], a:2, e:'Mumbai is the name of a place.'},
+  {q:'Rohan plays with his puppy every evening. Which naming word tells about the animal?', o:['puppy','Rohan','garden','ball'], a:0, e:'Puppy is an animal.'},
+  {q:'Students are writing in class. Which naming word tells what they are using?', o:['write','pencil','quickly','speak'], a:1, e:'A pencil is a thing used for writing.'},
+  {q:'Meera goes to a shop with her mother. Which pair shows a place and a person?', o:['shop, mother','shop, go','mother, go','go, shop'], a:0, e:'Shop is a place and mother is a person.'},
+  {q:'A child is grouping animals together. Which word does not belong?', o:['tiger','elephant','apple','dog'], a:2, e:'Apple is a thing, not an animal.'},
+  {q:'A teacher teaches in a school. Which pair shows a person and a place?', o:['teacher, school','teacher, teach','school, teach','teach, teacher'], a:0, e:'Teacher is a person and school is a place.'},
+  {q:'The dog is sleeping under the table. Which pair names an animal and a thing?', o:['dog, table','dog, under','under, table','is, dog'], a:0, e:'Dog is an animal and table is a thing.'},
+  {q:'Aarav wants to play on swings and slides with his friends. Where will he go?', o:['park','tiger','pencil','teacher'], a:0, e:'A park is a place where children play.'},
+  {q:'Riya uses an eraser in her classroom. Which pair shows a thing and a place?', o:['eraser, classroom','eraser, use','classroom, use','use, eraser'], a:0, e:'Eraser is a thing and classroom is a place.'},
+  {q:'A child is collecting things to keep in a school bag. Which group contains only things?', o:['lion, tiger, dog','table, book, pencil','school, park, city','boy, girl, teacher'], a:1, e:'All the words in option b are things.'},
+  {q:'You visit a zoo with your family. Which group are you most likely to see there?', o:['teacher, chalk, board','lion, elephant, zebra','table, chair, bag','run, jump, play'], a:1, e:'Zoos have animals.'},
+  {q:'Meera goes to the park with Uncle Raj and sees a dog. Which option shows a person, an animal and a place?', o:['Uncle Raj, dog, park','dog, park, sees','Uncle Raj, sees, dog','sees, dog, park'], a:0, e:'Uncle Raj is a person, dog is an animal and park is a place.'}
+];
+
+let idx = 0, score = 0, timeLeft = 45, timer = null, wrongAttempts = 0;
+const total = questions.length;
+qTotal.textContent = total;
+
+for (let i = 0; i < 18; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = (Math.random() * 100) + '%';
+  s.style.animationDelay = (Math.random() * 10) + 's';
+  s.style.animationDuration = (8 + Math.random() * 8) + 's';
+  document.getElementById('bgStars').appendChild(s);
+}
+
+const introScreen = document.getElementById('introScreen');
+const quizScreen = document.getElementById('quizScreen');
+const resultScreen = document.getElementById('resultScreen');
+const qIndex = document.getElementById('qIndex');
+const scoreEl = document.getElementById('score');
+const timeEl = document.getElementById('time');
+const bar = document.getElementById('bar');
+const qNo = document.getElementById('qNo');
+const questionEl = document.getElementById('question');
+const opts = document.getElementById('opts');
+const feedback = document.getElementById('feedback');
+const resultText = document.getElementById('resultText');
+const finalChallenge = document.getElementById('finalChallenge');
+const cross = document.getElementById('cross');
+const stamp = document.getElementById('stamp');
+
+const sounds = {
+  correct: new Audio('assets/correct.mp3'),
+  wrong: new Audio('assets/wrong.mp3'),
+  clap: new Audio('assets/freesound_community-claps-44774.mp3')
+};
+Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.6; });
+
+function play(name){
+  try{
+    const a = sounds[name];
+    if(a){ a.currentTime = 0; a.play(); }
+  }catch(e){}
+}
+
+function showScreen(s){
+  [introScreen, quizScreen, resultScreen].forEach(x => x.classList.remove('active'));
+  s.classList.add('active');
+}
+
+function startQuiz(){
+  idx = 0;
+  score = 0;
+  wrongAttempts = 0;
+  loadQ();
+  showScreen(quizScreen);
+}
+
+function loadQ(){
+  clearInterval(timer);
+  const q = questions[idx];
+  timeLeft = 45;
+  qIndex.textContent = idx + 1;
+  scoreEl.textContent = score;
+  qNo.textContent = `Q${idx + 1}.`;
+  questionEl.textContent = q.q;
+  opts.innerHTML = '';
+  feedback.className = 'feedback';
+  feedback.textContent = '';
+  finalChallenge.style.display = 'none';
+  timeEl.textContent = timeLeft;
+  bar.style.width = (idx / total * 100) + '%';
+
+  timer = setInterval(() => {
+    timeLeft--;
+    timeEl.textContent = timeLeft;
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      handleWrong(true);
+    }
+  }, 1000);
+
+  q.o.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = String.fromCharCode(97 + i) + ') ' + t;
+    b.onclick = () => answer(i, b);
+    opts.appendChild(b);
+  });
+}
+
+function answer(choice, btn){
+  clearInterval(timer);
+  const q = questions[idx];
+  const buttons = [...document.querySelectorAll('.opt')];
+  buttons.forEach(x => x.disabled = true);
+
+  if(choice === q.a){
+    btn.classList.add('correct');
+    score++;
+    scoreEl.textContent = score;
+    feedback.className = 'feedback good show';
+    feedback.textContent = 'Correct! ' + q.e;
+    play('correct');
+    confettiBurst();
+    setTimeout(next, 900);
+  } else {
+    handleWrong(false, btn);
+  }
+}
+
+function handleWrong(fromTime, btn){
+  wrongAttempts++;
+  const q = questions[idx];
+
+  if(btn) btn.classList.add('wrong');
+  cross.classList.add('show');
+  cross.style.left = '50%';
+  cross.style.top = '50%';
+  setTimeout(() => cross.classList.remove('show'), 450);
+  play('wrong');
+
+  if(wrongAttempts === 1 && !fromTime){
+    feedback.className = 'feedback bad show';
+    feedback.textContent = 'Try once more.';
+    [...document.querySelectorAll('.opt')].forEach(x => x.disabled = false);
+    return;
+  }
+
+  feedback.className = 'feedback bad show';
+  feedback.textContent = `Correct answer: ${String.fromCharCode(97 + q.a)}) ${q.o[q.a]}. ${q.e}`;
+  [...document.querySelectorAll('.opt')].forEach((x, i) => {
+    if(i === q.a) x.classList.add('correct');
+  });
+  setTimeout(next, 1400);
+}
+
+function next(){
+  idx++;
+  bar.style.width = (idx / total * 100) + '%';
+  if(idx < total) loadQ();
+  else finish();
+}
+
+function confettiBurst(){
+  stamp.style.display = 'block';
+  stamp.textContent = 'Great job!';
+  setTimeout(() => stamp.style.display = 'none', 800);
+
+  for(let i = 0; i < 18; i++){
+    const c = document.createElement('i');
+    c.style.left = (Math.random() * 100) + '%';
+    c.style.background = ['#ffd166','#ff7a59','#4b7bec','#2ecc71','#ff9ff3'][i % 5];
+    c.style.animationDuration = (.8 + Math.random() * .7) + 's';
+    document.getElementById('confetti').appendChild(c);
+    setTimeout(() => c.remove(), 1600);
+  }
+}
+
+function finish(){
+  clearInterval(timer);
+  showScreen(resultScreen);
+  const pct = Math.round(score / total * 100);
+  resultText.innerHTML = `You scored <strong>${score}/${total}</strong> (${pct}%). ${pct >= 80 ? 'Excellent!' : 'Nice work!'} Final challenge complete.`;
+  play('clap');
+}
+
+startBtn.onclick = startQuiz;
+restartBtn.onclick = () => showScreen(introScreen);
+
+setTimeout(() => {
+  document.getElementById('logo').style.transition = 'opacity .5s';
+  document.getElementById('logo').style.opacity = '0';
+}, 5000);
+</script>
+</body>
+</html>

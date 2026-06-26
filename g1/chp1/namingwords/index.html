@@ -6,15 +6,15 @@
 <title>Naming Words Quiz</title>
 <style>
   :root{
-    --bg1:#fff7cc;
-    --bg2:#e6f7ff;
+    --bg1:#fff6bf;
+    --bg2:#dff7ff;
     --card:#ffffff;
-    --ink:#234;
-    --pri:#ff7a59;
+    --ink:#24324a;
+    --pri:#ff7b54;
     --sec:#4b7bec;
-    --good:#2ecc71;
-    --bad:#e74c3c;
-    --shadow:0 10px 30px rgba(0,0,0,.08)
+    --good:#22c55e;
+    --bad:#ef4444;
+    --shadow:0 12px 30px rgba(0,0,0,.10);
   }
   *{box-sizing:border-box}
   body{
@@ -23,35 +23,35 @@
     color:var(--ink);
     background:linear-gradient(135deg,var(--bg1),var(--bg2));
     min-height:100vh;
-    overflow-x:hidden
+    overflow-x:hidden;
   }
   .bg-stars{
     position:fixed;
     inset:0;
     pointer-events:none;
-    opacity:.35;
-    overflow:hidden
+    overflow:hidden;
+    opacity:.32;
   }
   .star{
     position:absolute;
-    width:10px;
-    height:10px;
-    background:#fff2a8;
+    width:12px;
+    height:12px;
+    background:#fff7b2;
     clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-    animation:float 10s linear infinite
+    animation:drift linear infinite;
   }
-  @keyframes float{
-    from{transform:translateY(110vh) rotate(0)}
+  @keyframes drift{
+    from{transform:translateY(110vh) rotate(0deg)}
     to{transform:translateY(-20vh) rotate(360deg)}
   }
   .wrap{
-    max-width:920px;
+    max-width:960px;
     margin:0 auto;
-    padding:18px
+    padding:16px;
   }
   .screen{
     display:none;
-    animation:fade .25s ease
+    animation:fade .25s ease;
   }
   .screen.active{display:block}
   @keyframes fade{
@@ -62,38 +62,46 @@
     background:var(--card);
     border-radius:24px;
     box-shadow:var(--shadow);
-    padding:22px
+    padding:22px;
   }
   .hero{
+    min-height:100vh;
     display:grid;
     place-items:center;
-    min-height:100vh;
-    text-align:center
+    text-align:center;
+  }
+  .splash-box{
+    max-width:540px;
+    width:100%;
   }
   .logo{
-    width:120px;
-    height:120px;
+    width:140px;
+    height:140px;
     object-fit:contain;
     display:block;
-    margin:0 auto 12px;
-    filter:drop-shadow(0 8px 18px rgba(0,0,0,.12))
+    margin:0 auto;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,.12));
+  }
+  .logo-only{
+    display:grid;
+    place-items:center;
+    min-height:70vh;
   }
   h1,h2{margin:0 0 10px}
-  p{line-height:1.5;margin:8px 0}
+  p{margin:8px 0; line-height:1.5}
   .btn{
     border:0;
     border-radius:16px;
-    padding:14px 18px;
-    font-weight:700;
+    padding:14px 20px;
+    font-weight:800;
+    font-size:1rem;
     cursor:pointer;
     background:linear-gradient(135deg,var(--pri),#ffb347);
     color:#fff;
-    box-shadow:0 8px 18px rgba(255,122,89,.25);
-    transition:transform .15s ease,opacity .15s ease
+    box-shadow:0 8px 18px rgba(255,123,84,.25);
   }
-  .btn:active{transform:scale(.98)}
   .btn.secondary{
-    background:linear-gradient(135deg,var(--sec),#6dd5fa)
+    background:linear-gradient(135deg,var(--sec),#6dd5fa);
   }
   .topbar{
     display:flex;
@@ -101,86 +109,87 @@
     gap:10px;
     flex-wrap:wrap;
     align-items:center;
-    margin-bottom:14px
+    margin-bottom:14px;
   }
   .pill{
     background:#f3f7ff;
     border-radius:999px;
     padding:10px 14px;
-    font-weight:700
+    font-weight:700;
   }
-  .score{color:#1f7a1f}
-  .timer{color:#b35c00}
+  .score{color:#157f3c}
+  .timer{color:#b45309}
   .progress{
     height:12px;
     background:#edf2ff;
     border-radius:999px;
     overflow:hidden;
-    margin:12px 0 18px
+    margin:12px 0 18px;
   }
   .bar{
     height:100%;
-    width:0;
-    background:linear-gradient(90deg,#4b7bec,#57e2a7);
-    transition:width .3s ease
+    width:0%;
+    background:linear-gradient(90deg,#4b7bec,#60d394);
+    transition:width .3s ease;
   }
   .qbox{
-    background:linear-gradient(180deg,#fff,#fffaf0);
-    border:2px solid #f1e6c7;
+    background:linear-gradient(180deg,#fff,#fff8e8);
+    border:2px solid #f2e6be;
     border-radius:22px;
-    padding:18px
+    padding:18px;
   }
   .qno{
     font-size:.95rem;
-    font-weight:700;
-    color:#7a5c19
+    font-weight:800;
+    color:#8a6418;
   }
   .question{
-    font-size:1.2rem;
+    font-size:1.22rem;
     font-weight:800;
-    margin:10px 0 16px
+    margin:10px 0 16px;
   }
   .opts{
     display:grid;
-    gap:12px
+    gap:12px;
   }
   .opt{
     width:100%;
     text-align:left;
     padding:14px 16px;
     border-radius:16px;
-    border:2px solid #e7edf8;
+    border:2px solid #e5ecf8;
     background:#fff;
     cursor:pointer;
     font-size:1rem;
-    font-weight:700
+    font-weight:700;
   }
   .opt:hover{
     border-color:#9fc0ff;
-    background:#f8fbff
+    background:#f8fbff;
   }
   .opt.correct{
-    background:#eafff2;
-    border-color:var(--good)
+    background:#eafaf1;
+    border-color:var(--good);
   }
   .opt.wrong{
-    background:#fff1f1;
-    border-color:var(--bad)
+    background:#fff1f2;
+    border-color:var(--bad);
   }
   .feedback{
     margin-top:14px;
     padding:14px 16px;
     border-radius:16px;
-    display:none
+    display:none;
+    font-weight:600;
   }
   .feedback.show{display:block}
   .feedback.good{
     background:#ecfff4;
-    color:#176b35
+    color:#156b35;
   }
   .feedback.bad{
     background:#fff2f2;
-    color:#8d1d1d
+    color:#9d1c1c;
   }
   .final{
     display:none;
@@ -188,81 +197,88 @@
     padding:16px;
     border-radius:18px;
     background:#fff8e6;
-    border:2px dashed #f2c94c
+    border:2px dashed #f2c94c;
   }
   .visual{
     position:relative;
-    height:110px;
+    height:100px;
     overflow:hidden;
-    margin:8px 0 0
+    margin:8px 0 0;
   }
   .blob{
     position:absolute;
     border-radius:999px;
     filter:blur(2px);
-    opacity:.5;
-    animation:drift 14s ease-in-out infinite alternate
+    opacity:.45;
+    animation:driftBlob 12s ease-in-out infinite alternate;
   }
-  @keyframes drift{
+  @keyframes driftBlob{
     from{transform:translateX(0)}
-    to{transform:translateX(40px)}
+    to{transform:translateX(36px)}
   }
-  .blob.b1{width:90px;height:90px;background:#ffeaa7;left:4%;top:12px}
-  .blob.b2{width:70px;height:70px;background:#c8f7f0;right:8%;top:18px}
-  .blob.b3{width:52px;height:52px;background:#ffd6e7;left:45%;top:44px}
-  .stamp{
-    position:fixed;
-    inset:auto 16px 16px auto;
-    background:rgba(255,255,255,.92);
-    padding:10px 12px;
-    border-radius:999px;
-    box-shadow:var(--shadow);
-    font-weight:800;
-    display:none
-  }
+  .b1{width:92px;height:92px;background:#ffe8a3;left:2%;top:10px}
+  .b2{width:64px;height:64px;background:#c7f7ee;right:10%;top:18px}
+  .b3{width:54px;height:54px;background:#ffd7ea;left:45%;top:42px}
   .cross{
     position:fixed;
-    width:70px;
-    height:70px;
-    inset:auto;
+    width:74px;
+    height:74px;
     pointer-events:none;
     opacity:0;
     transform:translate(-50%,-50%) scale(.5);
-    transition:.25s
+    transition:.25s;
+    z-index:20;
   }
   .cross.show{
     opacity:1;
-    transform:translate(-50%,-50%) scale(1)
+    transform:translate(-50%,-50%) scale(1);
   }
   .cross:before,.cross:after{
     content:"";
     position:absolute;
-    left:33px;
+    left:34px;
     top:10px;
     width:6px;
-    height:50px;
+    height:54px;
     background:var(--bad);
-    border-radius:10px
+    border-radius:8px;
   }
   .cross:before{transform:rotate(45deg)}
   .cross:after{transform:rotate(-45deg)}
+  .stamp{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    background:rgba(255,255,255,.92);
+    padding:10px 14px;
+    border-radius:999px;
+    box-shadow:var(--shadow);
+    font-weight:800;
+    display:none;
+    z-index:20;
+  }
   .confetti{
     position:fixed;
     inset:0;
     pointer-events:none;
-    overflow:hidden
+    overflow:hidden;
+    z-index:15;
   }
   .confetti i{
     position:absolute;
     top:-20px;
     width:10px;
     height:10px;
-    background:#fff;
     clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-    animation:fall 1s linear forwards
+    animation:fall 1s linear forwards;
   }
   @keyframes fall{
     to{transform:translateY(110vh) rotate(720deg);opacity:0}
+  }
+  .intro-note{
+    margin-top:12px;
+    font-size:.98rem;
+    color:#52657e;
   }
   @media (max-width:600px){
     .wrap{padding:12px}
@@ -276,16 +292,22 @@
 <div class="bg-stars" id="bgStars"></div>
 <div class="confetti" id="confetti"></div>
 <div class="cross" id="cross"></div>
-<div class="stamp" id="stamp">Correct!</div>
+<div class="stamp" id="stamp">Great job!</div>
 
 <div class="wrap">
-  <section class="screen active hero" id="introScreen">
-    <div class="card" style="max-width:560px;width:100%">
-      <img src="assets/logo.png" alt="Innovine Logo" class="logo" id="logo" />
-      <h1>Naming Words Adventure</h1>
-      <p>Pick the naming word that matches each question. You get one retry after a wrong answer.</p>
-      <p><strong>Chapter:</strong> Naming Words (Person, Place, Animal, Thing)</p>
-      <button class="btn" id="startBtn">Start Quiz</button>
+
+  <section class="screen active hero" id="splashScreen">
+    <div class="card splash-box">
+      <div class="logo-only" id="logoOnly">
+        <img src="assets/logo.png" alt="Innovine Logo" class="logo" />
+      </div>
+      <div id="introContent" style="display:none;">
+        <h1>Naming Words Adventure</h1>
+        <p>Choose the correct naming word in each question.</p>
+        <p><strong>Chapter:</strong> Naming Words (Person, Place, Animal, Thing)</p>
+        <p class="intro-note">You get one retry after a wrong answer. The quiz becomes slightly harder as you move ahead.</p>
+        <button class="btn" id="startBtn">Start Quiz</button>
+      </div>
     </div>
   </section>
 
@@ -313,7 +335,7 @@
   </section>
 
   <section class="screen hero" id="resultScreen">
-    <div class="card" style="max-width:560px;width:100%">
+    <div class="card splash-box">
       <h2>Quiz Complete</h2>
       <p id="resultText"></p>
       <button class="btn secondary" id="restartBtn">Play Again</button>
@@ -344,7 +366,7 @@ let idx = 0, score = 0, timeLeft = 45, timer = null, wrongAttempts = 0;
 const total = questions.length;
 qTotal.textContent = total;
 
-for (let i = 0; i < 18; i++) {
+for(let i = 0; i < 18; i++){
   const s = document.createElement('div');
   s.className = 'star';
   s.style.left = (Math.random() * 100) + '%';
@@ -353,7 +375,8 @@ for (let i = 0; i < 18; i++) {
   document.getElementById('bgStars').appendChild(s);
 }
 
-const introScreen = document.getElementById('introScreen');
+const splashScreen = document.getElementById('splashScreen');
+const introContent = document.getElementById('introContent');
 const quizScreen = document.getElementById('quizScreen');
 const resultScreen = document.getElementById('resultScreen');
 const qIndex = document.getElementById('qIndex');
@@ -379,13 +402,21 @@ Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.6; });
 function play(name){
   try{
     const a = sounds[name];
-    if(a){ a.currentTime = 0; a.play(); }
+    if(a){
+      a.currentTime = 0;
+      a.play();
+    }
   }catch(e){}
 }
 
 function showScreen(s){
-  [introScreen, quizScreen, resultScreen].forEach(x => x.classList.remove('active'));
+  [splashScreen, quizScreen, resultScreen].forEach(x => x.classList.remove('active'));
   s.classList.add('active');
+}
+
+function showIntroAfterSplash(){
+  introContent.style.display = 'block';
+  logoOnly.style.display = 'none';
 }
 
 function startQuiz(){
@@ -409,7 +440,7 @@ function loadQ(){
   feedback.textContent = '';
   finalChallenge.style.display = 'none';
   timeEl.textContent = timeLeft;
-  bar.style.width = (idx / total * 100) + '%';
+  bar.style.width = ((idx) / total * 100) + '%';
 
   timer = setInterval(() => {
     timeLeft--;
@@ -444,7 +475,7 @@ function answer(choice, btn){
     play('correct');
     confettiBurst();
     setTimeout(next, 900);
-  } else {
+  }else{
     handleWrong(false, btn);
   }
 }
@@ -477,7 +508,7 @@ function handleWrong(fromTime, btn){
 
 function next(){
   idx++;
-  bar.style.width = (idx / total * 100) + '%';
+  bar.style.width = ((idx) / total * 100) + '%';
   if(idx < total) loadQ();
   else finish();
 }
@@ -490,7 +521,7 @@ function confettiBurst(){
   for(let i = 0; i < 18; i++){
     const c = document.createElement('i');
     c.style.left = (Math.random() * 100) + '%';
-    c.style.background = ['#ffd166','#ff7a59','#4b7bec','#2ecc71','#ff9ff3'][i % 5];
+    c.style.background = ['#ffd166','#ff7b54','#4b7bec','#22c55e','#ff9ff3'][i % 5];
     c.style.animationDuration = (.8 + Math.random() * .7) + 's';
     document.getElementById('confetti').appendChild(c);
     setTimeout(() => c.remove(), 1600);
@@ -500,18 +531,20 @@ function confettiBurst(){
 function finish(){
   clearInterval(timer);
   showScreen(resultScreen);
-  const pct = Math.round(score / total * 100);
+  const pct = Math.round((score / total) * 100);
   resultText.innerHTML = `You scored <strong>${score}/${total}</strong> (${pct}%). ${pct >= 80 ? 'Excellent!' : 'Nice work!'} Final challenge complete.`;
   play('clap');
 }
 
 startBtn.onclick = startQuiz;
-restartBtn.onclick = () => showScreen(introScreen);
+restartBtn.onclick = () => {
+  showScreen(splashScreen);
+  introContent.style.display = 'none';
+  logoOnly.style.display = 'grid';
+  setTimeout(showIntroAfterSplash, 5000);
+};
 
-setTimeout(() => {
-  document.getElementById('logo').style.transition = 'opacity .5s';
-  document.getElementById('logo').style.opacity = '0';
-}, 5000);
+setTimeout(showIntroAfterSplash, 5000);
 </script>
 </body>
 </html>

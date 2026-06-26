@@ -6,12 +6,12 @@
 <title>Common and Proper Nouns Adventure</title>
 <style>
   :root{
-    --bg1:#dff3ff;
-    --bg2:#fff7dd;
+    --bg1:#ecfff9;
+    --bg2:#fff8e6;
     --card:#ffffff;
-    --ink:#233047;
+    --ink:#24324a;
     --pri:#2f80ed;
-    --sec:#f2994a;
+    --sec:#ff9f43;
     --good:#27ae60;
     --bad:#eb5757;
     --shadow:0 12px 30px rgba(30,60,90,.12);
@@ -21,14 +21,14 @@
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
     color:var(--ink);
-    background:
-      radial-gradient(circle at top left, rgba(255,255,255,.75), transparent 28%),
-      radial-gradient(circle at bottom right, rgba(255,245,210,.8), transparent 28%),
-      linear-gradient(135deg,var(--bg1),var(--bg2));
     min-height:100vh;
     overflow-x:hidden;
+    background:
+      radial-gradient(circle at top left, rgba(255,255,255,.8), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(255,246,220,.9), transparent 28%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));
   }
-  .bg-grid{
+  .bg-paper{
     position:fixed;
     inset:0;
     pointer-events:none;
@@ -36,23 +36,23 @@
     background-image:
       linear-gradient(rgba(47,128,237,.14) 1px, transparent 1px),
       linear-gradient(90deg, rgba(47,128,237,.14) 1px, transparent 1px);
-    background-size:34px 34px;
+    background-size:40px 40px;
   }
-  .bg-bubbles{
+  .bg-tags{
     position:fixed;
     inset:0;
     pointer-events:none;
     overflow:hidden;
   }
-  .bubble{
+  .tag{
     position:absolute;
-    border-radius:50%;
-    background:rgba(255,255,255,.35);
+    border-radius:18px;
+    opacity:.16;
     animation:floatUp linear infinite;
   }
   @keyframes floatUp{
-    from{transform:translateY(110vh) translateX(0);opacity:.05}
-    to{transform:translateY(-20vh) translateX(40px);opacity:.28}
+    from{transform:translateY(110vh) translateX(0) rotate(0deg)}
+    to{transform:translateY(-20vh) translateX(40px) rotate(10deg)}
   }
   .wrap{
     max-width:980px;
@@ -95,6 +95,10 @@
   }
   h1,h2{margin:0 0 10px}
   p{margin:8px 0; line-height:1.5}
+  .subtitle{
+    color:#5c6f89;
+    font-size:.98rem;
+  }
   .intro-note{
     margin-top:12px;
     font-size:.98rem;
@@ -109,11 +113,11 @@
     cursor:pointer;
     color:#fff;
     background:linear-gradient(135deg,var(--pri),#56ccf2);
-    box-shadow:0 8px 18px rgba(47,128,237,.24);
+    box-shadow:0 8px 18px rgba(47,128,237,.22);
   }
   .btn.secondary{
     background:linear-gradient(135deg,var(--sec),#f2c94c);
-    box-shadow:0 8px 18px rgba(242,153,74,.22);
+    box-shadow:0 8px 18px rgba(255,159,67,.22);
   }
   .topbar{
     display:flex;
@@ -159,7 +163,7 @@
     inset:0;
     background:
       linear-gradient(135deg, rgba(47,128,237,.04), transparent 55%),
-      linear-gradient(225deg, rgba(242,153,74,.05), transparent 55%);
+      linear-gradient(225deg, rgba(255,159,67,.05), transparent 55%);
     pointer-events:none;
   }
   .qno{
@@ -221,20 +225,19 @@
     overflow:hidden;
     margin:8px 0 2px;
   }
-  .shape{
+  .shape1,.shape2,.shape3,.shape4{
     position:absolute;
-    border-radius:18px;
-    opacity:.28;
+    opacity:.22;
     animation:drift 14s ease-in-out infinite alternate;
   }
   @keyframes drift{
     from{transform:translateX(0) rotate(0deg)}
     to{transform:translateX(30px) rotate(8deg)}
   }
-  .s1{width:90px;height:90px;background:#d4e9ff;left:2%;top:10px;border-radius:26px}
-  .s2{width:78px;height:78px;background:#ffe7c7;right:8%;top:16px;border-radius:50%}
-  .s3{width:56px;height:56px;background:#d9f7e8;left:46%;top:42px;border-radius:18px}
-  .s4{width:44px;height:44px;background:#ffdde7;left:70%;top:52px;border-radius:50%}
+  .shape1{width:88px;height:60px;background:#d8f0ff;left:3%;top:20px;border-radius:16px}
+  .shape2{width:60px;height:60px;background:#ffe6c8;right:9%;top:22px;border-radius:50%}
+  .shape3{width:70px;height:50px;background:#d9f7e8;left:45%;top:44px;border-radius:16px}
+  .shape4{width:48px;height:48px;background:#ffd7e6;left:70%;top:52px;border-radius:50%}
   .cross{
     position:fixed;
     width:74px;
@@ -291,10 +294,6 @@
   @keyframes fall{
     to{transform:translateY(110vh) rotate(720deg);opacity:0}
   }
-  .subtitle{
-    color:#5c6f89;
-    font-size:.98rem;
-  }
   @media (max-width:600px){
     .wrap{padding:12px}
     .card{padding:16px;border-radius:20px}
@@ -305,8 +304,8 @@
 </style>
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-bubbles" id="bgBubbles"></div>
+<div class="bg-paper"></div>
+<div class="bg-tags" id="bgTags"></div>
 <div class="confetti" id="confetti"></div>
 <div class="cross" id="cross"></div>
 <div class="stamp" id="stamp">Great job!</div>
@@ -319,7 +318,7 @@
       </div>
       <div id="introContent" style="display:none;">
         <h1>Common and Proper Nouns</h1>
-        <p class="subtitle">Learn to spot general names and special names.</p>
+        <p class="subtitle">Spot general names and special names in a bright classroom adventure.</p>
         <p><strong>Chapter:</strong> Common and Proper Nouns</p>
         <p class="intro-note">You get one retry after a wrong answer. The quiz becomes slightly harder as you move ahead.</p>
         <button class="btn" id="startBtn" type="button">Start Quiz</button>
@@ -336,10 +335,10 @@
       </div>
       <div class="progress"><div class="bar" id="bar"></div></div>
       <div class="visual">
-        <div class="shape s1"></div>
-        <div class="shape s2"></div>
-        <div class="shape s3"></div>
-        <div class="shape s4"></div>
+        <div class="shape1"></div>
+        <div class="shape2"></div>
+        <div class="shape3"></div>
+        <div class="shape4"></div>
       </div>
       <div class="qbox">
         <div class="qno" id="qNo"></div>
@@ -399,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultText = document.getElementById('resultText');
   const cross = document.getElementById('cross');
   const stamp = document.getElementById('stamp');
-  const bgBubbles = document.getElementById('bgBubbles');
+  const bgTags = document.getElementById('bgTags');
   const confettiLayer = document.getElementById('confetti');
 
   qTotal.textContent = total;
@@ -492,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleWrong(fromTime, btn){
-    wrongAttempts++;
     const q = questions[idx];
 
     if(btn) btn.classList.add('wrong');
@@ -502,13 +500,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => cross.classList.remove('show'), 450);
     play('wrong');
 
-    if(wrongAttempts === 1 && !fromTime){
+    if(wrongAttempts === 0 && !fromTime){
+      wrongAttempts = 1;
       feedback.className = 'feedback bad show';
       feedback.textContent = 'Try once more.';
       [...document.querySelectorAll('.opt')].forEach(x => x.disabled = false);
       return;
     }
 
+    wrongAttempts = 2;
     feedback.className = 'feedback bad show';
     feedback.textContent = `Correct answer: ${String.fromCharCode(97 + q.a)}) ${q.o[q.a]}. ${q.e}`;
     [...document.querySelectorAll('.opt')].forEach((x, i) => {
@@ -519,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function next(){
     idx++;
+    wrongAttempts = 0;
     bar.style.width = ((idx) / total * 100) + '%';
     if(idx < total) loadQ();
     else finish();
@@ -531,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for(let i = 0; i < 18; i++){
       const c = document.createElement('i');
       c.style.left = (Math.random() * 100) + '%';
-      c.style.background = ['#ffd166','#ff7b54','#2f80ed','#27ae60','#ff9ff3'][i % 5];
+      c.style.background = ['#ffd166','#ff9f43','#2f80ed','#27ae60','#ff9ff3'][i % 5];
       c.style.animationDuration = (.8 + Math.random() * .7) + 's';
       confettiLayer.appendChild(c);
       setTimeout(() => c.remove(), 1600);
@@ -554,17 +555,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(showIntroAfterSplash, 5000);
   });
 
-  for(let i = 0; i < 22; i++){
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = 18 + Math.random() * 54;
-    b.style.width = size + 'px';
-    b.style.height = size + 'px';
-    b.style.left = (Math.random() * 100) + '%';
-    b.style.animationDuration = (10 + Math.random() * 12) + 's';
-    b.style.animationDelay = (Math.random() * 8) + 's';
-    b.style.background = ['rgba(47,128,237,.20)','rgba(242,153,74,.18)','rgba(39,174,96,.16)','rgba(255,255,255,.25)'][i % 4];
-    bgBubbles.appendChild(b);
+  for(let i = 0; i < 20; i++){
+    const t = document.createElement('div');
+    t.className = 'tag';
+    const size = 24 + Math.random() * 50;
+    t.style.width = size + 'px';
+    t.style.height = size * 0.6 + 'px';
+    t.style.left = (Math.random() * 100) + '%';
+    t.style.background = ['rgba(47,128,237,.22)','rgba(255,159,67,.20)','rgba(39,174,96,.18)','rgba(255,255,255,.22)'][i % 4];
+    t.style.animationDuration = (10 + Math.random() * 14) + 's';
+    t.style.animationDelay = (Math.random() * 10) + 's';
+    bgTags.appendChild(t);
   }
 
   setTimeout(showIntroAfterSplash, 5000);

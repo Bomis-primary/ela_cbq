@@ -49,7 +49,7 @@
             box-shadow: 0 16px 0px var(--forest-deep), 0 25px 40px rgba(0,0,0,0.15);
             border: 5px solid #FFFFFF;
             max-height: 92vh;
-            overflow-y: auto; /* Adds inner scroll if elements get too tall */
+            overflow-y: auto;
         }
 
         .screen { display: none; }
@@ -164,9 +164,13 @@
             font-size: 1rem;
             line-height: 1.5;
             display: none;
-            background-color: #E2ECE9; 
-            color: var(--forest-deep); 
             border: 3px solid var(--success-green);
+        }
+        .feedback-box.retry {
+            background-color: #FFF9E6; color: #664D03; border-color: var(--sunset-gold);
+        }
+        .feedback-box.reveal {
+            background-color: #E2ECE9; color: var(--forest-deep); border-color: var(--success-green);
         }
 
         /* --- SUMMARY MEDAL --- */
@@ -328,6 +332,7 @@
 
         let playHead = 0; 
         let points = 0;
+        let attempts = 0; // Tracks clicks per question
 
         function initGame() {
             document.getElementById('scr-intro').classList.remove('active');
@@ -339,6 +344,7 @@
         }
 
         function buildQuestionLayout() {
+            attempts = 0; // Reset attempts for new question
             const data = coreQuiz[playHead];
             document.getElementById('curr-idx').innerText = playHead + 1;
             document.getElementById('question-text').innerHTML = data.q.replace(/\n/g, '<br>');
@@ -346,7 +352,9 @@
             const holder = document.getElementById('options-holder');
             holder.innerHTML = '';
             
-            document.getElementById('feedback-panel').style.display = 'none';
+            const panel = document.getElementById('feedback-panel');
+            panel.style.display = 'none';
+            panel.className = 'feedback-box';
             document.getElementById('next-action-btn').style.display = 'none';
 
             data.o.forEach((opt, idx) => {
@@ -363,23 +371,46 @@
             const panel = document.getElementById('feedback-panel');
             const tiles = document.querySelectorAll('.option-tile');
 
-            // Freeze all choices immediately
-            tiles.forEach(t => t.disabled = true);
-
-            if(selected === data.c) {
+            if (selected === data.c) {
+                // CORRECT ANSWER chosen
                 element.classList.add('correct');
-                points++;
-                document.getElementById('score-label').innerText = points;
+                freezeTiles();
+                
+                if (attempts === 0) {
+                    points++;
+                    document.getElementById('score-label').innerText = points;
+                }
+                
+                panel.className = "feedback-box reveal";
                 panel.innerHTML = `<strong>Splendid! You got it!</strong> ${data.x}`;
+                panel.style.display = 'block';
+                document.getElementById('next-action-btn').style.display = 'block';
             } else {
+                // WRONG ANSWER chosen
+                attempts++;
                 element.classList.add('wrong');
-                if(tiles[data.c]) tiles[data.c].classList.add('correct');
-                panel.innerHTML = `<strong>Let's learn!</strong> ${data.x}`;
-            }
+                element.disabled = true; // Block this specific wrong tile
 
-            // Always display feedback panel and next action button instantly
-            panel.style.display = 'block';
-            document.getElementById('next-action-btn').style.display = 'block';
+                if (attempts === 1) {
+                    // First wrong choice: give a second chance!
+                    panel.className = "feedback-box retry";
+                    panel.innerHTML = "<strong>Don't worry! Try one more time!</strong> Look closely at the word ending or meaning.";
+                    panel.style.display = 'block';
+                } else {
+                    // Second wrong choice: show answer and move on
+                    freezeTiles();
+                    if (tiles[data.c]) tiles[data.c].classList.add('correct');
+                    
+                    panel.className = "feedback-box reveal";
+                    panel.innerHTML = `<strong>Let's learn!</strong> ${data.x}`;
+                    panel.style.display = 'block';
+                    document.getElementById('next-action-btn').style.display = 'block';
+                }
+            }
+        }
+
+        function freezeTiles() {
+            document.querySelectorAll('.option-tile').forEach(b => b.disabled = true);
         }
 
         function advanceQueue() {
